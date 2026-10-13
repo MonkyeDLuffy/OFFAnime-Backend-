@@ -27,8 +27,9 @@ import { anilistProvider } from '../providers/index.js';
 import { cacheManager } from '../cache/cache-manager.js';
 import { identityResolver } from '../identity/identity-resolver.js';
 import { CACHE_TTL, ANILIST_SEASONS, ANILIST_FORMATS, ANILIST_STATUSES, ANILIST_SORTS, SEARCH_LIMITS } from '../config/constants.js';
+import { config } from '../config/env.js';
 import { parseRequiredId } from '../identity/id-types.js';
-import { ValidationError } from '../errors/index.js';
+import { TimeoutError, ValidationError } from '../errors/index.js';
 import { logger } from '../utils/logger.js';
 import {
   normalizeAnilistAnime,
@@ -50,6 +51,33 @@ const isValidSearchPage = (value) =>
   Boolean(value && typeof value === 'object' && Array.isArray(value.results));
 
 /**
+ * Bound an OPTIONAL enrichment promise by a deadline. Past the deadline the
+ * caller sees a TimeoutError (and skips the enrichment exactly like a provider
+ * failure), while the underlying operation keeps running in the background:
+ * when it eventually completes, the cache layer still records the component
+ * result, so a later composite refresh includes it. A non-positive/invalid
+ * deadline disables bounding.
+ * @template T
+ * @param {Promise<T>} promise
+ * @param {number} deadlineMs
+ * @param {string} label Provider/step name for logs (never secrets).
+ * @returns {Promise<T>}
+ */
+function withDeadline(promise, deadlineMs, label) {
+  if (!Number.isFinite(deadlineMs) || deadlineMs <= 0) return promise;
+  let timer;
+  const deadline = new Promise((_, reject) => {
+    timer = setTimeout(
+      () => reject(new TimeoutError(`${label} enrichment exceeded its ${deadlineMs}ms deadline`, { provider: label })),
+      deadlineMs,
+    );
+  });
+  // The deadline winner must not leave a late rejection unhandled.
+  promise.catch(() => {});
+  return Promise.race([promise, deadline]).finally(() => clearTimeout(timer));
+}
+
+/**
  * AniList-only canonical anime (lighter than the full pipeline; used by
  * episodes/tmdb endpoints that only need identity + titles).
  * @param {number|string} anilistId
@@ -67,49 +95,144 @@ export async function getAnimeDetails(anilistId) {
 }
 
 /**
- * FULL details pipeline (Phase 7): AniList primary + Jikan enrichment + TMDB
- * visuals, cached as a composite so /api/details and /api/smart/details share
- * the expensive result with zero duplicate provider calls.
+ * FULL details pipeline (Phase 7 + performance pass): AniList primary +
+ * Jikan/TMDB enrichment run CONCURRENTLY (bounded by ENRICHMENT_TIMEOUT_MS),
+ * cached as a composite so /api/details and /api/smart/details share the
+ * expensive result with zero duplicate provider calls.
  *
- * Enrichment resilience: Jikan/TMDB failures are caught and skipped - valid
- * AniList data is never replaced by Jikan/TMDB guesses or failures.
+ * Enrichment resilience: Jikan/TMDB failures AND deadline overruns are caught
+ * and skipped - valid AniList data is never replaced by Jikan/TMDB guesses or
+ * failures, and optional providers can only delay the response by the
+ * enrichment deadline, never by their own (longer) request timeouts.
  *
  * @param {number|string} anilistId
  * @returns {Promise<import('../normalizers/anime.types.js').CanonicalAnime>}
  */
 export async function getFullDetails(anilistId) {
   const id = parseRequiredId(anilistId, 'anilistId');
-  return cacheManager.getOrLoad(
+
+  // Lightweight stage timing (cache misses only; no secrets, no payloads).
+  const requestStartedAt = Date.now();
+  let loaderRan = false;
+
+  const result = await cacheManager.getOrLoad(
     `api:details:anilist:${id}`,
     async () => {
+      loaderRan = true;
+      const startedAt = Date.now();
+      /** @type {Record<string, number>} */
+      const timings = {};
+      /** @type {Record<string, string>} */
+      const stages = {};
+
       // 1. AniList primary data (component cache, DAY TTL).
       let canonical = await getAnimeDetails(id);
+      timings.anilist = Date.now() - startedAt;
 
-      // 2. Jikan enrichment when a trusted MAL ID exists. The MAL ID comes
-      //    from AniList's trusted `idMal` - never guessed. A Jikan failure
-      //    never destroys valid AniList data.
+      // 2 + 3. OPTIONAL enrichment: Jikan (secondary metadata, only when a
+      //        trusted AniList idMal exists) and TMDB (visuals) run
+      //        CONCURRENTLY - both depend only on already-resolved AniList
+      //        canonical data, never on each other's network results. Each
+      //        branch is bounded by ENRICHMENT_TIMEOUT_MS and fails
+      //        independently: a timeout/failure skips that enrichment only
+      //        (exactly like a provider failure) and never destroys or delays
+      //        the AniList-authoritative response beyond the deadline.
+      const enrichmentStartedAt = Date.now();
+      const enrichDeadlineMs = config.ENRICHMENT_TIMEOUT_MS;
+
+      const jikanPromise = canonical.malId !== null
+        ? withDeadline(jikanService.getAnimeByMalId(canonical.malId), enrichDeadlineMs, 'jikan')
+        : null;
+      const tmdbPromise = withDeadline(
+        tmdbService.enrichWithTmdb(canonical),
+        enrichDeadlineMs,
+        'tmdb',
+      );
+
+      // Titles the first TMDB resolution attempts - used to avoid re-searching
+      // them if a Jikan-title fallback retry is needed (see below).
+      const firstAttemptedTitles = tmdbService.plannedAttemptedTitles(canonical);
+
+      const [jikanSettled, tmdbSettled] = await Promise.allSettled([jikanPromise, tmdbPromise]);
+
+      // Jikan merge (AniList identity always wins; see anime.merge.js).
       if (canonical.malId !== null) {
+        if (jikanSettled.status === 'fulfilled') {
+          canonical = mergeJikanIntoCanonical(canonical, jikanSettled.value);
+          stages.jikan = 'ok';
+        } else {
+          stages.jikan = 'skipped';
+          logger.warn('details.jikanEnrichmentSkipped', { anilistId: id, err: jikanSettled.reason });
+        }
+        timings.jikan = Date.now() - enrichmentStartedAt;
+      } else {
+        stages.jikan = 'absent';
+      }
+
+      // TMDB merge (banner precedence enforced by the merge).
+      /** @type {import('../normalizers/tmdb.types.js').TmdbVisualResult | null} */
+      let tmdbVisual = null;
+      if (tmdbSettled.status === 'fulfilled') {
+        tmdbVisual = tmdbSettled.value;
+        stages.tmdb = tmdbVisual.resolved ? 'resolved' : 'unresolved';
+      } else {
+        stages.tmdb = 'skipped';
+        logger.warn('details.tmdbEnrichmentSkipped', { anilistId: id, err: tmdbSettled.reason });
+      }
+      timings.tmdb = Date.now() - enrichmentStartedAt;
+
+      // Accuracy-preserving fallback: when the first TMDB resolution ran
+      // WITHOUT Jikan titles (parallel execution) and ended unresolved, retry
+      // once with the NEW titles Jikan contributed (bounded, never re-searches
+      // attempted titles). This preserves the banner coverage the previous
+      // sequential pipeline had for anime with sparse AniList titles.
+      if (jikanSettled.status === 'fulfilled' && canonical.malId !== null
+          && tmdbVisual !== null && tmdbVisual.resolved !== true) {
         try {
-          const jikan = await jikanService.getAnimeByMalId(canonical.malId);
-          canonical = mergeJikanIntoCanonical(canonical, jikan);
+          const retryVisual = await withDeadline(
+            tmdbService.enrichWithExpandedTitles(canonical, firstAttemptedTitles),
+            enrichDeadlineMs,
+            'tmdb-fallback',
+          );
+          if (retryVisual) {
+            tmdbVisual = retryVisual;
+            stages.tmdb = 'resolved';
+            stages.tmdbFallback = 'used';
+          }
         } catch (err) {
-          logger.warn('details.jikanEnrichmentSkipped', { anilistId: id, err });
+          logger.warn('details.tmdbFallbackSkipped', { anilistId: id, err });
         }
       }
 
-      // 3. TMDB visual enrichment (banner precedence enforced by the merge).
-      //    A TMDB failure/unresolved result leaves canonical data intact.
-      try {
-        const visual = await tmdbService.enrichWithTmdb(canonical);
-        canonical = mergeTmdbIntoCanonical(canonical, visual);
-      } catch (err) {
-        logger.warn('details.tmdbEnrichmentSkipped', { anilistId: id, err });
-      }
+      canonical = mergeTmdbIntoCanonical(canonical, tmdbVisual);
+
+      logger.info('details.pipeline', {
+        anilistId: id,
+        timingsMs: timings,
+        stages,
+        totalMs: Date.now() - startedAt,
+      });
 
       return canonical;
     },
     { ttlSeconds: CACHE_TTL.MEDIUM, isValid: isCanonicalAnime },
   );
+
+  if (loaderRan) {
+    logger.info('details.request', {
+      anilistId: id,
+      cache: 'miss',
+      latencyMs: Date.now() - requestStartedAt,
+    });
+  } else {
+    logger.debug('details.request', {
+      anilistId: id,
+      cache: 'hit',
+      latencyMs: Date.now() - requestStartedAt,
+    });
+  }
+
+  return result;
 }
 
 /**

@@ -81,6 +81,11 @@ const schema = {
 
   CACHE_DEFAULT_TTL_SECONDS: { default: '300', transform: toNumber },
   REQUEST_TIMEOUT_MS: { default: '10000', transform: toNumber },
+  // Bounded deadline for OPTIONAL details enrichment (Jikan/TMDB). A slow
+  // optional provider must never hold the details response hostage: past this
+  // deadline the enrichment is skipped exactly like a provider failure
+  // (AniList core data is unaffected). 0 disables the deadline.
+  ENRICHMENT_TIMEOUT_MS: { default: '5000', transform: toNumber },
 
   LOG_LEVEL: { default: 'info', description: 'debug | info | warn | error' },
 };

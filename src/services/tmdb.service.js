@@ -95,6 +95,37 @@ export async function enrichWithTmdb(canonical, { provider = tmdbProvider, cache
 }
 
 /**
+ * Normalized title attempts a fresh TMDB resolution would try, in trusted
+ * priority order (AniList titles first, then Jikan). Shared by the cold-path
+ * resolver and the expanded-title retry so both attempt titles identically.
+ * @param {object} canonical
+ * @param {number} [maxAttempts]
+ * @returns {{ title: string, normalized: string }[]}
+ */
+function plannedTitleAttempts(canonical, maxAttempts = MAX_SEARCH_ATTEMPTS) {
+  const seen = new Set();
+  const attempts = [];
+  for (const title of extractKnownTitles(canonical)) {
+    const normalized = normalizeTitleForComparison(title);
+    if (!normalized || seen.has(normalized)) continue;
+    seen.add(normalized);
+    attempts.push({ title, normalized });
+    if (attempts.length >= maxAttempts) break;
+  }
+  return attempts;
+}
+
+/**
+ * The normalized titles a standard TMDB enrichment would (or did) attempt,
+ * used to avoid re-searching the same titles in the expanded-title retry.
+ * @param {object} canonical
+ * @returns {string[]}
+ */
+export function plannedAttemptedTitles(canonical) {
+  return plannedTitleAttempts(canonical).map((attempt) => attempt.normalized);
+}
+
+/**
  * Fresh enrichment resolution (cache miss path).
  * @param {object} canonical
  * @param {{ provider: import('../providers/tmdb/tmdb.provider.js').TmdbProvider }} deps
@@ -123,17 +154,13 @@ async function resolveTmdbVisual(canonical, { provider }) {
 
   // Conservative search: at most MAX_SEARCH_ATTEMPTS title attempts, stopping
   // at the first reliable title that yields a confident match.
-  const attempted = new Set();
+  const attempts = plannedTitleAttempts(canonical);
   const accumulatedCandidates = [];
 
-  for (const title of titles.slice(0, MAX_SEARCH_ATTEMPTS)) {
-    const normalized = normalizeTitleForComparison(title);
-    if (!normalized || attempted.has(normalized)) continue;
-    attempted.add(normalized);
-
+  for (const attempt of attempts) {
     const raw = mediaType === 'movie'
-      ? await provider.searchMovie(title)
-      : await provider.searchTv(title);
+      ? await provider.searchMovie(attempt.title)
+      : await provider.searchTv(attempt.title);
     accumulatedCandidates.push(...normalizeTmdbCandidates(raw, mediaType));
 
     const match = selectBestMatch(accumulatedCandidates, { titles, year, mediaType });
@@ -144,4 +171,55 @@ async function resolveTmdbVisual(canonical, { provider }) {
 
   // No sufficiently confident match exists - do NOT force a result.
   return createUnresolvedTmdbVisual('no_confident_match');
+}
+
+/**
+ * Expanded-title retry for a previously UNRESOLVED enrichment: attempt titles
+ * that a standard enrichment did NOT try (e.g. Jikan-provided alternates that
+ * became available after Jikan enrichment completed concurrently with the
+ * first TMDB resolution). Bounded to MAX_SEARCH_ATTEMPTS NEW title searches,
+ * never re-searches excluded (already-attempted) titles, and only a confident
+ * match is returned - otherwise null (never a forced result). A resolved
+ * result overwrites the cached unresolved entry with the resolved DAY TTL.
+ *
+ * @param {object} canonical Jikan-merged canonical anime (richest title set).
+ * @param {string[]} excludeNormalized Titles already attempted (skipped).
+ * @param {object} [deps]
+ * @param {import('../providers/tmdb/tmdb.provider.js').TmdbProvider} [deps.provider]
+ * @param {import('../cache/cache-manager.js').CacheManager} [deps.cache]
+ * @returns {Promise<import('../normalizers/tmdb.types.js').TmdbVisualResult | null>}
+ *   Resolved visual result, or null when no new title yields a confident match.
+ */
+export async function enrichWithExpandedTitles(canonical, excludeNormalized = [], { provider = tmdbProvider, cache = cacheManager } = {}) {
+  if (!canonical || typeof canonical !== 'object') return null;
+  if (!provider.isConfigured()) return null;
+
+  const anilistId = parseRequiredId(canonical.anilistId, 'anilistId');
+  const excluded = new Set(excludeNormalized);
+  const newAttempts = plannedTitleAttempts(canonical, MAX_SEARCH_ATTEMPTS * 2)
+    .filter((attempt) => !excluded.has(attempt.normalized))
+    .slice(0, MAX_SEARCH_ATTEMPTS);
+  if (newAttempts.length === 0) return null;
+
+  const titles = extractKnownTitles(canonical);
+  const mediaType = canonical.format === 'MOVIE' ? 'movie' : 'tv';
+  const year = canonical.seasonYear ?? null;
+  const accumulatedCandidates = [];
+
+  for (const attempt of newAttempts) {
+    const raw = mediaType === 'movie'
+      ? await provider.searchMovie(attempt.title)
+      : await provider.searchTv(attempt.title);
+    accumulatedCandidates.push(...normalizeTmdbCandidates(raw, mediaType));
+
+    const match = selectBestMatch(accumulatedCandidates, { titles, year, mediaType });
+    if (match) {
+      const visual = normalizeTmdbVisual(match);
+      // A confident match overwrites the cached unresolved entry (DAY TTL).
+      await cache.set(`tmdb:visual:anilist:${anilistId}`, visual, CACHE_TTL.DAY);
+      return visual;
+    }
+  }
+
+  return null;
 }
