@@ -64,6 +64,8 @@ const schema = {
   JIKAN_API_URL: { default: 'https://api.jikan.moe/v4' },
   TMDB_API_URL: { default: 'https://api.themoviedb.org/3' },
   MEGAPLAY_API_URL: { default: 'https://megaplay.buzz' },
+  // AniZip episode metadata (public API; keyed directly by AniList ID).
+  ANIZIP_API_URL: { default: 'https://api.ani.zip' },
   // Playback proxy (optional). When configured, /api/stream/resolve/:id
   // returns frontend-safe playback URLs through this proxy instead of direct
   // MegaPlay URLs. The host is NEVER hardcoded in provider/business logic.

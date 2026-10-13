@@ -52,6 +52,13 @@ function intOrNull(value) {
   return Number.isInteger(n) && n >= 0 ? n : null;
 }
 
+/** Boolean or null (missing/absent stays null - never fabricated as false). */
+function boolOrNull(value) {
+  if (value === true) return true;
+  if (value === false) return false;
+  return null;
+}
+
 /** Array of non-empty strings, or [] for anything else. */
 function strArray(value) {
   return Array.isArray(value) ? value.filter((v) => typeof v === 'string' && v.trim() !== '') : [];
@@ -514,13 +521,15 @@ export function normalizeJikanPage(raw) {
  * Normalize a raw Jikan episode-list payload ({ pagination, data }) into a
  * stable episode-metadata shape. Episode METADATA only - never stream URLs.
  *
- * The episode number is derived from the list position (Jikan returns episodes
- * in order, `perPage` per page) - deterministic derivation, not fabrication.
- * Entries without a title or id are dropped (never fabricated).
+ * The episode number comes from Jikan's own `mal_id` field (Jikan's episode
+ * identity) - never derived from the list position, never fabricated.
+ * Entries without a title or id are dropped (never fabricated); fields Jikan
+ * does not provide stay null (filler/recap are null when absent, never
+ * fabricated as false).
  *
  * @param {unknown} raw
  * @param {{ page?: number }} [options]
- * @returns {{ pageInfo: { page: number|null, lastPage: number|null, hasNextPage: boolean, total: number|null, perPage: number }, episodes: Array<{ episode: number, malId: number|null, title: string|null, titleJapanese: string|null, aired: string|null, score: number|null, filler: boolean, recap: boolean }> }}
+ * @returns {{ pageInfo: { page: number|null, lastPage: number|null, hasNextPage: boolean, total: number|null, perPage: number }, episodes: Array<{ episode: number|null, malId: number|null, title: string|null, titleJapanese: string|null, aired: string|null, score: number|null, filler: boolean|null, recap: boolean|null }> }}
  * @throws {ProviderError} when the payload is missing/has no data array.
  */
 export function normalizeJikanEpisodes(raw, { page = 1 } = {}) {
@@ -545,16 +554,16 @@ export function normalizeJikanEpisodes(raw, { page = 1 } = {}) {
       perPage,
     },
     episodes: data
-      .map((entry, index) => ({
-        episode: (page - 1) * perPage + index + 1,
+      .map((entry) => ({
+        episode: normalizeId(entry?.mal_id),
         malId: normalizeId(entry?.mal_id),
         title: str(entry?.title),
         titleJapanese: str(entry?.title_japanese),
         aired: str(entry?.aired),
         score: numberOrNull(entry?.score),
-        filler: entry?.filler === true,
-        recap: entry?.recap === true,
+        filler: boolOrNull(entry?.filler),
+        recap: boolOrNull(entry?.recap),
       }))
-      .filter((entry) => entry.title !== null || entry.malId !== null),
+      .filter((entry) => entry.title !== null || entry.episode !== null),
   };
 }

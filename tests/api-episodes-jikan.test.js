@@ -6,9 +6,11 @@
  * routed by provider host. No live providers required.
  *
  * Covered: valid/invalid IDs, episode METADATA only (NO MegaPlay, no stream
- * URLs), missing MAL mapping, Jikan MAL-ID identity preservation, AniList ->
- * MAL resolution through the identity layer, missing mapping -> 404 unresolved,
- * no title-based identity substitution.
+ * URLs), Jikan as the ONLY detailed-episode source (no TMDB, no AniList
+ * fallback), missing MAL mapping, Jikan MAL-ID identity preservation, AniList
+ * -> MAL resolution through the identity layer, no title-based identity
+ * substitution, the ACTUAL MAL ID (never the AniList ID) sent to Jikan, and
+ * page validation/passthrough.
  */
 
 // Env setup MUST be the first import (ESM evaluates imports depth-first in
@@ -26,6 +28,7 @@ import {
   jikanAnime,
   jikanEpisodes,
   jikanEpisode,
+  anizipNotFound,
 } from './helpers/test-server.js';
 
 /** @param {string} query */
@@ -56,6 +59,9 @@ test('GET /api/episodes/:id -> 200 episode METADATA only (no MegaPlay, no stream
       if (anilistKind(body.query) !== 'byId') throw new Error(`expected byId, got: ${body.query}`);
       return { data: { Media: anilistMedia({ id: 123, idMal: 456 }) } };
     },
+    // AniZip (the default episode source) has no mapping for this anime ->
+    // the existing Jikan fallback engages.
+    anizip: anizipNotFound,
     jikan: jikanHandlerFactory(),
   });
   const server = await startTestServer();
@@ -68,19 +74,83 @@ test('GET /api/episodes/:id -> 200 episode METADATA only (no MegaPlay, no stream
     assert.equal(body.id, 123);
     assert.equal(body.anilistId, 123);
     assert.equal(body.malId, 456);
-    assert.equal(body.totalEpisodes, 12);
+    // Jikan's pagination info is preferred for episode details: the fixture
+    // lists 2 episodes, so items.total (2) wins over the AniList count (12).
+    assert.equal(body.totalEpisodes, 2);
 
     // Episode metadata from Jikan (normalized), no fabricated fields.
+    // `episode` comes from Jikan's own mal_id (456) - never the list position.
     assert.ok(Array.isArray(body.episodes) && body.episodes.length === 2);
-    assert.equal(body.episodes[0].episode, 1);
+    assert.equal(body.episodes[0].episode, 456);
     assert.equal(body.episodes[0].malId, 456);
     assert.equal(body.episodes[0].title, 'Episode 1');
+    assert.equal(body.episodes[0].filler, false);
+    assert.equal(body.episodes[0].recap, false);
+    assert.equal(body.source, 'jikan');
 
     // Phase 7 rule: NO MegaPlay, no stream URLs anywhere in the payload.
     assert.equal(mock.megaplayCalls().length, 0);
     const raw = JSON.stringify(body);
     assert.ok(!raw.includes('megaplay'), 'no megaplay reference in payload');
     assert.ok(!raw.includes('stream'), 'no stream URLs in payload');
+
+    // The ACTUAL MAL ID (456) was sent to Jikan - never the AniList ID (123).
+    assert.ok(mock.jikanCalls().some((u) => u.includes('/anime/456/episodes')));
+    assert.ok(!mock.jikanCalls().some((u) => u.includes('/anime/123/episodes')));
+    assert.ok(!mock.jikanCalls().some((u) => u.includes('q=')), 'no title/fuzzy Jikan search');
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/episodes/:id?page=1 -> requests Jikan page 1 (page param honored)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'byId') throw new Error(`expected byId, got: ${body.query}`);
+      return { data: { Media: anilistMedia({ id: 123, idMal: 456 }) } };
+    },
+    anizip: anizipNotFound,
+    jikan: jikanHandlerFactory(),
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/episodes/123?page=1`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.equal(body.pageInfo.page, 1);
+    assert.equal(body.source, 'jikan');
+
+    // Exactly the requested Jikan page: page 1 -> the Jikan episodes endpoint
+    // (Jikan defaults to page 1; no other page requested).
+    const episodeCalls = mock.jikanCalls().filter((u) => u.includes('/episodes'));
+    assert.equal(episodeCalls.length, 1);
+    assert.ok(episodeCalls[0].includes('/anime/456/episodes'));
+    assert.ok(!episodeCalls[0].includes('page=2'));
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/episodes/:id -> invalid page -> 400 ValidationError, no provider request', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: () => { throw new Error('must not be called'); },
+    jikan: () => { throw new Error('must not be called'); },
+  });
+  const server = await startTestServer();
+  try {
+    for (const page of ['0', '-2', 'abc', '1.5']) {
+      const res = await fetch(`${server.baseUrl}/api/episodes/123?page=${encodeURIComponent(page)}`);
+      assert.equal(res.status, 400, `expected 400 for page=${page}`);
+      const body = await res.json();
+      assert.equal(body.error.code, 'VALIDATION_ERROR');
+    }
+    assert.equal(mock.anilistCalls().length, 0);
+    assert.equal(mock.jikanCalls().length, 0);
   } finally {
     await server.stop();
     mock.restore();

@@ -50,6 +50,8 @@ export async function getAnimeByMalId(malId) {
 
 /**
  * Normalized Jikan episode list (episode METADATA only - never stream URLs).
+ * Cached per ACTUAL MAL ID + page under a namespace-safe key
+ * (episodes:jikan:{malId}:page:{page}) - failures are never cached.
  * @param {number|string} malId MyAnimeList ID (NOT an AniList ID).
  * @param {{ page?: number }} [options]
  * @returns {Promise<object>}
@@ -57,8 +59,9 @@ export async function getAnimeByMalId(malId) {
 export async function getEpisodes(malId, { page = 1 } = {}) {
   const id = parseRequiredId(malId, 'malId');
   return cacheManager.getOrLoad(
-    `jikan:episodes:${id}:p${page}`,
-    async () => normalizeJikanEpisodes(await jikanProvider.getAnimeEpisodes(id, { page })),
+    `episodes:jikan:${id}:page:${page}`,
+    async () =>
+      normalizeJikanEpisodes(await jikanProvider.getAnimeEpisodes(id, { page }), { page }),
     {
       ttlSeconds: CACHE_TTL.MEDIUM,
       isValid: (value) => Boolean(value && typeof value === 'object' && Array.isArray(value.episodes)),

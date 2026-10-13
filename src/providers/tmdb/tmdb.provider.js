@@ -36,6 +36,7 @@ import {
   movieSearchPath,
   tvDetailsPath,
   tvSearchPath,
+  tvSeasonPath,
 } from './tmdb.queries.js';
 
 export class TmdbProvider extends BaseProvider {
@@ -95,6 +96,20 @@ export class TmdbProvider extends BaseProvider {
    */
   async getMovieDetails(tmdbId) {
     return this._details(movieDetailsPath, tmdbId, 'movie');
+  }
+
+  /**
+   * Raw TMDB TV season details (season episode list). Used by the episode
+   * flow's TMDB fallback - the season number is chosen by the CALLER from
+   * trusted canonical metadata (never guessed here), and the payload is
+   * normalized into episode metadata in src/normalizers.
+   * @param {number|string} tmdbId
+   * @param {number|string} seasonNumber
+   * @returns {Promise<Record<string, unknown>>}
+   */
+  async getTvSeason(tmdbId, seasonNumber) {
+    const season = parseRequiredId(seasonNumber, 'seasonNumber');
+    return this._details((id) => tvSeasonPath(id, season), tmdbId, 'tv season');
   }
 
   // --- internals ------------------------------------------------------------

@@ -39,14 +39,19 @@ export function normalizeLanguage(value, label = 'language') {
 
 /**
  * Episode path segment: a positive integer bounded to a sensible maximum;
- * a missing value falls back to episode 1.
+ * a MISSING value (undefined/null) falls back to episode 1. A SUPPLIED value
+ * is never silently replaced: empty strings, arrays (repeated/array query
+ * params) and any other non positive-integer value are rejected.
  * @param {unknown} value
  * @param {string} [label='episode'] Used in the error message.
  * @returns {number}
- * @throws {ValidationError} for zero/negative/non-integer/excessive values.
+ * @throws {ValidationError} for zero/negative/non-integer/excessive/empty/array values.
  */
 export function normalizeEpisode(value, label = 'episode') {
-  const ep = normalizeId(value === undefined || value === null || value === '' ? 1 : value);
+  if (Array.isArray(value)) {
+    throw new ValidationError(`${label} must be a positive integer`, { received: value });
+  }
+  const ep = normalizeId(value === undefined || value === null ? 1 : value);
   if (ep === null) {
     throw new ValidationError(`${label} must be a positive integer`, { received: value });
   }

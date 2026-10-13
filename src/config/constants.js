@@ -26,6 +26,7 @@ export const PROVIDERS = Object.freeze({
   JIKAN: 'jikan',
   TMDB: 'tmdb',
   MEGAPLAY: 'megaplay',
+  ANIZIP: 'anizip',
 });
 
 /**

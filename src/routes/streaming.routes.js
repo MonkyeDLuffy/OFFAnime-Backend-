@@ -12,7 +12,8 @@
  * direct MegaPlay 410/no-stream never proves playback unavailable (the proxy
  * is the browser-facing playback mechanism and handles availability).
  *
- * Query parameters: ?episode=1&language=sub (validated in the resolver).
+ * Query parameters: ?ep=1&language=sub (the original documented ?episode=1
+ * alias remains supported; validated in the resolver).
  * Provider failures remain typed errors. The response's playbackUrl is ALWAYS
  * the frontend-safe proxy watch URL; direct MegaPlay URLs are NEVER exposed.
  */

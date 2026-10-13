@@ -32,6 +32,7 @@ import { NotFoundError, ProviderError, ValidationError } from '../../errors/inde
 import { parseRequiredId } from '../../identity/id-types.js';
 import {
   GET_AIRING_SCHEDULE_QUERY,
+  GET_ANIME_AIRING_SCHEDULE_QUERY,
   GET_ANIME_BY_ID_QUERY,
   GET_ANIME_BY_MAL_ID_QUERY,
   GET_RECOMMENDATIONS_QUERY,
@@ -195,6 +196,25 @@ export class AnilistProvider extends BaseProvider {
     if (to !== undefined) variables.to = to;
     const data = await this.executeQuery(GET_AIRING_SCHEDULE_QUERY, variables);
     return data.Page ?? null;
+  }
+
+  /**
+   * Fetch the PER-ANIME airing schedule (real episode numbers + air
+   * timestamps). AniList only provides schedule entries where they exist
+   * (often empty for older anime) - an empty result is returned as null, never
+   * fabricated into episode data.
+   * @param {number|string} anilistId
+   * @param {{ page?: number, perPage?: number }} [options]
+   * @returns {Promise<Record<string, unknown> | null>} Raw `airingSchedule`
+   *   connection ({ pageInfo, nodes: [{ episode, airingAt }] }).
+   */
+  async getAnimeAiringSchedule(anilistId, { page, perPage } = {}) {
+    const id = parseRequiredId(anilistId, 'anilistId');
+    const variables = { id };
+    if (page !== undefined) variables.page = page;
+    if (perPage !== undefined) variables.perPage = perPage;
+    const data = await this.executeQuery(GET_ANIME_AIRING_SCHEDULE_QUERY, variables);
+    return this._requireMedia(data.Media, `AniList ID ${id}`)?.airingSchedule ?? null;
   }
 
   // --- internals ------------------------------------------------------------

@@ -8,6 +8,7 @@
  */
 
 import { normalizeId } from '../identity/id-types.js';
+import { ProviderError } from '../errors/index.js';
 import { tmdbImageUrl } from '../providers/tmdb/tmdb.queries.js';
 
 /** @typedef {import('./tmdb.types.js').TmdbCandidate} TmdbCandidate */
@@ -137,4 +138,40 @@ export function normalizeTmdbDetails(raw, mediaType = 'tv') {
     poster: tmdbImageUrl(raw?.poster_path, 'w500'),
     reason: null,
   };
+}
+
+/**
+ * Normalize a raw TMDB TV season payload ({ episodes: [...] }) into canonical
+ * episode entries (episode METADATA only - never stream URLs).
+ *
+ * Episode numbers come ONLY from TMDB's actual `episode_number` field - never
+ * from list position, never fabricated. Values TMDB does not provide
+ * (Japanese titles, filler/recap flags, MAL IDs) stay null - never invented.
+ *
+ * @param {unknown} raw
+ * @returns {Array<{ episode: number, malId: number|null, title: string|null, titleJapanese: string|null, aired: string|null, score: number|null, filler: boolean|null, recap: boolean|null, source: 'tmdb' }>}
+ * @throws {ProviderError} when the payload is missing/has no episodes array.
+ */
+export function normalizeTmdbSeasonEpisodes(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new ProviderError('TMDB season payload is missing or malformed');
+  }
+  const episodes = Array.isArray(raw.episodes) ? raw.episodes : null;
+  if (episodes === null) {
+    // A payload without an episodes array is unusable - never cache as valid empty.
+    throw new ProviderError('TMDB season payload is missing episodes');
+  }
+  return episodes
+    .map((entry) => ({
+      episode: numberOrNull(entry?.episode_number),
+      malId: null, // TMDB has no MAL IDs - never invented
+      title: str(entry?.name),
+      titleJapanese: null, // not provided by TMDB - never invented
+      aired: str(entry?.air_date),
+      score: numberOrNull(entry?.vote_average),
+      filler: null, // not provided by TMDB - never invented
+      recap: null, // not provided by TMDB - never invented
+      source: 'tmdb',
+    }))
+    .filter((entry) => entry.episode !== null);
 }

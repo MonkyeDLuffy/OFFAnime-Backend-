@@ -15,12 +15,8 @@
 
 import { asyncHandler } from '../utils/async-handler.js';
 import { firstString, optionalInt } from '../utils/query.js';
-import {
-  getFullDetails,
-  getAnimeEpisodes,
-  getAnimeRecommendations,
-  getAnimeSeasons,
-} from '../services/anime.service.js';
+import { getFullDetails, getAnimeRecommendations, getAnimeSeasons } from '../services/anime.service.js';
+import { getAnimeEpisodes } from '../services/episode.service.js';
 import { getCategory } from '../services/category.service.js';
 
 /**

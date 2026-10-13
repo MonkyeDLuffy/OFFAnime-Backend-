@@ -151,3 +151,19 @@ query ($page: Int, $perPage: Int, $from: Int, $to: Int) {
   }
 }
 `;
+
+/**
+ * Per-anime airing schedule (real episode numbers + air timestamps,
+ * paginated). Used by the episode flow's AniList metadata fallback - episode
+ * numbers come ONLY from actual AniList schedule entries, never fabricated.
+ */
+export const GET_ANIME_AIRING_SCHEDULE_QUERY = `
+query ($id: Int, $page: Int, $perPage: Int) {
+  Media(id: $id, type: ANIME) {
+    airingSchedule(page: $page, perPage: $perPage) {
+      pageInfo { total currentPage lastPage hasNextPage perPage }
+      nodes { episode airingAt }
+    }
+  }
+}
+`;

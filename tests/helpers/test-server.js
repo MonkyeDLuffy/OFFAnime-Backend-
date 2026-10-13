@@ -58,7 +58,7 @@ export async function startTestServer() {
  * @param {(url: string, call: object) => Promise<Response | object> | Response | object} [handlers.megaplay]
  * @returns {{ calls: Array<object>, restore: () => void }}
  */
-export function installApiMocks({ anilist, jikan, tmdb, megaplay } = {}) {
+export function installApiMocks({ anilist, jikan, tmdb, megaplay, anizip } = {}) {
   const original = globalThis.fetch;
   /** @type {Array<object>} */
   const calls = [];
@@ -106,6 +106,10 @@ export function installApiMocks({ anilist, jikan, tmdb, megaplay } = {}) {
       if (!megaplay) throw new Error(`unexpected MegaPlay request: ${call.url}`);
       return asResponse(await megaplay(call.url, call));
     }
+    if (call.url.includes('api.ani.zip')) {
+      if (!anizip) throw new Error(`unexpected AniZip request: ${call.url}`);
+      return asResponse(await anizip(call.url, call));
+    }
     throw new Error(`unexpected fetch to non-provider host: ${call.url}`);
   };
 
@@ -122,6 +126,8 @@ export function installApiMocks({ anilist, jikan, tmdb, megaplay } = {}) {
     tmdbCalls: () => calls.filter((c) => c.url.includes('api.themoviedb.org')).map((c) => c.url),
     /** All MegaPlay call URLs. */
     megaplayCalls: () => calls.filter((c) => c.url.includes('megaplay')),
+    /** All AniZip call URLs. */
+    anizipCalls: () => calls.filter((c) => c.url.includes('api.ani.zip')).map((c) => c.url),
     restore: () => {
       globalThis.fetch = original;
     },
@@ -250,4 +256,131 @@ export function tmdbSearchResults(results = []) {
  */
 export function tmdbTvCandidate({ id = 789, name = 'Test Anime', originalName = name, firstAirDate = '2023-01-10', backdropPath = '/backdrop.jpg', popularity = 50 } = {}) {
   return { id, name, original_name: originalName, first_air_date: firstAirDate, backdrop_path: backdropPath, poster_path: '/poster.jpg', popularity };
+}
+
+/**
+ * Raw TMDB TV details fixture (seasons array included).
+ * @param {object[]} [seasons]
+ */
+export function tmdbTvDetails(seasons = []) {
+  return { status: 200, json: { id: 789, name: 'Test Anime', seasons } };
+}
+
+/**
+ * Raw TMDB season fixture ({ episodes: [...] }).
+ * @param {number} seasonNumber
+ * @param {object[]} [episodes]
+ */
+export function tmdbSeason(seasonNumber, episodes = []) {
+  return { status: 200, json: { id: 789, season_number: seasonNumber, name: `Season ${seasonNumber}`, episodes } };
+}
+
+/**
+ * Raw TMDB season episode entry.
+ * @param {{ id?: number, seasonNumber?: number, number?: number, name?: string, overview?: string, airDate?: string, runtime?: number, stillPath?: string|null, voteAverage?: number, voteCount?: number, episodeType?: string, extra?: object }} [options]
+ */
+export function tmdbEpisode({ id, seasonNumber = 1, number = 1, name, overview, airDate, runtime, stillPath, voteAverage, voteCount, episodeType, extra = {} } = {}) {
+  return {
+    id,
+    season_number: seasonNumber,
+    episode_number: number,
+    name: name ?? `Ep S${seasonNumber}E${number}`,
+    overview: overview ?? `Overview for S${seasonNumber}E${number}`,
+    air_date: airDate ?? '2023-01-10',
+    runtime: runtime ?? 24,
+    still_path: stillPath === undefined ? `/still-s${seasonNumber}-e${number}.jpg` : stillPath,
+    vote_average: voteAverage ?? 7.5,
+    vote_count: voteCount ?? 10,
+    episode_type: episodeType ?? 'standard',
+    ...extra,
+  };
+}
+
+/**
+ * TMDB season-number list fixture (TV details' seasons array).
+ * @param {number[]} [seasonNumbers]
+ */
+export function tmdbSeasonsList(seasonNumbers = []) {
+  return seasonNumbers.map((seasonNumber) => ({ season_number: seasonNumber, name: `Season ${seasonNumber}`, episode_count: 0 }));
+}
+
+// --- AniZip fixtures ----------------------------------------------------------
+
+/**
+ * Raw AniZip episode entry, shaped exactly like the live mappings response
+ * (verified: anilist_id=21 One Piece, anilist_id=20 Naruto).
+ * @param {{ episode?: number, title?: string, titleJa?: string|null, titleVariants?: object|null, image?: string|null, overview?: string|null, airDate?: string|null, airDateUtc?: string|null, runtime?: number|null, rating?: string|null, extra?: object }} [options]
+ */
+export function anizipEpisode({
+  episode = 1,
+  title = `Episode ${episode}`,
+  titleJa = null,
+  titleVariants,
+  image = null,
+  overview = null,
+  airDate = null,
+  airDateUtc = null,
+  runtime = null,
+  rating = null,
+  extra = {},
+} = {}) {
+  return {
+    tvdbShowId: 81797,
+    tvdbId: 361880 + episode,
+    seasonNumber: 1,
+    episodeNumber: episode,
+    absoluteEpisodeNumber: episode,
+    title: {
+      en: title,
+      ...(titleJa !== null ? { ja: titleJa } : {}),
+      'x-jat': `Romaji ${title}`,
+      ...(titleVariants !== undefined ? titleVariants : {}),
+    },
+    airDate,
+    airDateUtc,
+    runtime,
+    overview,
+    image,
+    episode: String(episode),
+    anidbEid: 400 + episode,
+    length: runtime,
+    airdate: airDate,
+    rating,
+    summary: overview === null ? null : `${overview} (AniDB)`,
+    ...extra,
+  };
+}
+
+/**
+ * Raw AniZip mappings payload ({ titles, episodes, episodeCount, specialCount,
+ * images, mappings }) - `episodes` is an OBJECT keyed by episode number, with
+ * prefixed keys (S1/O29) for specials, exactly like the live response.
+ * @param {{ anilistId?: number, malId?: number, episodes?: Record<string, object>, specialCount?: number, extra?: object }} [options]
+ */
+export function anizipMappings({
+  anilistId = 123,
+  malId = 456,
+  episodes = { '1': anizipEpisode({ episode: 1 }), '2': anizipEpisode({ episode: 2 }) },
+  specialCount = 0,
+  extra = {},
+} = {}) {
+  return {
+    titles: { en: 'Test Anime', ja: 'テストアニメ', 'x-jat': 'Testo Anime' },
+    episodes,
+    episodeCount: Object.keys(episodes).filter((k) => /^\d+$/.test(k)).length,
+    specialCount,
+    images: [{ coverType: 'Poster', url: 'https://artworks.example/poster.jpg' }],
+    mappings: { anilist_id: anilistId, mal_id: malId, type: 'TV' },
+    ...extra,
+  };
+}
+
+/**
+ * AniZip "no mapping for this ID" response (live-verified: HTTP 404 + JSON
+ * string "Not Found"). Use as `anizip: anizipNotFound` in tests that exercise
+ * the fallback chain (AniZip cannot provide -> TMDB -> Jikan).
+ * @returns {{ status: number, body: string, contentType: string }}
+ */
+export function anizipNotFound() {
+  return { status: 404, body: '"Not Found"', contentType: 'application/json' };
 }

@@ -25,6 +25,7 @@
 
 import { anilistProvider } from '../providers/index.js';
 import { cacheManager } from '../cache/cache-manager.js';
+import { identityResolver } from '../identity/identity-resolver.js';
 import { CACHE_TTL, ANILIST_SEASONS, ANILIST_FORMATS, ANILIST_STATUSES, ANILIST_SORTS, SEARCH_LIMITS } from '../config/constants.js';
 import { parseRequiredId } from '../identity/id-types.js';
 import { ValidationError } from '../errors/index.js';
@@ -233,38 +234,5 @@ export async function getAnimeSeasons(anilistId) {
   );
 }
 
-/**
- * Episode METADATA for an anime (Phase 7 - NO streaming). Uses the AniList
- * base for identity + episode count, and Jikan's episode list when a trusted
- * MAL ID exists. No MegaPlay calls, no stream URLs, no fabricated episodes.
- * @param {number|string} anilistId
- * @param {{ page?: number }} [options]
- * @returns {Promise<object>}
- */
-export async function getAnimeEpisodes(anilistId, { page = 1 } = {}) {
-  const id = parseRequiredId(anilistId, 'anilistId');
-  const canonical = await getAnimeDetails(id);
-
-  // No trusted MAL mapping -> the correct unavailable representation (null),
-  // never fake episodes.
-  if (canonical.malId === null) {
-    return {
-      id: canonical.id,
-      anilistId: canonical.id,
-      malId: null,
-      totalEpisodes: canonical.episodes,
-      pageInfo: null,
-      episodes: null,
-    };
-  }
-
-  const episodesPage = await jikanService.getEpisodes(canonical.malId, { page });
-  return {
-    id: canonical.id,
-    anilistId: canonical.id,
-    malId: canonical.malId,
-    totalEpisodes: canonical.episodes,
-    pageInfo: episodesPage.pageInfo,
-    episodes: episodesPage.episodes,
-  };
-}
+// NOTE: Episode METADATA lives in the isolated episode resolver/service
+// (src/services/episode.service.js) - getAnimeEpisodes moved there.

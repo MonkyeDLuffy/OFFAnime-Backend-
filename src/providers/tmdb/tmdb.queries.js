@@ -61,3 +61,11 @@ export function movieSearchPath({ query, page } = {}) {
  * @returns {string}
  */
 export const movieDetailsPath = (tmdbId) => `/movie/${tmdbId}`;
+
+/**
+ * TV season details endpoint (season episode list).
+ * @param {number} tmdbId
+ * @param {number} seasonNumber
+ * @returns {string}
+ */
+export const tvSeasonPath = (tmdbId, seasonNumber) => `/tv/${tmdbId}/season/${seasonNumber}`;

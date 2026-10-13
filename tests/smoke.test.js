@@ -23,8 +23,8 @@ const { streamResolver } = await import('../src/streaming/stream-resolver.js');
 const { createBaseAnime } = await import('../src/normalizers/anime.normalizer.js');
 const { ValidationError } = await import('../src/errors/index.js');
 
-test('provider registry exposes all four providers', () => {
-  assert.deepEqual(Object.keys(providers).sort(), ['anilist', 'jikan', 'megaplay', 'tmdb']);
+test('provider registry exposes all providers (AniZip included)', () => {
+  assert.deepEqual(Object.keys(providers).sort(), ['anilist', 'anizip', 'jikan', 'megaplay', 'tmdb']);
 });
 
 test('identity: MAL id is never stored as the AniList id', () => {

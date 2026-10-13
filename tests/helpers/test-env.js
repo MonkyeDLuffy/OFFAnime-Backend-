@@ -10,3 +10,8 @@ process.env.LOG_LEVEL = 'error';
 // covered with injected fakes (config stays deterministic regardless of a
 // local .env file).
 process.env.MEGAPLAY_PROXY_URL = '';
+
+// TMDB is NOT configured by default (a local .env with a real key must never
+// leak into tests). Tests that need TMDB configured import test-env-tmdb.js
+// instead, which sets a deterministic key AFTER this default.
+process.env.TMDB_API_KEY = '';
