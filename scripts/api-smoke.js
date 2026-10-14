@@ -19,11 +19,20 @@
  * Usage:
  *   node scripts/api-smoke.js
  * Exits 0 when every check passes, 1 on any failure.
+ *
+ * API-key note: the middleware FAILS CLOSED in every environment, so this
+ * script pins a SMOKE-ONLY secret (before config/env.js loads - hence the
+ * dynamic imports) and sends it on every request. A real deployment secret is
+ * respected when configured via the environment.
  */
 
 process.env.LOG_LEVEL = 'error';
+process.env.BACKEND_API_SECRET ||= 'smoke-only-secret';
 
-import { createApp } from '../src/app.js';
+// Dynamic imports AFTER env setup (ESM static imports would hoist and load
+// config/env.js before the env overrides above are applied).
+const { createApp } = await import('../src/app.js');
+const { config } = await import('../src/config/env.js');
 
 /** @type {Array<{ name: string, check: () => Promise<void> | void }>} */
 let checks = [];
@@ -33,12 +42,17 @@ function assertOk(condition, message) {
 }
 
 /**
- * Minimal fetch against the local app (no dependencies).
+ * Minimal fetch against the local app (no dependencies). When a
+ * BACKEND_API_SECRET is configured, the API-key credential is attached
+ * automatically so protected-route checks stay valid.
  * @param {string} url
  * @returns {Promise<{ status: number, body: any }>}
  */
 async function request(url) {
-  const response = await fetch(url);
+  const headers = config.BACKEND_API_SECRET
+    ? { Authorization: `Bearer ${config.BACKEND_API_SECRET}` }
+    : {};
+  const response = await fetch(url, { headers });
   let body = null;
   try {
     body = await response.json();
@@ -86,6 +100,29 @@ async function checkStructured404(baseUrl) {
   );
 }
 
+/**
+ * Only runs when BACKEND_API_SECRET is configured: proves protection is active
+ * (missing key -> 401) and the key itself authorizes (health stays 200, and a
+ * validation path behind auth is reachable with the credential).
+ * @param {string} baseUrl
+ */
+async function checkApiKeyProtection(baseUrl) {
+  const noKey = await fetch(`${baseUrl}/api/details/abc`);
+  assertOk(noKey.status === 401, `expected protected route 401 without key, received ${noKey.status}`);
+  const noKeyBody = await noKey.json();
+  assertOk(
+    noKeyBody?.error?.code === 'UNAUTHORIZED_ERROR',
+    `expected UNAUTHORIZED_ERROR, received ${JSON.stringify(noKeyBody?.error?.code)}`,
+  );
+
+  const withKey = await request(`${baseUrl}/api/details/abc`);
+  assertOk(withKey.status === 400, `expected protected route 400 with key, received ${withKey.status}`);
+  assertOk(
+    withKey.body?.error?.code === 'VALIDATION_ERROR',
+    `expected VALIDATION_ERROR with key, received ${JSON.stringify(withKey.body?.error?.code)}`,
+  );
+}
+
 /** Run the smoke checks against a freshly built app on an ephemeral port. */
 export async function runSmoke() {
   const app = createApp();
@@ -98,6 +135,9 @@ export async function runSmoke() {
     { name: 'GET /api/health -> 200', check: () => checkHealth(baseUrl) },
     { name: 'invalid IDs -> 400 before any provider call', check: () => checkValidationErrorBeforeProvider(baseUrl) },
     { name: 'unknown route -> structured 404', check: () => checkStructured404(baseUrl) },
+    ...(config.BACKEND_API_SECRET
+      ? [{ name: 'API key protection: 401 without key, authorized with key', check: () => checkApiKeyProtection(baseUrl) }]
+      : []),
   ];
 
   let failed = 0;

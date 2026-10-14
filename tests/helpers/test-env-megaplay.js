@@ -7,3 +7,4 @@
 
 process.env.LOG_LEVEL = 'error';
 process.env.REQUEST_TIMEOUT_MS = '200';
+process.env.BACKEND_API_SECRET = 'test-only-default-secret';

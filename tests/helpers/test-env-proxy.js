@@ -9,3 +9,4 @@
 
 process.env.LOG_LEVEL = 'error';
 process.env.MEGAPLAY_PROXY_URL = 'https://megaplayproxy.test';
+process.env.BACKEND_API_SECRET = 'test-only-default-secret';

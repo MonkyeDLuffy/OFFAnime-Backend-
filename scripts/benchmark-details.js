@@ -24,6 +24,9 @@ process.env.LOG_LEVEL = 'error';
 process.env.NODE_ENV = 'test';
 process.env.MEGAPLAY_PROXY_URL = '';
 process.env.TMDB_API_KEY = 'benchmark-key'; // configured so the TMDB leg really runs (mocked)
+// Fail-closed API-key middleware is active in every environment; the injected
+// Authorization header comes from startTestServer().
+process.env.BACKEND_API_SECRET = 'benchmark-only-secret';
 process.env.SUPABASE_URL = '';
 process.env.SUPABASE_SERVICE_ROLE_KEY = '';
 process.env.SUPABASE_ANON_KEY = '';

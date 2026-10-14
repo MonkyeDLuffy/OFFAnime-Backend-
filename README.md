@@ -138,6 +138,82 @@ ID. Any AniList -> MAL mapping is performed by the identity layer.
   confident match is `resolved: false` - never a failure, never fabricated
   images.
 
+## API key protection
+
+Every `/api/*` route **except `GET /api/health`** is protected by ONE centralized
+middleware (`src/middleware/api-key-auth.js`), registered once in
+`src/routes/index.js` before all feature routers - controllers never duplicate
+credential checks.
+
+**Public routes (no key required):**
+
+- `GET /api/health` - intentional decision: deployment/uptime probes (Vercel,
+  Cloudflare, monitoring) cannot carry secrets, and the endpoint leaks no
+  sensitive data (static status payload only). CORS `OPTIONS` preflight
+  requests are also never blocked (browsers cannot attach custom headers to a
+  preflight; the middleware passes them through before any credential check).
+
+**Protected routes:** everything else under `/api` (`/home`, `/search`,
+`/top-search`, `/details`, `/smart/details`, `/episodes`, `/stream/resolve`,
+`/jikan/*`, `/tmdb`, `/recommendations`, `/seasons`, `/category`, `/schedule`).
+
+**Request header format** (either one; Bearer is preferred):
+
+```text
+Authorization: Bearer <BACKEND_API_SECRET>
+x-api-key: <BACKEND_API_SECRET>
+```
+
+**Behavior:**
+
+- Missing or invalid key -> `401` with the standard error shape
+  (`{ "error": { "code": "UNAUTHORIZED_ERROR", "message": "..." } }`).
+- Comparison is constant-time (SHA-256 digests + `timingSafeEqual`).
+- The secret comes ONLY from the server-side env var `BACKEND_API_SECRET`
+  (`src/config/env.js`). It is never hardcoded, never returned in a response,
+  never logged, and never placed in URLs or query params.
+- **Fail closed everywhere (dev included):** a missing `BACKEND_API_SECRET`
+  rejects every protected request with `500` ("API authentication is not
+  configured") in ALL environments - there is no development bypass. Local
+  development must set a value in `.env`, exactly like production does on the
+  platform dashboard.
+
+### Environment configuration
+
+Generate a long, cryptographically random secret (never reuse an example or a
+real value in logs):
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+```
+
+- **Backend - local:** put the value in `.env` as `BACKEND_API_SECRET=...`
+  (`.env` is gitignored; see `.env.example`).
+- **Backend - Vercel:** Project Settings -> Environment Variables ->
+  `BACKEND_API_SECRET` (all environments), then redeploy.
+- **Backend - Cloudflare Pages:** Settings -> Variables and Secrets ->
+  `BACKEND_API_SECRET` (encrypted), then redeploy. `process.env` is
+  auto-populated from Pages variables (compat date >= 2025-04-01).
+
+### Frontend: the key must NEVER live in the browser
+
+A key placed in a browser-facing `.env` (e.g. `VITE_*`/`NEXT_PUBLIC_*`) is
+**public** - it ships to every visitor. OffAnime's frontend is a separate,
+statically-deployed site, so this backend repo cannot hide a private key on
+its behalf:
+
+- The frontend repo needs a **server-side proxy** (e.g. Next.js server route /
+  Vercel Function / Pages Function) that keeps `BACKEND_API_SECRET` and the
+  private backend base URL in ITS OWN server environment, adds
+  `Authorization: Bearer <BACKEND_API_SECRET>` when calling this backend, and
+  exposes only the public proxy URL to browser code.
+- Browser code should know the public backend/proxy base URL only. The secret
+  must never appear in client bundles, HTML, JS, URLs, or query params.
+- If such a proxy is NOT built, browser access to protected endpoints will
+  correctly fail with `401` - that is the protection working as designed.
+- A proxy must be route-restricted (forward only the intended `/api/*` paths
+  and methods), never an arbitrary-URL forwarder (no open proxy).
+
 ## Identity system (critical)
 
 AniList IDs and MyAnimeList (MAL) IDs are **different namespaces**. They are
@@ -293,6 +369,15 @@ node scripts/megaplay-smoke.js 101922 1 sub   # manual live smoke (real MegaPlay
 See `.env.example` for the full annotated list. New variables must be added to
 the schema in `src/config/env.js` (the app fails fast with a clear message if a
 required variable is missing). Never commit real secrets; `.env` is gitignored.
+
+Key variables for API protection (see "API key protection" above):
+
+- Backend (server-side only): `BACKEND_API_SECRET` - the credential every
+  protected `/api/*` request must present. Fail closed in production when
+  missing.
+- Frontend server-side proxy runtime (only once the proxy exists):
+  `BACKEND_API_SECRET` (same value) plus the private backend base URL.
+- Frontend browser: the public backend/proxy base URL only - never the secret.
 
 ## Phase 2 — AniList
 

@@ -13,6 +13,7 @@
 import { Router } from 'express';
 
 import { API_PREFIX } from '../config/constants.js';
+import { apiKeyAuth } from '../middleware/api-key-auth.js';
 import healthRoutes from './health.routes.js';
 import homeRoutes from './home.routes.js';
 import searchRoutes from './search.routes.js';
@@ -28,7 +29,17 @@ import tmdbRoutes from './tmdb.routes.js';
 export function registerRoutes(app) {
   const api = Router();
 
+  // PUBLIC: /api/health is the only route registered BEFORE the API-key
+  // middleware. Deployment health probes cannot carry secrets and the endpoint
+  // leaks no sensitive data (see README "API key protection").
   api.use(healthRoutes); //    /health
+
+  // PROTECTED: everything mounted below requires a valid API key
+  // (Authorization: Bearer <BACKEND_API_SECRET>, or x-api-key). ONE central
+  // registration - controllers never duplicate credential checks. OPTIONS
+  // preflight requests pass through untouched (handled inside the middleware).
+  api.use(apiKeyAuth());
+
   api.use(homeRoutes); //      /home, /schedule
   api.use(searchRoutes); //    /search, /top-search
   api.use(animeRoutes); //     /details, /smart/details, /episodes, /recommendations, /seasons, /category

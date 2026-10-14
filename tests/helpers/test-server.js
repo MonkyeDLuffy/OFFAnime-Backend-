@@ -31,6 +31,16 @@ export function anilistRequestBody(call) {
 
 /**
  * Start the app on a random free port and return its base URL + a stop fn.
+ *
+ * While the server runs, the global fetch is wrapped so every LOCALHOST
+ * request automatically carries the configured test API key
+ * (`Authorization: Bearer <BACKEND_API_SECRET>`). Provider calls made BY the
+ * app go to external hosts and are untouched. Existing endpoint tests therefore
+ * keep calling plain `fetch(baseUrl + path)` while the fail-closed API-key
+ * middleware is active; tests that verify REJECTION send requests without the
+ * key via a raw fetch captured before this wrapper (or rely on it being
+ * removed in `stop()`).
+ *
  * @returns {Promise<{ baseUrl: string, stop: () => Promise<void> }>}
  */
 export async function startTestServer() {
@@ -39,9 +49,34 @@ export async function startTestServer() {
   const server = app.listen(0);
   await new Promise((resolve) => server.once('listening', resolve));
   const { port } = server.address();
+
+  const secret = process.env.BACKEND_API_SECRET;
+  /** @type {(() => void) | null} */
+  let unwrapFetch = null;
+  if (secret) {
+    const previous = globalThis.fetch;
+    globalThis.fetch = (url, init = {}) => {
+      const target = String(url);
+      if (target.includes('127.0.0.1') || target.includes('localhost')) {
+        init = {
+          ...init,
+          headers: { ...(init.headers ?? {}), Authorization: `Bearer ${secret}` },
+        };
+      }
+      return previous(url, init);
+    };
+    unwrapFetch = () => {
+      globalThis.fetch = previous;
+    };
+  }
+
   return {
     baseUrl: `http://127.0.0.1:${port}`,
-    stop: () => new Promise((resolve) => server.close(resolve)),
+    stop: async () => {
+      unwrapFetch?.();
+      unwrapFetch = null;
+      await new Promise((resolve) => server.close(resolve));
+    },
   };
 }
 

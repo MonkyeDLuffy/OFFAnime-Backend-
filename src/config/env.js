@@ -60,6 +60,14 @@ const schema = {
 
   CORS_ORIGIN: { default: '*', description: 'Comma-separated allowed origins or "*".' },
 
+  // SECRET - server-side only; required credential for every protected /api/*
+  // route (see src/middleware/api-key-auth.js). Never exposed to the frontend,
+  // never placed in URLs/query params, and never logged. A missing value FAILS
+  // CLOSED in EVERY environment (dev included): protected requests are
+  // rejected (500) rather than silently served unauthenticated. Local
+  // development must set a value in .env, exactly like production does.
+  BACKEND_API_SECRET: { required: false, secret: true, default: '' },
+
   ANILIST_API_URL: { default: 'https://graphql.anilist.co' },
   JIKAN_API_URL: { default: 'https://api.jikan.moe/v4' },
   TMDB_API_URL: { default: 'https://api.themoviedb.org/3' },

@@ -21,6 +21,13 @@ export class ValidationError extends AppError {
   }
 }
 
+/** 401 - the caller is not authenticated (missing/invalid API key). */
+export class UnauthorizedError extends AppError {
+  constructor(message = 'Unauthorized', details) {
+    super(message, { statusCode: 401, code: ERROR_CODES.UNAUTHORIZED, details });
+  }
+}
+
 /** 404 - the requested resource does not exist. */
 export class NotFoundError extends AppError {
   constructor(message = 'Resource not found', details) {
