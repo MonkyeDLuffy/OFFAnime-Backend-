@@ -21,6 +21,7 @@ import animeRoutes from './anime.routes.js';
 import streamingRoutes from './streaming.routes.js';
 import jikanRoutes from './jikan.routes.js';
 import tmdbRoutes from './tmdb.routes.js';
+import authRoutes from './auth.routes.js';
 
 /**
  * Attach all routers to the app under {@link API_PREFIX}.
@@ -38,8 +39,15 @@ export function registerRoutes(app) {
   // (Authorization: Bearer <BACKEND_API_SECRET>, or x-api-key). ONE central
   // registration - controllers never duplicate credential checks. OPTIONS
   // preflight requests pass through untouched (handled inside the middleware).
+  //
+  // /api/auth/* is included DELIBERATELY: login/signup must arrive through a
+  // trusted server-side proxy that adds the API key (the browser never holds
+  // the secret). User sessions (Authorization: Bearer <access_token> /
+  // session cookie) are a SEPARATE layer enforced inside the auth routes
+  // (requireUser) - they never substitute for the API key.
   api.use(apiKeyAuth());
 
+  api.use(authRoutes); //      /auth/* (Supabase Auth; API key + per-route session policy)
   api.use(homeRoutes); //      /home, /schedule
   api.use(searchRoutes); //    /search, /top-search
   api.use(animeRoutes); //     /details, /smart/details, /episodes, /recommendations, /seasons, /category

@@ -68,6 +68,24 @@ export const STREAM_LANGUAGES = Object.freeze({
 });
 
 /**
+ * User-authentication (Supabase Auth) constants.
+ *
+ * Session architecture: token-first (the JSON body of login/signup/refresh
+ * carries access/refresh tokens for `Authorization: Bearer` use from ANY
+ * frontend/domain), PLUS optional HttpOnly cookies for same-site deployments.
+ * The cookies are host-only (no Domain attribute) and the refresh cookie is
+ * path-scoped to the auth endpoints so it is never sent with data requests.
+ */
+export const AUTH_COOKIES = Object.freeze({
+  ACCESS: 'offanime_session',
+  REFRESH: 'offanime_refresh',
+  REFRESH_PATH: '/api/auth',
+});
+
+/** Email one-time-token types accepted by POST /api/auth/verify. */
+export const AUTH_VERIFY_TYPES = Object.freeze(['signup', 'recovery']);
+
+/**
  * Streaming cache TTLs (seconds). Streaming data is MORE volatile than anime
  * metadata: MegaPlay stream URLs/sources can rotate or expire independently
  * of the metadata caches, so valid stream results use a conservative SHORT

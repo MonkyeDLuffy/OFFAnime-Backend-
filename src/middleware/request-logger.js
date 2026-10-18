@@ -10,6 +10,7 @@
  */
 
 import { logger as rootLogger } from '../utils/logger.js';
+import { redactApiKeyFromUrl } from '../utils/url-redact.js';
 
 /** @returns {import('express').RequestHandler} */
 export function requestLogger() {
@@ -20,7 +21,9 @@ export function requestLogger() {
     res.on('finish', () => {
       const context = {
         method: req.method,
-        path: req.originalUrl,
+        // The api_key query value (optional direct-access auth) is redacted -
+        // raw query strings must never reach the logs with the secret intact.
+        path: redactApiKeyFromUrl(req.originalUrl),
         status: res.statusCode,
         latencyMs: Date.now() - start,
       };

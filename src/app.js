@@ -37,10 +37,16 @@ export function createApp() {
   app.disable('x-powered-by');
 
   // CORS: the frontend (offanime.cc) is a separate origin calling this API.
+  // Credentials (cookies for the user-session mode) require an EXPLICIT origin
+  // allowlist - the spec forbids `Access-Control-Allow-Origin: *` together
+  // with `Access-Control-Allow-Credentials: true`, so wildcard CORS keeps
+  // credentials disabled (the token/Bearer flow does not need cookie CORS).
+  // Production deployments that use cookie sessions MUST set CORS_ORIGIN to
+  // the frontend origins.
   const corsOrigin = config.CORS_ORIGIN === '*'
     ? '*'
     : String(config.CORS_ORIGIN).split(',').map((o) => o.trim()).filter(Boolean);
-  app.use(cors({ origin: corsOrigin }));
+  app.use(cors({ origin: corsOrigin, credentials: corsOrigin !== '*' }));
 
   // JSON body parsing (bounded to avoid abuse). GET-only for now, but harmless.
   app.use(express.json({ limit: '1mb' }));

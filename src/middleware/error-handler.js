@@ -17,6 +17,7 @@
 
 import { AppError, InternalError } from '../errors/index.js';
 import { logger as rootLogger } from '../utils/logger.js';
+import { redactApiKeyFromUrl } from '../utils/url-redact.js';
 import { config } from '../config/env.js';
 
 /**
@@ -35,10 +36,11 @@ export function errorHandler(err, req, res, next) {
         });
 
   // 5xx and non-operational errors are logged at error level; 4xx at warn.
+  // The api_key query value (optional direct-access auth) is redacted.
   const isServerError = appError.statusCode >= 500;
   log[isServerError ? 'error' : 'warn']('request.error', {
     method: req.method,
-    path: req.originalUrl,
+    path: redactApiKeyFromUrl(req.originalUrl),
     status: appError.statusCode,
     code: appError.code,
     err: appError,

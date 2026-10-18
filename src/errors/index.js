@@ -28,6 +28,48 @@ export class UnauthorizedError extends AppError {
   }
 }
 
+/** 403 - authenticated but not allowed (e.g. CSRF/origin rejection). */
+export class ForbiddenError extends AppError {
+  constructor(message = 'Forbidden', details) {
+    super(message, { statusCode: 403, code: ERROR_CODES.FORBIDDEN, details });
+  }
+}
+
+/** 401 - Supabase Auth rejected the presented credentials (login). */
+export class InvalidCredentialsError extends AppError {
+  constructor(message = 'Invalid email or password', details) {
+    super(message, { statusCode: 401, code: ERROR_CODES.AUTH_INVALID_CREDENTIALS, details });
+  }
+}
+
+/** 403 - the account exists but the email address is not confirmed yet. */
+export class EmailNotConfirmedError extends AppError {
+  constructor(message = 'Email address is not confirmed', details) {
+    super(message, { statusCode: 403, code: ERROR_CODES.AUTH_EMAIL_NOT_CONFIRMED, details });
+  }
+}
+
+/** 409 - signup with an email that is already registered. */
+export class EmailTakenError extends AppError {
+  constructor(message = 'An account with this email already exists', details) {
+    super(message, { statusCode: 409, code: ERROR_CODES.AUTH_EMAIL_TAKEN, details });
+  }
+}
+
+/** 401 - a user session token (or one-time email token) is invalid/expired. */
+export class SessionExpiredError extends AppError {
+  constructor(message = 'Session is invalid or expired', details) {
+    super(message, { statusCode: 401, code: ERROR_CODES.AUTH_SESSION_EXPIRED, details });
+  }
+}
+
+/** 502 - the Supabase Auth (GoTrue) upstream failed unexpectedly. */
+export class AuthProviderError extends AppError {
+  constructor(message = 'Authentication provider error', { details, cause } = {}) {
+    super(message, { statusCode: 502, code: ERROR_CODES.AUTH_PROVIDER, details, cause });
+  }
+}
+
 /** 404 - the requested resource does not exist. */
 export class NotFoundError extends AppError {
   constructor(message = 'Resource not found', details) {

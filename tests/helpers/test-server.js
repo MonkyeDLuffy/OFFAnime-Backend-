@@ -91,9 +91,14 @@ export async function startTestServer() {
  * @param {(url: string, call: object) => Promise<Response | object> | Response | object} [handlers.jikan]
  * @param {(url: string, call: object) => Promise<Response | object> | Response | object} [handlers.tmdb]
  * @param {(url: string, call: object) => Promise<Response | object> | Response | object} [handlers.megaplay]
+ * @param {(url: string, call: object) => Promise<Response | object> | Response | object} [handlers.supabaseAuth]
+ *   Supabase Auth (GoTrue) requests - routed by the `/auth/v1/` path segment
+ *   regardless of project host.
+ * @param {(url: string, call: object) => Promise<Response | object> | Response | object} [handlers.supabaseRest]
+ *   Supabase PostgREST (L2 cache) requests - routed by the `/rest/v1/` path.
  * @returns {{ calls: Array<object>, restore: () => void }}
  */
-export function installApiMocks({ anilist, jikan, tmdb, megaplay, anizip } = {}) {
+export function installApiMocks({ anilist, jikan, tmdb, megaplay, anizip, supabaseAuth, supabaseRest } = {}) {
   const original = globalThis.fetch;
   /** @type {Array<object>} */
   const calls = [];
@@ -145,6 +150,14 @@ export function installApiMocks({ anilist, jikan, tmdb, megaplay, anizip } = {})
       if (!anizip) throw new Error(`unexpected AniZip request: ${call.url}`);
       return asResponse(await anizip(call.url, call));
     }
+    if (call.url.includes('/auth/v1/')) {
+      if (!supabaseAuth) throw new Error(`unexpected Supabase Auth request: ${call.url}`);
+      return asResponse(await supabaseAuth(call.url, call));
+    }
+    if (call.url.includes('/rest/v1/')) {
+      if (!supabaseRest) throw new Error(`unexpected Supabase REST request: ${call.url}`);
+      return asResponse(await supabaseRest(call.url, call));
+    }
     throw new Error(`unexpected fetch to non-provider host: ${call.url}`);
   };
 
@@ -163,6 +176,10 @@ export function installApiMocks({ anilist, jikan, tmdb, megaplay, anizip } = {})
     megaplayCalls: () => calls.filter((c) => c.url.includes('megaplay')),
     /** All AniZip call URLs. */
     anizipCalls: () => calls.filter((c) => c.url.includes('api.ani.zip')).map((c) => c.url),
+    /** All Supabase Auth (GoTrue) calls. */
+    supabaseAuthCalls: () => calls.filter((c) => c.url.includes('/auth/v1/')),
+    /** All Supabase PostgREST (L2 cache) calls. */
+    supabaseRestCalls: () => calls.filter((c) => c.url.includes('/rest/v1/')),
     restore: () => {
       globalThis.fetch = original;
     },

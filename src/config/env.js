@@ -43,6 +43,13 @@ const toNumber = (value) => {
   return n;
 };
 
+const toBoolean = (value) => {
+  const normalized = String(value).trim().toLowerCase();
+  if (normalized === 'true' || normalized === '1') return true;
+  if (normalized === 'false' || normalized === '0') return false;
+  throw new Error(`expected a boolean but received "${value}"`);
+};
+
 /**
  * Declarative schema for every environment variable the backend understands.
  * Add new variables here (and to .env.example) as later phases need them.
@@ -86,6 +93,19 @@ const schema = {
   // SECRET - server-side only; preferred over the anon key for L2 cache access
   // because it bypasses RLS. Never exposed to the frontend or logs.
   SUPABASE_SERVICE_ROLE_KEY: { required: false, secret: true, default: '' },
+
+  // --- User authentication (Supabase Auth / GoTrue - server-side only) --------
+  // The auth endpoints (src/routes/auth.routes.js) talk to Supabase Auth with
+  // the PUBLIC anon key ONLY - never the service-role key. A missing
+  // SUPABASE_URL or SUPABASE_ANON_KEY fails closed (500) like the API-key
+  // middleware: auth endpoints reject requests instead of silently degrading.
+  // AUTH_COOKIES_ENABLED additionally sets HttpOnly session cookies on the
+  // login/signup/refresh responses (token responses are the universal primary
+  // mechanism; cookies are the recommended upgrade for same-site deployments).
+  AUTH_COOKIES_ENABLED: { default: 'true', transform: toBoolean },
+  // Max-Age (seconds) for the refresh-token cookie. Access-token cookies are
+  // always scoped to the upstream-issued session lifetime (expires_in).
+  AUTH_REFRESH_COOKIE_MAX_AGE_SECONDS: { default: '2592000', transform: toNumber },
 
   CACHE_DEFAULT_TTL_SECONDS: { default: '300', transform: toNumber },
   REQUEST_TIMEOUT_MS: { default: '10000', transform: toNumber },

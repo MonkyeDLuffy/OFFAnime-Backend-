@@ -60,6 +60,18 @@ test('development WITHOUT a configured secret: /api/health stays public', async 
   }
 });
 
+test('development WITHOUT a configured secret: query param cannot bypass fail-closed (500)', async () => {
+  await resetL1Cache();
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/search?q=cowboy&api_key=whatever-value`);
+    assert.equal(res.status, 500);
+    assert.equal((await res.json()).error.code, 'INTERNAL_ERROR');
+  } finally {
+    await server.stop();
+  }
+});
+
 test('development WITHOUT a configured secret: CORS preflight still works', async () => {
   const server = await startTestServer();
   try {

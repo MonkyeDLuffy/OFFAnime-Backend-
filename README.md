@@ -155,7 +155,9 @@ credential checks.
 
 **Protected routes:** everything else under `/api` (`/home`, `/search`,
 `/top-search`, `/details`, `/smart/details`, `/episodes`, `/stream/resolve`,
-`/jikan/*`, `/tmdb`, `/recommendations`, `/seasons`, `/category`, `/schedule`).
+`/jikan/*`, `/tmdb`, `/recommendations`, `/seasons`, `/category`, `/schedule`,
+and the whole `/auth/*` group - login/signup MUST arrive through the trusted
+proxy; see "User authentication" below).
 
 **Request header format** (either one; Bearer is preferred):
 
@@ -164,19 +166,75 @@ Authorization: Bearer <BACKEND_API_SECRET>
 x-api-key: <BACKEND_API_SECRET>
 ```
 
+Header credentials are accepted on EVERY protected route and method. This is
+what the frontend server-side proxy uses - that flow is unchanged. When BOTH
+headers are presented they are evaluated as independent candidates and the
+check passes when AT LEAST ONE equals the secret: this is what allows the
+proxy to forward its own `x-api-key` ALONGSIDE a user's session token in
+`Authorization: Bearer` on `/api/auth/*` requests (a user session token is
+NEVER treated as an API key by itself, and the query-param conflict rule still
+applies - see below).
+
+### Optional `?api_key=` query parameter (direct/manual access only)
+
+For human testing directly from a browser URL bar, an approved subset of GET
+endpoints ALSO accepts the key as a query parameter:
+
+```text
+GET /api/details/20?api_key=<BACKEND_API_SECRET>
+```
+
+**Approved GET endpoints only** (`QUERY_KEY_APPROVED_GET_PATHS` in
+`src/middleware/api-key-auth.js` - the explicit allowlist, not a global rule):
+
+`/home`, `/search`, `/top-search`, `/schedule`, `/category/:type`,
+`/details/:id`, `/smart/details/:id`, `/episodes/:id`, `/recommendations/:id`,
+`/seasons/:id`, `/jikan/anime/:malId`, `/jikan/from-anilist/:id`, `/tmdb/:id`.
+
+**NOT approved:** the streaming/playback route (`/stream/resolve/:id`), every
+non-GET method (POST/PUT/DELETE/...), and any unapproved/unknown path. A valid
+key alone in the query string does NOT authorize those - they return `401`.
+CORS preflights and user-agent strings prove nothing (both are trivially
+forgeable by scripts); the allowlist + method check is the only gate.
+
+**Precedence rule:** when both a header and a query credential are supplied,
+they must be IDENTICAL. Conflicting values are rejected outright with `401`
+(`Conflicting API credentials`) BEFORE any policy check, so an invalid
+credential can never ride along with - or override - a valid one. Identical
+values are treated as the header credential (header policy applies). Only
+query-ONLY authentication is restricted by the allowlist.
+
+**Security caveats (read before using):**
+
+- Query-string keys are strictly LESS secure than header keys: they leak into
+  browser history, shared/copied URLs, Referer headers, and infrastructure
+  access logs (CDN, load balancer, reverse proxy). This backend redacts the
+  value from its OWN logs and error messages (see `src/utils/url-redact.js`)
+  but cannot control other infrastructure. Intended for manual testing only -
+  do not embed in production client code.
+- The middleware deletes `req.query.api_key` before any controller, service,
+  or cache layer runs, so the value never reaches cache keys, downstream
+  providers, or error details. Malformed values (repeated/nested query syntax)
+  can never validate.
+- A CORS preflight or a "browser-like" request is never treated as proof a
+  human sent it.
+
 **Behavior:**
 
 - Missing or invalid key -> `401` with the standard error shape
-  (`{ "error": { "code": "UNAUTHORIZED_ERROR", "message": "..." } }`).
+  (`{ "error": { "code": "UNAUTHORIZED_ERROR", "message": "..." } }`). Error
+  messages never echo the presented key.
 - Comparison is constant-time (SHA-256 digests + `timingSafeEqual`).
 - The secret comes ONLY from the server-side env var `BACKEND_API_SECRET`
   (`src/config/env.js`). It is never hardcoded, never returned in a response,
-  never logged, and never placed in URLs or query params.
+  and never logged. (The OPTIONAL query-parameter method above is the single,
+  deliberate exception to "never in query params" - restricted exactly as
+  documented there.)
 - **Fail closed everywhere (dev included):** a missing `BACKEND_API_SECRET`
   rejects every protected request with `500` ("API authentication is not
-  configured") in ALL environments - there is no development bypass. Local
-  development must set a value in `.env`, exactly like production does on the
-  platform dashboard.
+  configured") in ALL environments - there is no development bypass, and a
+  query parameter cannot bypass it. Local development must set a value in
+  `.env`, exactly like production does on the platform dashboard.
 
 ### Environment configuration
 
@@ -213,6 +271,113 @@ its behalf:
   correctly fail with `401` - that is the protection working as designed.
 - A proxy must be route-restricted (forward only the intended `/api/*` paths
   and methods), never an arbitrary-URL forwarder (no open proxy).
+
+## User authentication (Supabase Auth)
+
+User accounts are handled by **Supabase Auth (GoTrue)**, called server-side by
+this backend (`src/services/supabase-auth.service.js`). The backend NEVER
+stores or hashes passwords, and never uses the service-role key for
+authentication - GoTrue is called with the **public anon key** only, so a
+future user-data layer can keep enforcing per-user RLS (the backend never acts
+as a database superuser on a user's behalf).
+
+**IMPORTANT - status:** the backend auth API is implemented and tested end to
+end against a mocked GoTrue. No frontend exists yet; the browser flow has NOT
+been tested end to end. Do not consider the login migration "complete" until a
+frontend consumes these endpoints through its trusted proxy and the full
+signup -> confirm -> login -> me -> refresh -> logout cycle is exercised
+against a real Supabase project.
+
+### Endpoints
+
+| Method | Path                       | API key | User session | Purpose |
+| ------ | -------------------------- | ------- | ------------ | ------- |
+| POST   | `/api/auth/signup`         | yes     | no           | Create account (Supabase Auth) |
+| POST   | `/api/auth/login`          | yes     | no           | Password grant -> user + session |
+| POST   | `/api/auth/logout`         | yes     | yes (token)  | Revoke session upstream + clear cookies |
+| GET    | `/api/auth/me`             | yes     | yes          | Current user (token verified upstream) |
+| POST   | `/api/auth/refresh`        | yes     | refresh token| Rotate session |
+| POST   | `/api/auth/password-reset` | yes     | no           | Request reset email (uniform response) |
+| POST   | `/api/auth/verify`         | yes     | no           | Exchange one-time email token -> session |
+| POST   | `/api/auth/password-update`| yes     | yes          | Set new password (verified session) |
+| POST   | `/api/auth/resend`         | yes     | no           | Resend confirmation/recovery email |
+
+"API key" means the `BACKEND_API_SECRET` credential (X-API-Key header) - i.e.
+auth requests arrive **through the trusted server-side proxy** exactly like
+data requests. A user session token is never a substitute for the API key, and
+the API key never substitutes for a user session.
+
+### Session architecture (and why)
+
+Deployment topology: static frontend on `offanime.cc`, backend on Vercel, final
+backend domain not yet decided. Two mechanisms are supported simultaneously:
+
+1. **Tokens in the JSON body (primary, universal).** `signup`/`login`/`refresh`
+   return `{ user, session: { accessToken, refreshToken, tokenType, expiresIn,
+   expiresAt } }`. The frontend (or its proxy) sends
+   `Authorization: Bearer <accessToken>` on session endpoints. This works from
+   ANY domain, through ANY trusted proxy, regardless of how the backend domain
+   is eventually decided. `expiresAt` lets clients refresh proactively (avoid
+   refresh loops: on `AUTH_SESSION_EXPIRED` refresh ONCE and retry, then log
+   out).
+2. **HttpOnly cookies (recommended upgrade for same-site deployments).** When
+   `AUTH_COOKIES_ENABLED=true` (default), the same responses also set:
+   - `offanime_session` - access token; HttpOnly, Secure (production),
+     SameSite=Lax, `Path=/`, lifetime = upstream `expires_in`.
+   - `offanime_refresh` - refresh token; HttpOnly, Secure, SameSite=Lax,
+     `Path=/api/auth` (never attached to data requests), Max-Age
+     `AUTH_REFRESH_COOKIE_MAX_AGE_SECONDS` (default 30 days).
+   Cookies work when the browser-facing origin and the backend share a site
+   (e.g. frontend proxy on `offanime.cc` forwarding to `api.offanime.cc`, with
+   the proxy passing `Cookie`/`Set-Cookie` headers through unchanged). If the
+   backend stays on a `*.vercel.app` host, browsers treat it as cross-SITE:
+   Safari (and increasingly Chrome) drop those cookies - harmless, the token
+   flow keeps working. `SameSite=None` cross-site cookies are deliberately NOT
+   used.
+
+**Session verification:** every protected request verifies the access token
+UPSTREAM with Supabase (`GET /auth/v1/user`). There is no local JWT decode
+that could be spoofed, revocation takes effect immediately, and identity NEVER
+comes from a client-submitted user id.
+
+**CSRF:** state-changing requests that arrived with a session COOKIE require
+the `Origin`/`Referer` to match the `CORS_ORIGIN` allowlist (403 otherwise) -
+defense in depth on top of SameSite=Lax. Bearer-token requests are immune by
+construction and skip the check. Requests without an Origin (curl,
+server-to-server) pass.
+
+**CORS:** `credentials: true` is emitted only when `CORS_ORIGIN` is an explicit
+origin list (the spec forbids credentialed wildcard CORS). Cookie mode REQUIRES
+`CORS_ORIGIN` to list the frontend origins.
+
+**Email flows:** confirmation / recovery emails are sent by Supabase (dashboard
+SMTP + "Site URL" and redirect settings). One-time link tokens are exchanged
+via `POST /api/auth/verify` (`type: 'signup'|'recovery'`, `token` or
+`tokenHash`) so even link completion stays within the backend API.
+
+### Error codes (auth)
+
+`AUTH_INVALID_CREDENTIALS` (401), `AUTH_EMAIL_NOT_CONFIRMED` (403),
+`AUTH_EMAIL_TAKEN` (409), `AUTH_SESSION_EXPIRED` (401 - refresh once),
+`AUTH_PROVIDER_ERROR` (502 - GoTrue down/unexpected), plus the generic
+`VALIDATION_ERROR` (400) / `UNAUTHORIZED_ERROR` (401) shapes. Upstream GoTrue
+error bodies are never forwarded; passwords and tokens are never logged or
+echoed.
+
+### Supabase dashboard + RLS checklist
+
+- Use the **anon key** in `SUPABASE_ANON_KEY` (backend env). The
+  **service-role key** (`SUPABASE_SERVICE_ROLE_KEY`) is for the L2 cache table
+  ONLY - never for auth, never in the frontend.
+- Apply `supabase/migrations/20260101000000_create_user_profiles_rls.sql` as
+  the RLS baseline when user-owned tables are introduced: RLS enabled,
+  policies keyed on `auth.uid()`, every row carries `user_id`.
+- When a backend feature queries user-owned tables, it MUST forward the USER's
+  access token to PostgREST (`Authorization: Bearer <user token>`,
+  `apikey: <anon key>`) so RLS evaluates as that user. Never query user-owned
+  data with the service-role key.
+- Users cannot access another user's data by changing IDs: identity comes from
+  the verified token, and RLS scopes every row to its owner.
 
 ## Identity system (critical)
 
@@ -378,6 +543,17 @@ Key variables for API protection (see "API key protection" above):
 - Frontend server-side proxy runtime (only once the proxy exists):
   `BACKEND_API_SECRET` (same value) plus the private backend base URL.
 - Frontend browser: the public backend/proxy base URL only - never the secret.
+
+Key variables for user authentication (see "User authentication" above):
+
+- Backend (server-side only): `SUPABASE_URL` + `SUPABASE_ANON_KEY` (public
+  key, but kept server-side) - used for ALL GoTrue calls. `SUPABASE_SERVICE_ROLE_KEY`
+  remains cache-only and is never used for authentication.
+- Backend (optional): `AUTH_COOKIES_ENABLED` (default `true`),
+  `AUTH_REFRESH_COOKIE_MAX_AGE_SECONDS` (default 30 days).
+- Frontend: NOTHING new - the browser talks to the trusted proxy (or the
+  backend base URL) and stores the session tokens it receives; no Supabase
+  credentials belong in the frontend.
 
 ## Phase 2 — AniList
 

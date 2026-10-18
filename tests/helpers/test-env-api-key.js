@@ -1,11 +1,8 @@
 /**
- * Test env setup with an API-key secret CONFIGURED (development mode).
- * Import as the FIRST static import of a test file: ESM evaluates imports
- * depth-first in import order, so this module body runs BEFORE any application
- * module (config/env.js - loaded transitively by helpers/test-server.js).
- *
- * The secret is a TEST-ONLY value; a local .env can never leak in because
- * dotenv does not override pre-set variables.
+ * Test env setup for API-key QUERY-PARAMETER auth tests: development mode with
+ * a configured (test-only) secret. Import as the FIRST static import of a
+ * test file (runs before config/env.js loads transitively via
+ * helpers/test-server.js).
  */
 
 import './test-env.js';

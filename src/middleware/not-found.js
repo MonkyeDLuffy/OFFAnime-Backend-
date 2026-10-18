@@ -7,8 +7,12 @@
  */
 
 import { NotFoundError } from '../errors/index.js';
+import { redactApiKeyFromUrl } from '../utils/url-redact.js';
 
 /** @type {import('express').RequestHandler} */
 export function notFoundHandler(req, _res, next) {
-  next(new NotFoundError(`Route not found: ${req.method} ${req.originalUrl}`));
+  // The api_key query value (optional direct-access auth) is redacted - this
+  // message reaches BOTH the logs and the 404 response body, so the raw key
+  // must never appear in it.
+  next(new NotFoundError(`Route not found: ${req.method} ${redactApiKeyFromUrl(req.originalUrl)}`));
 }
