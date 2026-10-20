@@ -33,9 +33,13 @@ import { NotFoundError, ProviderError, ValidationError } from '../../errors/inde
 import { parseRequiredId } from '../../identity/id-types.js';
 import {
   movieDetailsPath,
+  movieImagesPath,
   movieSearchPath,
+  movieVideosPath,
   tvDetailsPath,
+  tvImagesPath,
   tvSearchPath,
+  tvVideosPath,
   tvSeasonPath,
 } from './tmdb.queries.js';
 
@@ -96,6 +100,44 @@ export class TmdbProvider extends BaseProvider {
    */
   async getMovieDetails(tmdbId) {
     return this._details(movieDetailsPath, tmdbId, 'movie');
+  }
+
+  /**
+   * Raw TMDB TV image metadata ({ id, backdrops, logos, posters } with
+   * per-image dimensions/languages). Normalization lives in src/normalizers.
+   * @param {number|string} tmdbId
+   * @returns {Promise<Record<string, unknown>>}
+   */
+  async getTvImages(tmdbId) {
+    return this._details(tvImagesPath, tmdbId, 'tv images');
+  }
+
+  /**
+   * Raw TMDB movie image metadata ({ id, backdrops, logos, posters } with
+   * per-image dimensions/languages). Normalization lives in src/normalizers.
+   * @param {number|string} tmdbId
+   * @returns {Promise<Record<string, unknown>>}
+   */
+  async getMovieImages(tmdbId) {
+    return this._details(movieImagesPath, tmdbId, 'movie images');
+  }
+
+  /**
+   * Raw TMDB TV video metadata ({ id, results: [...] } trailers/teasers).
+   * @param {number|string} tmdbId
+   * @returns {Promise<Record<string, unknown>>}
+   */
+  async getTvVideos(tmdbId) {
+    return this._details(tvVideosPath, tmdbId, 'tv videos');
+  }
+
+  /**
+   * Raw TMDB movie video metadata ({ id, results: [...] } trailers/teasers).
+   * @param {number|string} tmdbId
+   * @returns {Promise<Record<string, unknown>>}
+   */
+  async getMovieVideos(tmdbId) {
+    return this._details(movieVideosPath, tmdbId, 'movie videos');
   }
 
   /**

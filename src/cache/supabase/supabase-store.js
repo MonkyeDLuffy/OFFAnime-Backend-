@@ -76,7 +76,7 @@ export class SupabaseStore extends CacheStore {
    * collisions are impossible:
    *   anilist:anime:123       -> namespace "anilist", cache_key "anime:123"
    *   jikan:anime:123         -> namespace "jikan",  cache_key "anime:123"
-   *   tmdb:visual:anilist:123 -> namespace "tmdb",    cache_key "visual:anilist:123"
+   *   tmdb:visual:v2:anilist:123 -> namespace "tmdb", cache_key "visual:v2:anilist:123"
    * @param {string} key
    * @returns {{ namespace: string, cacheKey: string }}
    */

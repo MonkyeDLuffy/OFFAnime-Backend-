@@ -272,15 +272,15 @@ test('namespace safety: key splitting preserves full namespace separation', asyn
   assert.deepEqual(store._splitKey('anilist:anime:123'), { namespace: 'anilist', cacheKey: 'anime:123' });
   assert.deepEqual(store._splitKey('jikan:anime:123'), { namespace: 'jikan', cacheKey: 'anime:123' });
   assert.deepEqual(store._splitKey('mal:anime:123'), { namespace: 'mal', cacheKey: 'anime:123' });
-  assert.deepEqual(store._splitKey('tmdb:visual:anilist:123'), { namespace: 'tmdb', cacheKey: 'visual:anilist:123' });
+  assert.deepEqual(store._splitKey('tmdb:visual:v2:anilist:123'), { namespace: 'tmdb', cacheKey: 'visual:v2:anilist:123' });
   assert.deepEqual(store._splitKey('identity:anilist-to-mal:123'), { namespace: 'identity', cacheKey: 'anilist-to-mal:123' });
   assert.deepEqual(store._splitKey('plainkey'), { namespace: 'default', cacheKey: 'plainkey' });
 });
 
-test('namespace safety: tmdb:visual:anilist:123 queries the tmdb namespace', async () => {
+test('namespace safety: tmdb:visual:v2:anilist:123 queries the tmdb namespace', async () => {
   const mock = installMockFetch(() => jsonResponse([]));
   try {
-    await buildStore().get('tmdb:visual:anilist:123');
+    await buildStore().get('tmdb:visual:v2:anilist:123');
     const url = new URL(mock.calls[0].url);
     assert.equal(url.searchParams.get('namespace'), 'eq.tmdb');
     assert.equal(url.searchParams.get('cache_key'), 'eq.visual:anilist:123');
@@ -471,7 +471,7 @@ test('manager: namespace safety - same numeric ID across namespaces never collid
   try {
     assert.equal(await manager.get('anilist:anime:123'), 'anilist-value');
     assert.equal(await manager.get('jikan:anime:123'), 'jikan-value'); // different record
-    assert.equal(await manager.get('tmdb:visual:anilist:123'), null); // separate namespace
+    assert.equal(await manager.get('tmdb:visual:v2:anilist:123'), null); // separate namespace
   } finally {
     mock.restore();
   }

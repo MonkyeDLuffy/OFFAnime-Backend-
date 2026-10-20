@@ -44,6 +44,42 @@ export function tvSearchPath({ query, page } = {}) {
 export const tvDetailsPath = (tmdbId) => `/tv/${tmdbId}`;
 
 /**
+ * Languages requested for image metadata (logos/backdrops/posters). Anime
+ * logos are typically English (en), Japanese (ja) or languageless textless
+ * artwork (null) - without this parameter TMDB only returns images matching
+ * the default language, hiding most usable logos.
+ */
+const IMAGE_LANGUAGES = 'en,ja,null';
+
+/**
+ * Image metadata endpoint (logos + backdrops + posters with dimensions).
+ * @param {number} tmdbId
+ * @returns {string}
+ */
+export const tvImagesPath = (tmdbId) => `/tv/${tmdbId}/images?include_image_language=${IMAGE_LANGUAGES}`;
+
+/**
+ * Image metadata endpoint (logos + backdrops + posters with dimensions).
+ * @param {number} tmdbId
+ * @returns {string}
+ */
+export const movieImagesPath = (tmdbId) => `/movie/${tmdbId}/images?include_image_language=${IMAGE_LANGUAGES}`;
+
+/**
+ * Videos endpoint (trailers/teasers metadata).
+ * @param {number} tmdbId
+ * @returns {string}
+ */
+export const tvVideosPath = (tmdbId) => `/tv/${tmdbId}/videos`;
+
+/**
+ * Videos endpoint (trailers/teasers metadata).
+ * @param {number} tmdbId
+ * @returns {string}
+ */
+export const movieVideosPath = (tmdbId) => `/movie/${tmdbId}/videos`;
+
+/**
  * Movie search endpoint.
  * @param {{ query: string, page?: number }} options
  * @returns {string}

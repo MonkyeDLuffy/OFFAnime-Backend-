@@ -4,9 +4,10 @@
  * Uses the real Express app on an ephemeral port with a mocked global fetch
  * routed by provider host. No live AniList/Jikan/TMDB/Supabase required.
  *
- * Covered: successful response, cached response (no extra provider calls),
- * section failure omitted (no destructive empty fallback), total failure +
- * structured error, total failure with stale-if-error fallback.
+ * Covered: successful response (sections + Top 10), cached response (no extra
+ * provider calls), Top 10 cap/dedupe, section failure omitted (Top 10 follows
+ * its ranking source), total failure + structured error, total failure with
+ * stale-if-error fallback.
  */
 
 // Env setup MUST be the first import (ESM evaluates imports depth-first in
@@ -25,7 +26,7 @@ import {
   anilistPage,
 } from './helpers/test-server.js';
 
-const HOME_KEY = 'api:home:v1';
+const HOME_KEY = 'api:home:v2';
 
 /** @param {string} query */
 function anilistKind(query) {
@@ -37,17 +38,26 @@ function anilistKind(query) {
   return 'byId';
 }
 
-/** AniList handler returning a distinct page per section (by sort variable). */
-function sectionHandler({ media, failSorts = [] } = {}) {
+/**
+ * AniList handler returning a distinct page per section (by sort variable).
+ * Each section yields `perSection` entries so the Top 10 cap (10 of 12) is
+ * exercised by the default flow.
+ */
+function sectionHandler({ failSorts = [], perSection = 12, topRatedIds = null } = {}) {
   return (body) => {
     if (anilistKind(body.query) !== 'search') throw new Error(`home must only search, got: ${body.query}`);
     const sort = body.variables.sort?.[0] ?? '';
     if (failSorts.includes(sort)) return { status: 500, json: { error: 'boom' } };
-    return anilistPage([anilistMedia({ id: 100 + sort.length, idMal: 200 + sort.length, title: `Anime ${sort}` })]);
+    if (sort === 'SCORE_DESC' && topRatedIds) {
+      return anilistPage(topRatedIds.map((id) => anilistMedia({ id, idMal: id + 5000, title: `Top ${id}` })));
+    }
+    const entries = Array.from({ length: perSection }, (_, i) =>
+      anilistMedia({ id: 100 + sort.length + i, idMal: 200 + sort.length + i, title: `Anime ${sort} ${i}` }));
+    return anilistPage(entries);
   };
 }
 
-test('GET /api/home -> 200 with populated AniList-backed sections', async () => {
+test('GET /api/home -> 200 with populated AniList-backed sections + Top 10', async () => {
   await resetL1Cache();
   const mock = installApiMocks({ anilist: sectionHandler({}) });
   const server = await startTestServer();
@@ -66,11 +76,41 @@ test('GET /api/home -> 200 with populated AniList-backed sections', async () => 
       assert.ok(card.title);
     }
 
-    // Exactly 4 AniList searches (one per section), no Jikan/TMDB/MegaPlay.
+    // Top 10: dedicated collection, capped at 10, ordered by the topRated
+    // (SCORE_DESC) ranking, deduplicated by AniList ID.
+    assert.ok(Array.isArray(body.top10), 'top10 collection present');
+    assert.equal(body.top10.length, 10);
+    assert.deepEqual(body.top10.map((a) => a.anilistId), body.topRated.slice(0, 10).map((a) => a.anilistId));
+    const top10Ids = new Set(body.top10.map((a) => a.anilistId));
+    assert.equal(top10Ids.size, body.top10.length, 'no duplicate entries within Top 10');
+
+    // Exactly 4 AniList searches (one per section - Top 10 adds NO calls),
+    // no Jikan/TMDB/MegaPlay.
     assert.equal(mock.anilistCalls().length, 4);
     assert.equal(mock.jikanCalls().length, 0);
     assert.equal(mock.tmdbCalls().length, 0);
     assert.equal(mock.megaplayCalls().length, 0);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> Top 10 deduplicates by AniList ID and stays <= 10', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: sectionHandler({ topRatedIds: [7, 8, 7, 9, 7, 10, 11, 12, 13, 14, 15, 16, 17] }),
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.ok(Array.isArray(body.top10));
+    const ids = body.top10.map((a) => a.anilistId);
+    assert.deepEqual(ids, [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]); // dup 7 collapsed, cap 10
+    assert.equal(new Set(ids).size, ids.length);
   } finally {
     await server.stop();
     mock.restore();
@@ -100,7 +140,7 @@ test('GET /api/home -> second request served from cache (zero provider calls)', 
   }
 });
 
-test('GET /api/home -> one failing section is OMITTED, others survive (no destructive empty fallback)', async () => {
+test('GET /api/home -> one failing section is OMITTED, others survive (Top 10 follows its ranking source)', async () => {
   await resetL1Cache();
   const mock = installApiMocks({ anilist: sectionHandler({ failSorts: ['TRENDING_DESC'] }) });
   const server = await startTestServer();
@@ -113,6 +153,27 @@ test('GET /api/home -> one failing section is OMITTED, others survive (no destru
     assert.ok(Array.isArray(body.popular) && body.popular.length > 0);
     assert.ok(Array.isArray(body.seasonal) && body.seasonal.length > 0);
     assert.ok(Array.isArray(body.topRated) && body.topRated.length > 0);
+    // topRated loaded -> the Top 10 collection is still present.
+    assert.ok(Array.isArray(body.top10) && body.top10.length > 0);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> topRated failing omits Top 10 (no fabricated ranking)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({ anilist: sectionHandler({ failSorts: ['SCORE_DESC'] }) });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.equal(body.topRated, undefined);
+    assert.equal(body.top10, undefined);
+    assert.ok(Array.isArray(body.trending) && body.trending.length > 0);
+    assert.ok(Array.isArray(body.popular) && body.popular.length > 0);
   } finally {
     await server.stop();
     mock.restore();

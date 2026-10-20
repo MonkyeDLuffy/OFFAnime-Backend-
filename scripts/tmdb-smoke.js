@@ -31,7 +31,6 @@ try {
   const raw = await provider.searchTv(query);
   const candidates = normalizeTmdbCandidates(raw, 'tv');
   const match = selectBestMatch(candidates, { titles: [query] });
-
   console.log('LIVE TMDB SMOKE TEST OK');
   console.log(`Search "${query}" -> ${candidates.length} candidate(s)`);
   console.log('Top candidates (conservative matcher input, not auto-selected):');
@@ -45,7 +44,7 @@ try {
     }));
   }
   if (match) {
-    const visual = normalizeTmdbVisual(match);
+    const visual = normalizeTmdbVisual(match.candidate, { strategy: match.strategy });
     console.log('Confident match found (normalized visual):');
     console.log(JSON.stringify(visual, null, 2));
   } else {

@@ -233,7 +233,7 @@ All routes are mounted under **`/api`**. Auth requirement: 🔓 public,
 
 | Method | Path | Auth | Use |
 | --- | --- | --- | --- |
-| GET | `/api/home` | 🔐 | Homepage feed: `{ trending, popular, seasonal, topRated }` — arrays of normalized anime cards (AniList-backed, cached). A failing section is omitted, not fatal. |
+| GET | `/api/home` | 🔐 | Homepage feed: `{ trending, popular, seasonal, topRated, top10 }` — arrays of normalized anime cards (AniList-backed, cached). `top10` is the dedicated Top 10 collection (topRated SCORE_DESC ranking, deduplicated by AniList ID, capped at 10; no extra provider call). A failing section is omitted, not fatal (Top 10 follows its topRated ranking source). |
 | GET | `/api/schedule` | 🔐 | Airing schedule (AniList). Query: `from`/`to` (epoch seconds), `page`. Response: `{ window: { from, to }, pageInfo, results }`. Cached. |
 
 ### Search
@@ -273,7 +273,7 @@ All routes are mounted under **`/api`**. Auth requirement: 🔓 public,
 
 | Method | Path | Auth | Use |
 | --- | --- | --- | --- |
-| GET | `/api/tmdb/:id` | 🔐 | TMDB visual enrichment (backdrops/banners) for an AniList ID. `{ resolved, tmdbId, mediaType, images, poster, reason }`. No confident match → `200` with `resolved: false` (never an error, never fabricated images). |
+| GET | `/api/tmdb/:id` | 🔐 | TMDB visual enrichment + media assets for an AniList ID. `{ resolved, tmdbId, mediaType, images, poster, reason, logo, backdrops, trailer, videos }`. Logo = best transparent PNG (language/quality ranked); `backdrops` = ranked high-quality landscape entries (w1280/original URLs, dimensions); `trailer` = preferred official YouTube trailer (`{ name, key, site, type, official, url, embedUrl }`, `null` when none); `videos` = bounded trailer/teaser list. Media assets degrade to `null`/`[]` on upstream failure — never fail the request. No confident match → `200` with `resolved: false` and all media fields `null` (never an error, never fabricated). Optional `?type=mal` resolves a MAL ID via the IdentityResolver first (unknown MAL ID → `404`). |
 
 ### User authentication (Supabase Auth)
 

@@ -1,7 +1,8 @@
 /**
  * Home / discovery feed routes (LIVE since Phase 7).
  *
- *   GET /api/home      -> aggregated homepage feed (AniList-backed sections).
+ *   GET /api/home      -> aggregated homepage feed (AniList-backed sections
+ *                         + derived Top 10 collection).
  *   GET /api/schedule  -> airing schedule (AniList).
  */
 

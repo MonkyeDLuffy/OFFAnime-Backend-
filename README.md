@@ -91,7 +91,7 @@ All routes are mounted under `/api`. Phase 7 status:
 | Route | Status | Notes |
 | --- | --- | --- |
 | `GET /api/health` | **Live** - liveness probe | No provider/cache calls |
-| `GET /api/home` | **Live** | AniList-backed sections (trending/popular/seasonal/topRated), cached |
+| `GET /api/home` | **Live** | AniList-backed sections (trending/popular/seasonal/topRated) + Top 10 collection, cached |
 | `GET /api/search` | **Live** | AniList primary search; `q`, `page`, `perPage`, `season`, `year`, `format`, `status`, `genre`, `sort` |
 | `GET /api/details/:id` | **Live** | Full pipeline: AniList + Jikan enrichment + TMDB visuals, composite cache |
 | `GET /api/smart/details/:id` | **Live** | Same canonical payload as `/details/:id`; shares the identical cache key |
@@ -104,7 +104,7 @@ All routes are mounted under `/api`. Phase 7 status:
 | `GET /api/category/:type` | **Live** | Genre + special categories, validated types, `page`/`perPage` |
 | `GET /api/top-search` | **Live** | Popularity-ranked AniList suggestions, cached |
 | `GET /api/schedule` | **Live** | AniList airing schedule; `from`/`to` (epoch seconds), `page`; cached |
-| `GET /api/tmdb/:id` | **Live** | TMDB visual enrichment for an AniList ID; unresolved match -> 200 |
+| `GET /api/tmdb/:id` | **Live** | TMDB visual enrichment + media assets (logo, backdrops, trailer) for an AniList ID (`?type=mal` supported); unresolved match -> 200 |
 
 `501` responses (reserved for any future unimplemented route) use the standard
 error shape (below) with `code: "NOT_IMPLEMENTED"` - reserved routes never
@@ -117,9 +117,11 @@ ID. Any AniList -> MAL mapping is performed by the identity layer.
 
 ### Response overview
 
-- `/api/home` -> `{ trending: [...], popular: [...], seasonal: [...], topRated: [...] }`
+- `/api/home` -> `{ trending: [...], popular: [...], seasonal: [...], topRated: [...], top10: [...] }`
   (each section an array of normalized anime cards; a failing section is
-  omitted rather than emptying the whole page).
+  omitted rather than emptying the whole page; `top10` is a dedicated Top 10
+  collection ranked by the topRated SCORE_DESC source, deduplicated by
+  AniList ID, capped at 10, and omitted when its ranking source failed).
 - `/api/search`, `/api/category/:type` -> `{ pageInfo: {...}, results: [...] }`
   (normalized anime cards).
 - `/api/details/:id` (and `/smart/details/:id`) -> canonical anime shape
@@ -133,10 +135,16 @@ ID. Any AniList -> MAL mapping is performed by the identity layer.
   (normalized airing entries; AniList airing times only).
 - `/api/jikan/anime/:malId`, `/api/jikan/from-anilist/:id` -> normalized Jikan
   shape (`malId` only - never converted into `id`/`anilistId`).
-- `/api/tmdb/:id` -> visual enrichment result
-  (`{ resolved, tmdbId, mediaType, images, poster, reason }`); a missing
-  confident match is `resolved: false` - never a failure, never fabricated
-  images.
+- `/api/tmdb/:id` -> visual enrichment result PLUS additive media assets
+  (`{ resolved, tmdbId, mediaType, images, poster, reason, logo, backdrops,
+  trailer, videos }`). `logo`/`trailer` are the best-ranked transparent-PNG
+  logo / official YouTube trailer (each `null` when unavailable);
+  `backdrops` is a ranked, dimension-annotated array of high-quality TMDB
+  backdrops (falls back to the enrichment backdrop; `[]` when none);
+  `videos` is a bounded trailer/teaser list. A missing confident match is
+  `resolved: false` with all media fields `null` - never a failure, never
+  fabricated images or video keys. `?type=mal` resolves a MAL ID through the
+  identity layer first (unknown MAL ID -> 404).
 
 ## API key protection
 
@@ -1127,7 +1135,7 @@ canonical response (cached composite, MEDIUM TTL)
 
 | Endpoint | Service | Providers |
 | --- | --- | --- |
-| `GET /api/home` | `home.service.getHomeFeed` | AniList (4 cached section searches) |
+| `GET /api/home` | `home.service.getHomeFeed` | AniList (4 cached section searches; Top 10 derived from topRated - no extra calls) |
 | `GET /api/search` | `anime.service.searchAnime` | AniList only (no per-result enrichment) |
 | `GET /api/details/:id` | `anime.service.getFullDetails` | AniList -> Jikan -> TMDB |
 | `GET /api/smart/details/:id` | `anime.service.getFullDetails` | Identical composite cache key - zero duplicate calls |
@@ -1139,7 +1147,7 @@ canonical response (cached composite, MEDIUM TTL)
 | `GET /api/category/:type` | `category.service.getCategory` | AniList search (validated genre/special types) |
 | `GET /api/top-search` | `top-search.service.getTopSearch` | AniList (popularity-ranked cached search) |
 | `GET /api/schedule` | `schedule.service.getAiringSchedule` | AniList airing schedule only |
-| `GET /api/tmdb/:id` | `tmdb.controller` + `tmdb.service.enrichWithTmdb` | AniList (titles) -> TMDB (visuals only) |
+| `GET /api/tmdb/:id` | `tmdb.controller` + `tmdb.service.enrichWithTmdb` / `getTmdbMediaResponse` | AniList (titles) -> TMDB (visuals + media assets) |
 
 ### ID namespace rules (enforced)
 

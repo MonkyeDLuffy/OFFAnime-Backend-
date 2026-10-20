@@ -60,7 +60,25 @@ function anilistHandler({ anilistId, malId, title = 'Test Anime', sparseTitles =
   };
 }
 
-const tmdbMatchHandler = () => tmdbSearchResults([tmdbTvCandidate({ id: 789, name: 'Test Anime' })]);
+/**
+ * TMDB router: search results with a confident match + TV details (with a
+ * seasons list) for the season-derivation step.
+ */
+const tmdbMatchHandler = (url) => {
+  const u = String(url);
+  if (u.includes('/search/')) {
+    return tmdbSearchResults([tmdbTvCandidate({ id: 789, name: 'Test Anime' })]);
+  }
+  return {
+    status: 200,
+    json: {
+      id: 789,
+      name: 'Test Anime',
+      first_air_date: '2015-01-10',
+      seasons: [{ season_number: 1, name: 'Season 1', air_date: '2015-01-10', episode_count: 12, poster_path: null }],
+    },
+  };
+};
 
 test('details: Jikan and TMDB enrichment run concurrently (overlapping, not sequential)', async () => {
   const ANI = 123;
@@ -74,10 +92,10 @@ test('details: Jikan and TMDB enrichment run concurrently (overlapping, not sequ
       callTimes.jikanEnd = Date.now();
       return jikanAnime({});
     },
-    tmdb: async () => {
+    tmdb: async (url) => {
       callTimes.tmdbStart = Date.now();
       await sleep(120);
-      return tmdbMatchHandler();
+      return tmdbMatchHandler(url);
     },
   });
   const server = await startTestServer();
@@ -113,7 +131,7 @@ test('details: slow Jikan past the enrichment deadline does not delay core AniLi
       await sleep(2000); // far beyond the 300ms enrichment deadline
       return jikanAnime({});
     },
-    tmdb: tmdbMatchHandler(),
+    tmdb: tmdbMatchHandler,
   });
   const server = await startTestServer();
   try {
@@ -152,7 +170,7 @@ test('details: a late-completing enrichment still fills its component cache for 
       await sleep(700); // completes after the 300ms deadline
       return jikanAnime({ malId: 602 });
     },
-    tmdb: tmdbMatchHandler(),
+    tmdb: tmdbMatchHandler,
   });
   const server = await startTestServer();
   try {
@@ -212,6 +230,18 @@ test('details: TMDB expanded-title fallback resolves via Jikan titles without re
     anilist: anilistHandler({ anilistId: ANI, malId: 604, title: 'Zoku Anime', sparseTitles: true }),
     jikan: () => jikanAnime({ malId: 604, title: 'Zoku Anime', extra: { title_english: 'Sequel Anime EN' } }),
     tmdb: (url) => {
+      // TV details (season derivation) - not a search, never recorded.
+      if (!String(url).includes('/search/')) {
+        return {
+          status: 200,
+          json: {
+            id: 789,
+            name: 'Sequel Anime EN',
+            first_air_date: '2023-01-10',
+            seasons: [{ season_number: 1, name: 'Season 1', air_date: '2023-01-10', episode_count: 12, poster_path: null }],
+          },
+        };
+      }
       const query = new URL(url).searchParams.get('query') ?? '';
       searchedQueries.push(query);
       // The AniList title has NO confident match; the Jikan alternate does.
@@ -247,7 +277,7 @@ test('details: concurrent same-anime requests are coalesced into one upstream lo
   const mock = installApiMocks({
     anilist: anilistHandler({ anilistId: ANI, malId: 605 }),
     jikan: () => jikanAnime({ malId: 605 }),
-    tmdb: tmdbMatchHandler(),
+    tmdb: tmdbMatchHandler,
   });
   const server = await startTestServer();
   try {
@@ -258,10 +288,11 @@ test('details: concurrent same-anime requests are coalesced into one upstream lo
       assert.equal(res.status, 200);
       await res.json();
     }
-    // One shared load: exactly 1 AniList + 1 Jikan + 1 TMDB search.
+    // One shared load: exactly 1 AniList + 1 Jikan + 1 TMDB search + 1 TMDB
+    // details (season derivation), all coalesced across the 8 requests.
     assert.equal(mock.anilistCalls().length, 1);
     assert.equal(mock.jikanCalls().length, 1);
-    assert.equal(mock.tmdbCalls().length, 1);
+    assert.equal(mock.tmdbCalls().length, 2);
   } finally {
     await server.stop();
     mock.restore();
@@ -274,7 +305,7 @@ test('details: required AniList failure still yields the canonical 502 error beh
   const mock = installApiMocks({
     anilist: () => ({ status: 500, json: { error: 'boom' } }),
     jikan: () => jikanAnime({}),
-    tmdb: tmdbMatchHandler(),
+    tmdb: tmdbMatchHandler,
   });
   const server = await startTestServer();
   try {

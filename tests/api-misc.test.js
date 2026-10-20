@@ -24,6 +24,11 @@ import {
   anilistPage,
   tmdbSearchResults,
   tmdbTvCandidate,
+  tmdbImages,
+  tmdbVideos,
+  tmdbBackdrop,
+  tmdbLogo,
+  tmdbVideo,
 } from './helpers/test-server.js';
 
 /** @param {string} query */
@@ -286,7 +291,7 @@ test('GET /api/schedule -> provider failure -> 502 structured error (never fabri
   }
 });
 
-test('GET /api/tmdb/:id -> 200 resolved visual enrichment; AniList identity untouched', async () => {
+test('GET /api/tmdb/:id -> 200 resolved visual enrichment + media assets; AniList identity untouched', async () => {
   await resetL1Cache();
   const mock = installApiMocks({
     anilist: (body) => {
@@ -294,8 +299,41 @@ test('GET /api/tmdb/:id -> 200 resolved visual enrichment; AniList identity unto
       return { data: { Media: anilistMedia({ id: 123, idMal: 456 }) } };
     },
     tmdb: (url) => {
-      if (!url.includes('/search/tv')) throw new Error(`unexpected TMDB path: ${url}`);
-      return tmdbSearchResults([tmdbTvCandidate({ id: 789, name: 'Test Anime', backdropPath: '/backdrop.jpg' })]);
+      if (url.includes('/search/tv')) {
+        return tmdbSearchResults([tmdbTvCandidate({ id: 789, name: 'Test Anime', backdropPath: '/backdrop.jpg' })]);
+      }
+      if (url.includes('/tv/789') && !url.includes('/tv/789/')) {
+        // TV details (season derivation): season 1 matches the entry year.
+        return {
+          status: 200,
+          json: {
+            id: 789,
+            name: 'Test Anime',
+            first_air_date: '2023-01-10',
+            seasons: [{ season_number: 1, name: 'Season 1', air_date: '2023-01-10', episode_count: 12, poster_path: '/season-1.jpg' }],
+          },
+        };
+      }
+      if (url.includes('/tv/789/images')) return tmdbImages({
+        backdrops: [
+          tmdbBackdrop({ path: '/bd-a.jpg', width: 3840, height: 2160, voteAverage: 6 }),
+          tmdbBackdrop({ path: '/bd-b.jpg', width: 1920, height: 1080, voteAverage: 4 }),
+        ],
+        logos: [
+          tmdbLogo({ path: '/logo-jp.png', language: 'ja', voteAverage: 4 }),
+          tmdbLogo({ path: '/logo-en.png', language: 'en', voteAverage: 4 }),
+          tmdbLogo({ path: '/logo.svg', language: 'en', voteAverage: 9 }),
+        ],
+      });
+      if (url.includes('/tv/789/videos')) {
+        return tmdbVideos({ results: [
+          tmdbVideo({ key: 'teaser1', name: 'Teaser', type: 'Teaser', official: true, publishedAt: '2023-02-01T00:00:00.000Z' }),
+          tmdbVideo({ key: 'trailer1', name: 'Official Trailer', type: 'Trailer', official: true, publishedAt: '2023-01-01T00:00:00.000Z' }),
+          tmdbVideo({ key: 'clip1', name: 'Clip', type: 'Clip', official: false }),
+          tmdbVideo({ key: 'vimeo1', site: 'Vimeo', type: 'Trailer', official: true }),
+        ] });
+      }
+      throw new Error(`unexpected TMDB path: ${url}`);
     },
   });
   const server = await startTestServer();
@@ -312,9 +350,84 @@ test('GET /api/tmdb/:id -> 200 resolved visual enrichment; AniList identity unto
     assert.equal(body.images.backdrop, 'https://image.tmdb.org/t/p/original/backdrop.jpg');
     assert.equal(body.images.banner, 'https://image.tmdb.org/t/p/original/backdrop.jpg');
 
+    // Logo: transparent PNG preferred (svg ignored), language/quality ranked.
+    assert.equal(body.logo.path, '/logo-en.png');
+    assert.equal(body.logo.extension, 'png');
+    assert.equal(body.logo.language, 'en');
+    assert.equal(body.logo.url, 'https://image.tmdb.org/t/p/w500/logo-en.png');
+    assert.equal(body.logo.urlOriginal, 'https://image.tmdb.org/t/p/original/logo-en.png');
+
+    // Backdrops: high-quality landscape entries with dimensions, ranked.
+    assert.ok(Array.isArray(body.backdrops) && body.backdrops.length === 2);
+    assert.equal(body.backdrops[0].path, '/bd-a.jpg');
+    assert.equal(body.backdrops[0].url, 'https://image.tmdb.org/t/p/w1280/bd-a.jpg');
+    assert.equal(body.backdrops[0].urlOriginal, 'https://image.tmdb.org/t/p/original/bd-a.jpg');
+    assert.equal(body.backdrops[0].width, 3840);
+    assert.equal(body.backdrops[0].height, 2160);
+
+    // Trailer: official YouTube Trailer preferred over Teaser; clips and
+    // non-YouTube providers excluded.
+    assert.equal(body.trailer.key, 'trailer1');
+    assert.equal(body.trailer.site, 'YouTube');
+    assert.equal(body.trailer.type, 'Trailer');
+    assert.equal(body.trailer.official, true);
+    assert.equal(body.trailer.url, 'https://www.youtube.com/watch?v=trailer1');
+    assert.equal(body.trailer.embedUrl, 'https://www.youtube.com/embed/trailer1');
+    assert.ok(Array.isArray(body.videos) && body.videos.length === 2);
+    assert.ok(body.videos.every((v) => ['Trailer', 'Teaser'].includes(v.type)));
+
+    // Season derivation: series match + season validated against TMDB seasons.
+    assert.equal(body.tmdbSeasonNumber, 1);
+    assert.equal(body.season.seasonNumber, 1);
+    assert.equal(body.season.airDate, '2023-01-10');
+    assert.equal(body.season.poster, 'https://image.tmdb.org/t/p/w500/season-1.jpg');
+    assert.equal(body.matchStrategy, 'title');
+    assert.equal(body.matchedTitle, 'Test Anime');
+
     // The AniList search used titles for matching; the id stays AniList.
     assert.equal(mock.anilistCalls()[0].body.variables.id, 123);
     assert.ok(!mock.tmdbCalls()[0].includes('123'), 'AniList ID never sent to TMDB');
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/tmdb/:id -> images/videos upstream failure degrades gracefully (200, fallback backdrop)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'byId') throw new Error(`expected byId, got: ${body.query}`);
+      return { data: { Media: anilistMedia({ id: 123, idMal: 456 }) } };
+    },
+    tmdb: (url) => {
+      if (url.includes('/search/tv')) {
+        return tmdbSearchResults([tmdbTvCandidate({ id: 789, name: 'Test Anime', backdropPath: '/backdrop.jpg' })]);
+      }
+      // Both media-asset legs fail (e.g. partial TMDB outage).
+      return { status: 500, json: { error: 'boom' } };
+    },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/tmdb/123`);
+    assert.equal(res.status, 200, 'media-asset failure never fails the response');
+
+    const body = await res.json();
+    // Existing visual contract intact.
+    assert.equal(body.resolved, true);
+    assert.equal(body.tmdbId, 789);
+    assert.equal(body.images.backdrop, 'https://image.tmdb.org/t/p/original/backdrop.jpg');
+    // Details endpoint also failing -> season derivation degrades gracefully
+    // (the reliable series match stands; the season stays unresolved).
+    assert.equal(body.tmdbSeasonNumber, null);
+    assert.equal(body.season, null);
+    // Degraded media fields: no logo/trailer, fallback backdrop from the
+    // enrichment's real TMDB path.
+    assert.equal(body.logo, null);
+    assert.equal(body.trailer, null);
+    assert.deepEqual(body.videos, []);
+    assert.deepEqual(body.backdrops, [{ path: null, url: 'https://image.tmdb.org/t/p/original/backdrop.jpg', urlOriginal: 'https://image.tmdb.org/t/p/original/backdrop.jpg', width: null, height: null, language: null, voteAverage: null }]);
   } finally {
     await server.stop();
     mock.restore();
@@ -341,6 +454,13 @@ test('GET /api/tmdb/:id -> unresolved: 200 valid unresolved enrichment (no fake 
     assert.equal(body.images, null);
     assert.equal(body.poster, null);
     assert.ok(body.reason);
+    // Additive media fields mirror the unresolved null convention - and NO
+    // images/videos requests are made without a confident match.
+    assert.equal(body.logo, null);
+    assert.equal(body.backdrops, null);
+    assert.equal(body.trailer, null);
+    assert.equal(body.videos, null);
+    assert.ok(mock.tmdbCalls().every((u) => u.includes('/search/tv')));
   } finally {
     await server.stop();
     mock.restore();
@@ -376,7 +496,84 @@ test('GET /api/tmdb/:id -> TMDB failure -> 502 but canonical data unaffected (ca
   }
 });
 
-test('GET /api/tmdb/:id -> invalid ID -> 400 ValidationError, no provider request', async () => {
+test('GET /api/tmdb/:id?type=mal -> resolves MAL ID via IdentityResolver (never treated as AniList/TMDB ID)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      const kind = anilistKind(body.query);
+      if (kind === 'byMal') {
+        return { data: { Media: anilistMedia({ id: 123, idMal: 456 }) } };
+      }
+      if (kind === 'byId') {
+        return { data: { Media: anilistMedia({ id: 123, idMal: 456 }) } };
+      }
+      throw new Error(`unexpected AniList query: ${body.query}`);
+    },
+    tmdb: (url) => {
+      if (url.includes('/search/tv')) {
+        return tmdbSearchResults([tmdbTvCandidate({ id: 789, name: 'Test Anime', backdropPath: '/backdrop.jpg' })]);
+      }
+      if (url.includes('/tv/789') && !url.includes('/tv/789/')) {
+        return {
+          status: 200,
+          json: {
+            id: 789,
+            name: 'Test Anime',
+            first_air_date: '2023-01-10',
+            seasons: [{ season_number: 1, name: 'Season 1', air_date: '2023-01-10', episode_count: 12, poster_path: null }],
+          },
+        };
+      }
+      if (url.includes('/tv/789/images')) return tmdbImages();
+      if (url.includes('/tv/789/videos')) return tmdbVideos();
+      throw new Error(`unexpected TMDB path: ${url}`);
+    },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/tmdb/456?type=mal`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.equal(body.resolved, true);
+    assert.equal(body.tmdbId, 789);
+    assert.ok(body.trailer);
+
+    // The MAL ID 456 was resolved through AniList's idMal (byMal), then the
+    // canonical AniList ID 123 was used for title matching. TMDB never sees
+    // either raw ID.
+    const malCall = mock.anilistCalls().find((c) => anilistKind(c.body.query) === 'byMal');
+    assert.equal(malCall.body.variables.idMal, 456);
+    assert.ok(mock.tmdbCalls().every((u) => !u.includes('456') && !u.includes('/tv/456')));
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/tmdb/:id?type=mal -> unknown MAL ID -> 404 controlled error (never guessed)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'byMal') throw new Error(`expected byMal, got: ${body.query}`);
+      return { data: { Media: null } };
+    },
+    tmdb: () => { throw new Error('must not be called'); },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/tmdb/999999?type=mal`);
+    assert.equal(res.status, 404);
+    const body = await res.json();
+    assert.equal(body.error.code, 'NOT_FOUND');
+    assert.equal(mock.tmdbCalls().length, 0);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/tmdb/:id -> invalid ID or unknown ID type -> 400 ValidationError, no provider request', async () => {
   await resetL1Cache();
   const mock = installApiMocks({
     anilist: () => { throw new Error('must not be called'); },
@@ -387,6 +584,12 @@ test('GET /api/tmdb/:id -> invalid ID -> 400 ValidationError, no provider reques
     const res = await fetch(`${server.baseUrl}/api/tmdb/abc`);
     assert.equal(res.status, 400);
     assert.equal((await res.json()).error.code, 'VALIDATION_ERROR');
+
+    // Unknown id type: a bare number is ambiguous and never guessed.
+    const badType = await fetch(`${server.baseUrl}/api/tmdb/123?type=tmdb`);
+    assert.equal(badType.status, 400);
+    assert.equal((await badType.json()).error.code, 'VALIDATION_ERROR');
+
     assert.equal(mock.anilistCalls().length, 0);
     assert.equal(mock.tmdbCalls().length, 0);
   } finally {

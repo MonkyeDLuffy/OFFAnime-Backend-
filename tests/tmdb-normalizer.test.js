@@ -94,13 +94,19 @@ test('unusual year values -> null (never guessed)', () => {
 });
 
 test('resolved visual from candidate: backdrop/banner from actual backdrop path only', () => {
-  const visual = normalizeTmdbVisual(normalizeTmdbCandidate(rawTv, 'tv'));
+  const visual = normalizeTmdbVisual(normalizeTmdbCandidate(rawTv, 'tv'), { strategy: 'title' });
   assert.equal(visual.resolved, true);
   assert.equal(visual.tmdbId, 789);
   assert.equal(visual.images.backdrop, 'https://image.tmdb.org/t/p/original/backdrop.jpg');
   assert.equal(visual.images.banner, 'https://image.tmdb.org/t/p/original/backdrop.jpg');
   // A poster is NEVER turned into a backdrop/banner.
   assert.notEqual(visual.images.banner, 'https://image.tmdb.org/t/p/w500/poster.jpg');
+  // Season fields start unresolved (the service derives them from evidence);
+  // match provenance is attached.
+  assert.equal(visual.tmdbSeasonNumber, null);
+  assert.equal(visual.season, null);
+  assert.equal(visual.matchedTitle, 'One Punch Man');
+  assert.equal(visual.matchStrategy, 'title');
 });
 
 test('unresolved visual: valid result with reason, no fabricated data', () => {
@@ -111,6 +117,10 @@ test('unresolved visual: valid result with reason, no fabricated data', () => {
     mediaType: null,
     images: null,
     poster: null,
+    tmdbSeasonNumber: null,
+    season: null,
+    matchedTitle: null,
+    matchStrategy: null,
     reason: 'no_confident_match',
   });
 });
@@ -151,7 +161,7 @@ test('known titles: empty metadata -> []', () => {
   assert.deepEqual(extractKnownTitles(null), []);
 });
 
-// --- Matching: selectBestMatch -----------------------------------------------------
+// --- Matching: selectBestMatch (layered: full/base titles, year, media type) -----
 
 const makeCandidate = (over = {}) => ({
   tmdbId: 1,
@@ -167,22 +177,23 @@ const makeCandidate = (over = {}) => ({
 test('exact title match accepted', () => {
   const candidates = [makeCandidate({ tmdbId: 1, title: 'One Punch Man' })];
   const match = selectBestMatch(candidates, { titles: ['One Punch Man'], year: null });
-  assert.equal(match.tmdbId, 1);
+  assert.equal(match.candidate.tmdbId, 1);
+  assert.equal(match.strategy, 'title');
 });
 
 test('case-insensitive match accepted', () => {
   const candidates = [makeCandidate({ tmdbId: 2, title: 'one punch man' })];
-  assert.equal(selectBestMatch(candidates, { titles: ['One Punch Man'] }).tmdbId, 2);
+  assert.equal(selectBestMatch(candidates, { titles: ['One Punch Man'] }).candidate.tmdbId, 2);
 });
 
 test('whitespace and punctuation normalization in matching', () => {
   const candidates = [makeCandidate({ tmdbId: 3, title: 'one-punch man' })];
-  assert.equal(selectBestMatch(candidates, { titles: ['One   Punch  Man'] }).tmdbId, 3);
+  assert.equal(selectBestMatch(candidates, { titles: ['One   Punch  Man'] }).candidate.tmdbId, 3);
 });
 
 test('alternate (original) title match accepted', () => {
   const candidates = [makeCandidate({ tmdbId: 4, originalTitle: 'ワンパンマン' })];
-  assert.equal(selectBestMatch(candidates, { titles: ['One Punch Man', 'ワンパンマン'] }).tmdbId, 4);
+  assert.equal(selectBestMatch(candidates, { titles: ['One Punch Man', 'ワンパンマン'] }).candidate.tmdbId, 4);
 });
 
 test('wrong title rejected (never forced)', () => {
@@ -195,48 +206,60 @@ test('wrong title rejected (never forced)', () => {
 
 test('year-compatible match accepted', () => {
   const candidates = [makeCandidate({ tmdbId: 7, title: 'Anime A', year: 2015 })];
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2015 }).tmdbId, 7);
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2016 }).tmdbId, 7); // +/-1 tolerance
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2015 }).candidate.tmdbId, 7);
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2016 }).candidate.tmdbId, 7);
 });
 
-test('wrong-year candidate rejected when year is known on both sides', () => {
-  const candidates = [makeCandidate({ tmdbId: 8, title: 'Anime A', year: 2003 })];
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018 }), null);
+test('TV year rule: candidate premiering AFTER the entry is rejected (never a later reboot)', () => {
+  const candidates = [makeCandidate({ tmdbId: 8, title: 'Anime A', year: 2011 })];
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 1999 }), null);
+});
+
+test('TV year rule: candidate premiering YEARS BEFORE the entry is a valid later season', () => {
+  // One-Punch Man S2 (2019) -> series premiered 2015 (shared TMDB series).
+  const candidates = [makeCandidate({ tmdbId: 9, title: 'Anime A', year: 2003 })];
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A 2'], year: 2018 }).candidate.tmdbId, 9);
+});
+
+test('MOVIE year rule: strict +/-1 (a movie IS the entry)', () => {
+  const candidates = [makeCandidate({ tmdbId: 10, title: 'Anime A', year: 2003, mediaType: 'movie' })];
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018, mediaType: 'movie' }), null);
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2004, mediaType: 'movie' }).candidate.tmdbId, 10);
 });
 
 test('candidate with unknown year is not rejected (never guessed)', () => {
-  const candidates = [makeCandidate({ tmdbId: 9, title: 'Anime A', year: null })];
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018 }).tmdbId, 9);
+  const candidates = [makeCandidate({ tmdbId: 11, title: 'Anime A', year: null })];
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018 }).candidate.tmdbId, 11);
 });
 
 test('multiple candidates: popularity is a tie-breaker ONLY among equal title rank', () => {
   const candidates = [
-    makeCandidate({ tmdbId: 10, title: 'Anime A', popularity: 50 }),
-    makeCandidate({ tmdbId: 11, title: 'Anime A', popularity: 90 }),
+    makeCandidate({ tmdbId: 12, title: 'Anime A', popularity: 50 }),
+    makeCandidate({ tmdbId: 13, title: 'Anime A', popularity: 90 }),
   ];
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'] }).tmdbId, 11);
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'] }).candidate.tmdbId, 13);
 });
 
 test('multiple candidates: primary title match preferred over alternate', () => {
   const candidates = [
-    makeCandidate({ tmdbId: 12, originalTitle: 'ワンパンマン', popularity: 999 }), // alternate match
-    makeCandidate({ tmdbId: 13, title: 'One Punch Man', popularity: 10 }), // primary match
+    makeCandidate({ tmdbId: 14, originalTitle: 'ワンパンマン', popularity: 999 }), // alternate match
+    makeCandidate({ tmdbId: 15, title: 'One Punch Man', popularity: 10 }), // primary match
   ];
-  assert.equal(selectBestMatch(candidates, { titles: ['One Punch Man', 'ワンパンマン'] }).tmdbId, 13);
+  assert.equal(selectBestMatch(candidates, { titles: ['One Punch Man', 'ワンパンマン'] }).candidate.tmdbId, 15);
 });
 
-test('ambiguous candidates: same title different years -> year filter resolves', () => {
+test('ambiguous candidates: same title different years -> year proximity resolves', () => {
   const candidates = [
-    makeCandidate({ tmdbId: 14, title: 'Anime A', year: 1999 }),
-    makeCandidate({ tmdbId: 15, title: 'Anime A', year: 2018 }),
+    makeCandidate({ tmdbId: 16, title: 'Anime A', year: 1999 }),
+    makeCandidate({ tmdbId: 17, title: 'Anime A', year: 2018 }),
   ];
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018 }).tmdbId, 15);
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018 }).candidate.tmdbId, 17);
 });
 
 test('no acceptable candidate -> null (missing banner beats wrong banner)', () => {
   const candidates = [
-    makeCandidate({ tmdbId: 16, title: 'Unrelated Show', year: 1990 }),
-    makeCandidate({ tmdbId: 17, title: 'Another Unrelated', year: 2020 }),
+    makeCandidate({ tmdbId: 18, title: 'Unrelated Show', year: 1990 }),
+    makeCandidate({ tmdbId: 19, title: 'Another Unrelated', year: 2020 }),
   ];
   assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], year: 2018 }), null);
   assert.equal(selectBestMatch([], { titles: ['Anime A'] }), null);
@@ -244,7 +267,7 @@ test('no acceptable candidate -> null (missing banner beats wrong banner)', () =
 });
 
 test('media type incompatibility rejected', () => {
-  const candidates = [makeCandidate({ tmdbId: 18, title: 'Anime A', mediaType: 'movie' })];
+  const candidates = [makeCandidate({ tmdbId: 20, title: 'Anime A', mediaType: 'movie' })];
   assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], mediaType: 'tv' }), null);
-  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], mediaType: 'movie' }).tmdbId, 18);
+  assert.equal(selectBestMatch(candidates, { titles: ['Anime A'], mediaType: 'movie' }).candidate.tmdbId, 20);
 });

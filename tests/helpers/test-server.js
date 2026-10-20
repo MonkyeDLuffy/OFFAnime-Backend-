@@ -319,6 +319,46 @@ export function tmdbTvDetails(seasons = []) {
 }
 
 /**
+ * Raw TMDB images metadata entry (backdrop).
+ * @param {{ path?: string, width?: number, height?: number, language?: string|null, voteAverage?: number }} [options]
+ */
+export function tmdbBackdrop({ path = '/backdrop.jpg', width = 3840, height = 2160, language = null, voteAverage = 5.5 } = {}) {
+  return { file_path: path, width, height, iso_639_1: language, vote_average: voteAverage, vote_count: 10, aspect_ratio: 1.777 };
+}
+
+/**
+ * Raw TMDB images metadata entry (logo).
+ * @param {{ path?: string, language?: string|null, voteAverage?: number }} [options]
+ */
+export function tmdbLogo({ path = '/logo.png', language = 'en', voteAverage = 5 } = {}) {
+  return { file_path: path, iso_639_1: language, vote_average: voteAverage, vote_count: 3, width: 1000, height: 500 };
+}
+
+/**
+ * Raw TMDB images metadata payload ({ id, backdrops, logos, posters }).
+ * @param {{ id?: number, backdrops?: object[], logos?: object[] }} [options]
+ */
+export function tmdbImages({ id = 789, backdrops = [tmdbBackdrop()], logos = [tmdbLogo()] } = {}) {
+  return { status: 200, json: { id, backdrops, logos, posters: [] } };
+}
+
+/**
+ * Raw TMDB video entry (videos payload member).
+ * @param {{ key?: string, name?: string, site?: string, type?: string, official?: boolean, publishedAt?: string }} [options]
+ */
+export function tmdbVideo({ key = 'abc123', name = 'Official Trailer', site = 'YouTube', type = 'Trailer', official = true, publishedAt = '2023-01-01T00:00:00.000Z' } = {}) {
+  return { name, key, site, type, official, published_at: publishedAt, id: `video-${key}`, size: 1080, iso_639_1: 'en', iso_3166_1: 'US' };
+}
+
+/**
+ * Raw TMDB videos payload ({ id, results }).
+ * @param {{ id?: number, results?: object[] }} [options]
+ */
+export function tmdbVideos({ id = 789, results = [tmdbVideo()] } = {}) {
+  return { status: 200, json: { id, results } };
+}
+
+/**
  * Raw TMDB season fixture ({ episodes: [...] }).
  * @param {number} seasonNumber
  * @param {object[]} [episodes]

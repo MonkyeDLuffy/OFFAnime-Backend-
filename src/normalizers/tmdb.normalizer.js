@@ -82,9 +82,12 @@ export function normalizeTmdbCandidates(raw, defaultMediaType = 'tv') {
 /**
  * Build a resolved visual-enrichment result from a selected candidate.
  * @param {TmdbCandidate} candidate
+ * @param {object} [options]
+ * @param {'title' | 'title_base' | null} [options.strategy] How the candidate
+ *   matched (filled by the service's matcher).
  * @returns {TmdbVisualResult}
  */
-export function normalizeTmdbVisual(candidate) {
+export function normalizeTmdbVisual(candidate, { strategy = null } = {}) {
   return {
     resolved: true,
     tmdbId: candidate.tmdbId,
@@ -96,6 +99,13 @@ export function normalizeTmdbVisual(candidate) {
       banner: candidate.images.backdrop,
     },
     poster: candidate.images.poster,
+    // Season information: derived (and validated against TMDB season
+    // metadata) by the service - null here, never guessed.
+    tmdbSeasonNumber: null,
+    season: null,
+    // Match provenance (the TMDB entry that matched, and how).
+    matchedTitle: candidate.title ?? candidate.originalTitle,
+    matchStrategy: strategy ?? null,
     reason: null,
   };
 }
@@ -113,6 +123,10 @@ export function createUnresolvedTmdbVisual(reason) {
     mediaType: null,
     images: null,
     poster: null,
+    tmdbSeasonNumber: null,
+    season: null,
+    matchedTitle: null,
+    matchStrategy: null,
     reason: str(reason) ?? 'unresolved',
   };
 }
@@ -136,8 +150,37 @@ export function normalizeTmdbDetails(raw, mediaType = 'tv') {
       banner: tmdbImageUrl(raw?.backdrop_path, 'original'),
     },
     poster: tmdbImageUrl(raw?.poster_path, 'w500'),
+    tmdbSeasonNumber: null,
+    season: null,
+    matchedTitle: str(raw?.name) ?? str(raw?.title),
+    matchStrategy: null,
     reason: null,
   };
+}
+
+/**
+ * Normalize a raw TMDB TV details payload's seasons list into stable season
+ * metadata (used for tmdbSeasonNumber derivation and season-level artwork).
+ * Season 0 (specials) is kept with its number - callers filter it.
+ * @param {unknown} raw Raw TMDB TV details payload ({ seasons: [...] }).
+ * @returns {TmdbSeason[]}
+ */
+export function normalizeTmdbSeasons(raw) {
+  const entries = Array.isArray(raw?.seasons) ? raw.seasons : [];
+  return entries
+    .map((entry) => {
+      const seasonNumber = numberOrNull(entry?.season_number);
+      if (seasonNumber === null || seasonNumber < 0) return null;
+      return {
+        seasonNumber,
+        name: str(entry?.name),
+        airDate: str(entry?.air_date),
+        posterPath: str(entry?.poster_path),
+        poster: tmdbImageUrl(entry?.poster_path, 'w500'),
+        episodeCount: numberOrNull(entry?.episode_count),
+      };
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -174,4 +217,176 @@ export function normalizeTmdbSeasonEpisodes(raw) {
       source: 'tmdb',
     }))
     .filter((entry) => entry.episode !== null);
+}
+
+// --- image/video metadata (logos, backdrops, trailers) ------------------------
+
+/** Backdrop cap per response (lightweight; the top-ranked entries suffice). */
+const MAX_BACKDROPS = 6;
+
+/** Candidate video cap per response (trailers/teasers only). */
+const MAX_VIDEOS = 8;
+
+/** Language preference for logos: en, then ja, then languageless, then rest. */
+function logoLanguageRank(language) {
+  if (language === 'en') return 0;
+  if (language === 'ja') return 1;
+  if (language === null) return 2;
+  return 3;
+}
+
+/** File extension from an actual TMDB file path (null when none). */
+function pathExtension(path) {
+  const match = typeof path === 'string' ? path.match(/\.([A-Za-z0-9]+)$/) : null;
+  return match ? match[1].toLowerCase() : null;
+}
+
+/**
+ * Select the best logo from raw TMDB image metadata. Transparent PNG logos are
+ * preferred when available; within that, language (en > ja > languageless) and
+ * TMDB's community vote decide. Built ONLY from actual file paths.
+ * @param {unknown} raw Raw TMDB images payload ({ logos: [...] }).
+ * @returns {import('./tmdb.types.js').TmdbLogo | null}
+ */
+export function normalizeTmdbLogo(raw) {
+  const entries = Array.isArray(raw?.logos) ? raw.logos : [];
+  const candidates = entries
+    .map((entry) => {
+      const path = str(entry?.file_path);
+      if (path === null) return null;
+      return {
+        path,
+        language: str(entry?.iso_639_1),
+        extension: pathExtension(path),
+        voteAverage: numberOrNull(entry?.vote_average),
+      };
+    })
+    .filter(Boolean);
+
+  if (candidates.length === 0) return null;
+
+  // PNG (transparent raster, universally supported) wins when available.
+  const pngOnly = candidates.filter((logo) => logo.extension === 'png');
+  const pool = pngOnly.length > 0 ? pngOnly : candidates;
+
+  pool.sort((a, b) =>
+    logoLanguageRank(a.language) - logoLanguageRank(b.language)
+    || (b.voteAverage ?? 0) - (a.voteAverage ?? 0),
+  );
+
+  const logo = pool[0];
+  return {
+    path: logo.path,
+    url: tmdbImageUrl(logo.path, 'w500'),
+    urlOriginal: tmdbImageUrl(logo.path, 'original'),
+    language: logo.language,
+    extension: logo.extension,
+    voteAverage: logo.voteAverage,
+  };
+}
+
+/**
+ * Normalize ranked, high-quality backdrops from raw TMDB image metadata.
+ * Landscape by definition (backdrops); ranked by TMDB community vote, then
+ * intrinsic resolution. URLs are built ONLY from actual file paths - never a
+ * stretched poster, never fabricated.
+ * @param {unknown} raw Raw TMDB images payload ({ backdrops: [...] }).
+ * @returns {import('./tmdb.types.js').TmdbBackdrop[]}
+ */
+export function normalizeTmdbBackdrops(raw) {
+  const entries = Array.isArray(raw?.backdrops) ? raw.backdrops : [];
+  return entries
+    .map((entry) => {
+      const path = str(entry?.file_path);
+      if (path === null) return null;
+      return {
+        path,
+        url: tmdbImageUrl(path, 'w1280'),
+        urlOriginal: tmdbImageUrl(path, 'original'),
+        width: numberOrNull(entry?.width),
+        height: numberOrNull(entry?.height),
+        language: str(entry?.iso_639_1),
+        voteAverage: numberOrNull(entry?.vote_average),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) =>
+      (b.voteAverage ?? 0) - (a.voteAverage ?? 0)
+      || (b.width ?? 0) - (a.width ?? 0),
+    )
+    .slice(0, MAX_BACKDROPS);
+}
+
+/**
+ * Normalize raw TMDB image metadata into the logo + backdrops pair.
+ * @param {unknown} raw Raw TMDB images payload.
+ * @returns {{ logo: import('./tmdb.types.js').TmdbLogo | null, backdrops: import('./tmdb.types.js').TmdbBackdrop[] }}
+ */
+export function normalizeTmdbImageAssets(raw) {
+  return {
+    logo: normalizeTmdbLogo(raw),
+    backdrops: normalizeTmdbBackdrops(raw),
+  };
+}
+
+/** Only official trailer/teaser material qualifies as trailer metadata. */
+const TRAILER_VIDEO_TYPES = new Set(['Trailer', 'Teaser']);
+
+/**
+ * Normalize one raw TMDB video entry into stable metadata. Watch/embed URLs
+ * are built ONLY for YouTube keys (documented scheme) - never invented for
+ * other providers. Returns null for unusable entries (missing key/site/type).
+ * @param {unknown} entry
+ * @returns {import('./tmdb.types.js').TmdbVideo | null}
+ */
+function normalizeTmdbVideo(entry) {
+  const key = str(entry?.key);
+  const site = str(entry?.site);
+  const type = str(entry?.type);
+  if (key === null || site === null || type === null) return null;
+  const isYouTube = site === 'YouTube';
+  return {
+    name: str(entry?.name),
+    key,
+    site,
+    type,
+    official: typeof entry?.official === 'boolean' ? entry.official : null,
+    publishedAt: str(entry?.published_at),
+    url: isYouTube ? `https://www.youtube.com/watch?v=${encodeURIComponent(key)}` : null,
+    embedUrl: isYouTube ? `https://www.youtube.com/embed/${encodeURIComponent(key)}` : null,
+  };
+}
+
+/** Trailer ranking: type (Trailer > Teaser), official first, newest first. */
+function videoRank(video) {
+  return {
+    type: video.type === 'Trailer' ? 0 : 1,
+    official: video.official === true ? 0 : 1,
+    publishedAt: video.publishedAt ? Date.parse(video.publishedAt) || 0 : 0,
+  };
+}
+
+/**
+ * Normalize raw TMDB video metadata into the selected trailer + a bounded
+ * candidate list. YouTube trailers/teasers only; the primary trailer prefers
+ * official Trailer type, then official Teaser, newest first. Missing videos
+ * yield { trailer: null, videos: [] } - never fabricated keys/URLs.
+ * @param {unknown} raw Raw TMDB videos payload ({ results: [...] }).
+ * @returns {{ trailer: import('./tmdb.types.js').TmdbVideo | null, videos: import('./tmdb.types.js').TmdbVideo[] }}
+ */
+export function normalizeTmdbVideoAssets(raw) {
+  const entries = Array.isArray(raw?.results) ? raw.results : [];
+  const videos = entries
+    .map((entry) => normalizeTmdbVideo(entry))
+    .filter((video) => video !== null && video.site === 'YouTube' && TRAILER_VIDEO_TYPES.has(video.type))
+    .sort((a, b) => {
+      const ra = videoRank(a);
+      const rb = videoRank(b);
+      return ra.type - rb.type
+        || ra.official - rb.official
+        || rb.publishedAt - ra.publishedAt;
+    })
+    .slice(0, MAX_VIDEOS);
+
+  return { trailer: videos.length > 0 ? videos[0] : null, videos };
 }
