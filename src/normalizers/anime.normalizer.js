@@ -117,6 +117,31 @@ export function displayTitleFromRaw(raw) {
   return str(raw.userPreferred) ?? str(raw.english) ?? str(raw.romaji) ?? str(raw.native);
 }
 
+/**
+ * Normalize the three AniList title variants into explicit, null-safe fields.
+ * Missing/empty variants become null - never undefined, never "null" strings.
+ * @param {unknown} raw
+ * @returns {{ english: string|null, romaji: string|null, native: string|null }}
+ */
+function titleVariantsFromRaw(raw) {
+  if (!raw || typeof raw !== 'object') return { english: null, romaji: null, native: null };
+  return {
+    english: str(raw.english),
+    romaji: str(raw.romaji),
+    native: str(raw.native),
+  };
+}
+
+/**
+ * Pick a display title preferring the official English title (fallback chain:
+ * english -> romaji -> native -> null). Used for list-card `title` fields.
+ * @param {{ english: string|null, romaji: string|null, native: string|null }} variants
+ * @returns {string | null}
+ */
+function displayTitleEnglishFirst(variants) {
+  return variants.english ?? variants.romaji ?? variants.native;
+}
+
 // --- image handling ----------------------------------------------------------
 
 /**
@@ -160,18 +185,28 @@ export function normalizeAnilistRelation(node) {
 }
 
 /**
- * Normalize a minimal anime card (search/seasonal/recommendation results).
+ * Normalize a minimal anime card (search/seasonal/home/recommendation results).
+ *
+ * Title contract (backward-compatible):
+ *   - `title`: display string preferring the English title
+ *     (english -> romaji -> native), or null when no variant exists.
+ *   - `titleEnglish` / `titleRomaji` / `titleNative`: the individual AniList
+ *     variants, each null when unavailable.
  * @param {unknown} node
- * @returns {{ id: number, anilistId: number, malId: number|null, title: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, images: { poster: string|null } } | null}
+ * @returns {{ id: number, anilistId: number, malId: number|null, title: string|null, titleEnglish: string|null, titleRomaji: string|null, titleNative: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, images: { poster: string|null } } | null}
  */
 export function normalizeAnilistMediaCard(node) {
   const anilistId = normalizeId(node?.id);
   if (anilistId === null) return null;
+  const titleVariants = titleVariantsFromRaw(node?.title);
   return {
     id: anilistId,
     anilistId,
     malId: normalizeId(node?.idMal),
-    title: displayTitleFromRaw(node?.title),
+    title: displayTitleEnglishFirst(titleVariants),
+    titleEnglish: titleVariants.english,
+    titleRomaji: titleVariants.romaji,
+    titleNative: titleVariants.native,
     type: str(node?.type),
     format: str(node?.format),
     status: str(node?.status),

@@ -116,7 +116,9 @@ test('protected endpoint with the CORRECT key -> 200, unchanged response schema'
     assert.equal(body.results[0].id, 1);
     assert.equal(body.results[0].anilistId, 1);
     assert.equal(body.results[0].malId, 11);
-    assert.equal(body.results[0].title, 'Cowboy Bebop');
+    // English title is preferred for the display title (title variant fields
+    // asserted in api-search.test.js).
+    assert.equal(body.results[0].title, 'Cowboy Bebop EN');
     assert.ok(body.pageInfo);
 
     // Accepted fallback header: x-api-key: <secret>

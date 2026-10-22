@@ -113,7 +113,7 @@ query ($id: Int, $page: Int, $perPage: Int) {
           episodes
           season
           seasonYear
-          title { romaji english userPreferred }
+          title { romaji english native userPreferred }
           coverImage { large medium }
         }
       }

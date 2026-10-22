@@ -26,7 +26,7 @@ import {
   anilistPage,
 } from './helpers/test-server.js';
 
-const HOME_KEY = 'api:home:v2';
+const HOME_KEY = 'api:home:v3';
 
 /** @param {string} query */
 function anilistKind(query) {
@@ -39,9 +39,27 @@ function anilistKind(query) {
 }
 
 /**
+ * Assert the title contract on a card: display `title` plus the three explicit
+ * AniList title variants (English/Romaji/native), never "undefined"/"null".
+ * @param {object} card
+ */
+function assertTitleFields(card) {
+  assert.ok(typeof card.title === 'string' || card.title === null);
+  for (const field of ['titleEnglish', 'titleRomaji', 'titleNative']) {
+    assert.ok(field in card, `${field} present`);
+    assert.ok(card[field] === null || typeof card[field] === 'string', `${field} string|null`);
+    assert.ok(card[field] !== 'undefined' && card[field] !== 'null', `${field} never a bogus string`);
+  }
+  // Display title prefers English, then Romaji, then native.
+  assert.equal(card.title, card.titleEnglish ?? card.titleRomaji ?? card.titleNative);
+}
+
+/**
  * AniList handler returning a distinct page per section (by sort variable).
  * Each section yields `perSection` entries so the Top 10 cap (10 of 12) is
- * exercised by the default flow.
+ * exercised by the default flow. The first entry of every section has NO
+ * English title so the Romaji fallback (titleEnglish: null) is covered in
+ * every collection.
  */
 function sectionHandler({ failSorts = [], perSection = 12, topRatedIds = null } = {}) {
   return (body) => {
@@ -51,8 +69,17 @@ function sectionHandler({ failSorts = [], perSection = 12, topRatedIds = null } 
     if (sort === 'SCORE_DESC' && topRatedIds) {
       return anilistPage(topRatedIds.map((id) => anilistMedia({ id, idMal: id + 5000, title: `Top ${id}` })));
     }
-    const entries = Array.from({ length: perSection }, (_, i) =>
-      anilistMedia({ id: 100 + sort.length + i, idMal: 200 + sort.length + i, title: `Anime ${sort} ${i}` }));
+    const entries = Array.from({ length: perSection }, (_, i) => {
+      const title = `Anime ${sort} ${i}`;
+      if (i === 0) {
+        return anilistMedia({
+          id: 100 + sort.length,
+          idMal: 200 + sort.length,
+          extra: { title: { romaji: title, english: null, native: 'テスト', userPreferred: title } },
+        });
+      }
+      return anilistMedia({ id: 100 + sort.length + i, idMal: 200 + sort.length + i, title });
+    });
     return anilistPage(entries);
   };
 }
@@ -69,12 +96,23 @@ test('GET /api/home -> 200 with populated AniList-backed sections + Top 10', asy
     // Existing contract sections preserved (trending/popular/seasonal/topRated).
     for (const section of ['trending', 'popular', 'seasonal', 'topRated']) {
       assert.ok(Array.isArray(body[section]) && body[section].length > 0, `${section} populated`);
-      const card = body[section][0];
-      // Canonical identity: id === anilistId, malId separate namespace.
-      assert.equal(card.id, card.anilistId);
-      assert.equal(typeof card.malId, 'number');
-      assert.ok(card.title);
+      for (const card of body[section]) {
+        // Canonical identity: id === anilistId, malId separate namespace.
+        assert.equal(card.id, card.anilistId);
+        assert.equal(typeof card.malId, 'number');
+        // Title contract on EVERY card of EVERY collection.
+        assertTitleFields(card);
+      }
+      // Anime without an English title: display title falls back to Romaji,
+      // titleEnglish stays null, native preserved.
+      const noEnglish = body[section].find((card) => card.titleEnglish === null);
+      assert.ok(noEnglish, `${section} includes an English-less anime`);
+      assert.equal(noEnglish.title, noEnglish.titleRomaji);
+      assert.equal(noEnglish.titleNative, 'テスト');
     }
+
+    // Top 10 cards carry the same title fields.
+    for (const card of body.top10) assertTitleFields(card);
 
     // Top 10: dedicated collection, capped at 10, ordered by the topRated
     // (SCORE_DESC) ranking, deduplicated by AniList ID.

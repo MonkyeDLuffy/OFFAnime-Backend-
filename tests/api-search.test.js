@@ -52,7 +52,11 @@ test('GET /api/search?q= -> 200 with normalized AniList results', async () => {
     assert.equal(body.results[0].id, 1);
     assert.equal(body.results[0].anilistId, 1);
     assert.equal(body.results[0].malId, 11);
-    assert.equal(body.results[0].title, 'Cowboy Bebop');
+    // Display title prefers the English title; variants are explicit fields.
+    assert.equal(body.results[0].title, 'Cowboy Bebop EN');
+    assert.equal(body.results[0].titleEnglish, 'Cowboy Bebop EN');
+    assert.equal(body.results[0].titleRomaji, 'Cowboy Bebop');
+    assert.equal(body.results[0].titleNative, 'テスト');
     assert.ok(body.pageInfo);
 
     // The search query reached AniList inside the variables (never a raw URL).

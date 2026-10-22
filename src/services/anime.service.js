@@ -314,7 +314,10 @@ function validateSearchOptions(options = {}) {
  */
 export async function searchAnime(query, options = {}) {
   const normalized = validateSearchOptions(options);
-  const key = `anilist:search:${query ?? ''}:${JSON.stringify(normalized)}`;
+  // v2 key: cards now include titleEnglish/titleRomaji/titleNative (and
+  // `title` prefers English); bumping the namespace keeps stale cached pages
+  // from hiding the new fields (also feeds home sections / category / top-search).
+  const key = `anilist:search:v2:${query ?? ''}:${JSON.stringify(normalized)}`;
   return cacheManager.getOrLoad(
     key,
     async () => normalizeAnilistPage(await anilistProvider.searchAnime(query, normalized)),
@@ -331,7 +334,9 @@ export async function searchAnime(query, options = {}) {
 export async function getAnimeRecommendations(anilistId) {
   const id = parseRequiredId(anilistId, 'anilistId');
   return cacheManager.getOrLoad(
-    `anilist:recommendations:${id}`,
+    // v2 key: recommendation cards gained the title variant fields (DAY TTL,
+    // so stale entries must not outlive the schema change).
+    `anilist:recommendations:v2:${id}`,
     async () => normalizeAnilistRecommendations(await anilistProvider.getRecommendations(id, { perPage: 20 })),
     { ttlSeconds: CACHE_TTL.DAY, isValid: Array.isArray },
   );

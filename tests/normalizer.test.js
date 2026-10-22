@@ -226,6 +226,47 @@ test('normalizeAnilistPage builds stable page shape and drops junk entries', () 
   assert.equal(page.results[0].anilistId, 10);
 });
 
+test('media cards expose title variants; English preferred; missing variants stay null', () => {
+  const page = normalizeAnilistPage({
+    pageInfo: {},
+    media: [
+      // English available: preferred for the display title.
+      { id: 1, idMal: 11, title: { english: 'Attack on Titan', romaji: 'Shingeki no Kyojin', native: '進撃の巨人' } },
+      // English missing/empty: display title falls back to Romaji, never "undefined"/"null".
+      { id: 2, idMal: 12, title: { english: null, romaji: 'Romaji Only', native: '日本語' } },
+      { id: 3, idMal: 13, title: { english: '   ', romaji: 'Whitespace English', native: null } },
+      // No variants at all: explicit nulls.
+      { id: 4, idMal: 14, title: {} },
+    ],
+  });
+
+  assert.equal(page.results.length, 4);
+  const [withEnglish, noEnglish, emptyEnglish, none] = page.results;
+
+  // IDs/namespaces untouched by the title handling.
+  assert.equal(withEnglish.id, 1);
+  assert.equal(withEnglish.anilistId, 1);
+  assert.equal(withEnglish.malId, 11);
+
+  assert.equal(withEnglish.title, 'Attack on Titan');
+  assert.equal(withEnglish.titleEnglish, 'Attack on Titan');
+  assert.equal(withEnglish.titleRomaji, 'Shingeki no Kyojin');
+  assert.equal(withEnglish.titleNative, '進撃の巨人');
+
+  assert.equal(noEnglish.title, 'Romaji Only');
+  assert.equal(noEnglish.titleEnglish, null);
+  assert.equal(noEnglish.titleRomaji, 'Romaji Only');
+  assert.equal(noEnglish.titleNative, '日本語');
+
+  assert.equal(emptyEnglish.title, 'Whitespace English');
+  assert.equal(emptyEnglish.titleEnglish, null);
+
+  assert.equal(none.title, null);
+  assert.equal(none.titleEnglish, null);
+  assert.equal(none.titleRomaji, null);
+  assert.equal(none.titleNative, null);
+});
+
 test('createBaseAnime yields the canonical skeleton', () => {
   const anime = createBaseAnime({ anilistId: 123, malId: 456 });
   assert.equal(anime.id, 123);

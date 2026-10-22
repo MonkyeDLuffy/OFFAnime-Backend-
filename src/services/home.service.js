@@ -85,8 +85,11 @@ function buildTop10(sections) {
  * @returns {Promise<object>}
  */
 export async function getHomeFeed({ cache = cacheManager, search = searchAnime } = {}) {
+  // v3: anime cards now carry titleEnglish/titleRomaji/titleNative (and
+  // `title` prefers English) - the version bump keeps stale pre-change
+  // responses from hiding the new fields.
   return cache.getOrLoad(
-    'api:home:v2',
+    'api:home:v3',
     async () => {
       const sections = {};
       const definitions = homeSections();
