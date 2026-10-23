@@ -57,6 +57,10 @@ ${MEDIA_FIELDS}
  * Search anime with optional filters (page, perPage, season, year, format,
  * status, genre, sort). Sorts default to SEARCH_MATCH for keyword searches and
  * POPULARITY_DESC for filter-only browsing.
+ *
+ * `trailer { id site }` rides along in the SAME request (no extra API call):
+ * AniList's native trailer metadata for list cards (home sections, search,
+ * category, top-search). Normalization + URL building live in the normalizer.
  */
 export const SEARCH_ANIME_QUERY = `
 query ($page: Int, $perPage: Int, $search: String, $season: MediaSeason, $seasonYear: Int, $format: MediaFormat, $status: MediaStatus, $genre: String, $sort: [MediaSort]) {
@@ -73,6 +77,7 @@ query ($page: Int, $perPage: Int, $search: String, $season: MediaSeason, $season
       sort: $sort
     ) {
 ${MEDIA_FIELDS}
+      trailer { id site }
     }
   }
 }

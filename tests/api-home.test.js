@@ -26,7 +26,7 @@ import {
   anilistPage,
 } from './helpers/test-server.js';
 
-const HOME_KEY = 'api:home:v3';
+const HOME_KEY = 'api:home:v5';
 
 /** @param {string} query */
 function anilistKind(query) {
@@ -102,6 +102,11 @@ test('GET /api/home -> 200 with populated AniList-backed sections + Top 10', asy
         assert.equal(typeof card.malId, 'number');
         // Title contract on EVERY card of EVERY collection.
         assertTitleFields(card);
+        // AniList-native trailer contract: the field is ALWAYS present
+        // (null when this fixture provides no trailer - deep trailer shapes
+        // are covered by api-home-trailers.test.js).
+        assert.ok('trailer' in card, `trailer field present on ${card.title}`);
+        assert.ok(card.trailer === null || (card.trailer && typeof card.trailer === 'object'));
       }
       // Anime without an English title: display title falls back to Romaji,
       // titleEnglish stays null, native preserved.

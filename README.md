@@ -121,7 +121,11 @@ ID. Any AniList -> MAL mapping is performed by the identity layer.
   (each section an array of normalized anime cards; a failing section is
   omitted rather than emptying the whole page; `top10` is a dedicated Top 10
   collection ranked by the topRated SCORE_DESC source, deduplicated by
-  AniList ID, capped at 10, and omitted when its ranking source failed).
+  AniList ID, capped at 10, and omitted when its ranking source failed.
+  Every card additionally carries an additive `trailer` field - AniList's
+  NATIVE trailer metadata fetched in the SAME GraphQL request (no extra API
+  call, no TMDB dependency): `{ id, site, key, url }` with the URL built only
+  for known sites (YouTube/Dailymotion), or `null`, never fabricated).
 - `/api/search`, `/api/category/:type` -> `{ pageInfo: {...}, results: [...] }`
   (normalized anime cards).
 - `/api/details/:id` (and `/smart/details/:id`) -> canonical anime shape
@@ -1135,7 +1139,7 @@ canonical response (cached composite, MEDIUM TTL)
 
 | Endpoint | Service | Providers |
 | --- | --- | --- |
-| `GET /api/home` | `home.service.getHomeFeed` | AniList (4 cached section searches; Top 10 derived from topRated - no extra calls) |
+| `GET /api/home` | `home.service.getHomeFeed` | AniList only (4 cached section searches; trailers ride in the SAME requests via `trailer { id site }`; Top 10 derived from topRated - no extra calls) |
 | `GET /api/search` | `anime.service.searchAnime` | AniList only (no per-result enrichment) |
 | `GET /api/details/:id` | `anime.service.getFullDetails` | AniList -> Jikan -> TMDB |
 | `GET /api/smart/details/:id` | `anime.service.getFullDetails` | Identical composite cache key - zero duplicate calls |

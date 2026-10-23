@@ -233,7 +233,7 @@ All routes are mounted under **`/api`**. Auth requirement: 🔓 public,
 
 | Method | Path | Auth | Use |
 | --- | --- | --- | --- |
-| GET | `/api/home` | 🔐 | Homepage feed: `{ trending, popular, seasonal, topRated, top10 }` — arrays of normalized anime cards (AniList-backed, cached). `top10` is the dedicated Top 10 collection (topRated SCORE_DESC ranking, deduplicated by AniList ID, capped at 10; no extra provider call). A failing section is omitted, not fatal (Top 10 follows its topRated ranking source). |
+| GET | `/api/home` | 🔐 | Homepage feed: `{ trending, popular, seasonal, topRated, top10 }` — arrays of normalized anime cards (AniList-backed, cached). `top10` is the dedicated Top 10 collection (topRated SCORE_DESC ranking, deduplicated by AniList ID, capped at 10; no extra provider call). A failing section is omitted, not fatal (Top 10 follows its topRated ranking source). Every card also carries an additive `trailer` field — AniList's NATIVE `trailer { id site }` metadata fetched in the SAME GraphQL request (no extra API call, no TMDB dependency, no season mapping): `{ id, site, key, url }` with the URL built only for known sites (YouTube/Dailymotion), or `null` — never fabricated. |
 | GET | `/api/schedule` | 🔐 | Airing schedule (AniList). Query: `from`/`to` (epoch seconds), `page`. Response: `{ window: { from, to }, pageInfo, results }`. Cached. |
 
 ### Search

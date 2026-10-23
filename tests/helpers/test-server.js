@@ -209,9 +209,9 @@ export function expireL1Entry(key) {
 
 /**
  * Raw AniList Media fixture.
- * @param {{ id?: number, idMal?: number|null, title?: string, bannerImage?: string|null, coverImage?: string|null, format?: string, extra?: object }} [options]
+ * @param {{ id?: number, idMal?: number|null, title?: string, bannerImage?: string|null, coverImage?: string|null, format?: string, trailer?: object|null, extra?: object }} [options]
  */
-export function anilistMedia({ id = 123, idMal = 456, title = 'Test Anime', bannerImage = null, coverImage = null, format = 'TV', extra = {} } = {}) {
+export function anilistMedia({ id = 123, idMal = 456, title = 'Test Anime', bannerImage = null, coverImage = null, format = 'TV', trailer, extra = {} } = {}) {
   return {
     id,
     idMal,
@@ -233,6 +233,9 @@ export function anilistMedia({ id = 123, idMal = 456, title = 'Test Anime', bann
     averageScore: 85,
     popularity: 100000,
     studios: { nodes: [{ name: 'Test Studio' }] },
+    // AniList-native trailer metadata is included only when a test provides it
+    // (omitted entirely otherwise, exercising missing-field safety).
+    ...(trailer !== undefined ? { trailer } : {}),
     ...extra,
   };
 }
@@ -308,6 +311,14 @@ export function tmdbSearchResults(results = []) {
  */
 export function tmdbTvCandidate({ id = 789, name = 'Test Anime', originalName = name, firstAirDate = '2023-01-10', backdropPath = '/backdrop.jpg', popularity = 50 } = {}) {
   return { id, name, original_name: originalName, first_air_date: firstAirDate, backdrop_path: backdropPath, poster_path: '/poster.jpg', popularity };
+}
+
+/**
+ * Raw TMDB movie candidate.
+ * @param {{ id?: number, title?: string, originalTitle?: string, releaseDate?: string, backdropPath?: string|null, popularity?: number }} [options]
+ */
+export function tmdbMovieCandidate({ id = 555, title = 'Test Movie', originalTitle = title, releaseDate = '2023-01-10', backdropPath = '/backdrop.jpg', popularity = 50 } = {}) {
+  return { id, title, original_title: originalTitle, release_date: releaseDate, backdrop_path: backdropPath, poster_path: '/poster.jpg', popularity };
 }
 
 /**

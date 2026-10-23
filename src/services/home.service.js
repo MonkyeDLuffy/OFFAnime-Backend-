@@ -9,6 +9,12 @@
  *   - top10: a dedicated Top 10 collection derived from the topRated section
  *     (AniList SCORE_DESC - the ranking source this backend already uses).
  *     No extra provider call; deduplicated by AniList ID, capped at 10.
+ *   - Trailers: every card carries AniList's NATIVE `trailer { id site }`
+ *     metadata, requested in the SAME GraphQL request as the section data (no
+ *     extra API call, no N+1, no TMDB dependency, no season mapping - each
+ *     AniList entry is its own identity and carries its own trailer).
+ *     Normalization/URL building happen in the card normalizer; a missing or
+ *     invalid trailer is simply `trailer: null` and can never break the feed.
  *   - The aggregated response is cached under a namespace-safe key so repeat
  *     home requests make ZERO provider calls within the TTL.
  *   - Section resilience: a failing section is OMITTED from the response (with
@@ -85,11 +91,11 @@ function buildTop10(sections) {
  * @returns {Promise<object>}
  */
 export async function getHomeFeed({ cache = cacheManager, search = searchAnime } = {}) {
-  // v3: anime cards now carry titleEnglish/titleRomaji/titleNative (and
-  // `title` prefers English) - the version bump keeps stale pre-change
-  // responses from hiding the new fields.
+  // v5: cards carry the AniList-NATIVE trailer field (previously a TMDB-derived
+  // trailer) - the version bump keeps stale pre-change responses from serving
+  // the old trailer shape.
   return cache.getOrLoad(
-    'api:home:v3',
+    'api:home:v5',
     async () => {
       const sections = {};
       const definitions = homeSections();

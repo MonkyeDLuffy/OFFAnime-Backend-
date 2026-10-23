@@ -49,6 +49,7 @@ import { CACHE_TTL, PROVIDERS } from '../config/constants.js';
 import { parseRequiredId } from '../identity/id-types.js';
 import { ProviderError, ValidationError } from '../errors/index.js';
 import { logger } from '../utils/logger.js';
+import { mapWithBoundedConcurrency } from '../utils/concurrency.js';
 import { enrichWithTmdb } from './tmdb.service.js';
 import {
   extractTmdbSeasonEpisodes,
@@ -83,32 +84,6 @@ const isUsableUnified = (value) =>
       value.resolved === true &&
       Array.isArray(value.episodes),
   );
-
-/**
- * Bounded-concurrency map: at most `limit` workers run at once. Results keep
- * the input order. A worker failure is the worker's own concern (it returns a
- * failure descriptor here, never a thrown error).
- * @template T, R
- * @param {T[]} items
- * @param {number} limit
- * @param {(item: T, index: number) => Promise<R>} worker
- * @returns {Promise<R[]>}
- */
-async function mapWithBoundedConcurrency(items, limit, worker) {
-  const results = new Array(items.length);
-  let next = 0;
-  const workers = Array.from(
-    { length: Math.min(limit, items.length) },
-    async () => {
-      while (next < items.length) {
-        const index = next++;
-        results[index] = await worker(items[index], index);
-      }
-    },
-  );
-  await Promise.all(workers);
-  return results;
-}
 
 /**
  * Read the available NORMAL season numbers from raw TMDB TV details. Season 0

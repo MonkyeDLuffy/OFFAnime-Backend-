@@ -142,6 +142,46 @@ function displayTitleEnglishFirst(variants) {
   return variants.english ?? variants.romaji ?? variants.native;
 }
 
+// --- card trailer handling (AniList-native) -----------------------------------
+
+/**
+ * Sites whose trailer URL format is known and reliable. AniList's `trailer.site`
+ * is matched case-insensitively; anything outside this map keeps its real
+ * `id`/`site` with `url: null` - URLs are never guessed.
+ */
+const TRAILER_URL_BUILDERS = {
+  youtube: (id) => `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`,
+  dailymotion: (id) => `https://www.dailymotion.com/video/${encodeURIComponent(id)}`,
+};
+
+/**
+ * Normalize an AniList card's native `trailer { id site }` entry.
+ *
+ * Rules (never fabricate anything):
+ *   - Missing/malformed entry, missing `id` or `site`, or an id containing
+ *     whitespace/control characters (never a valid video key) -> null.
+ *   - `site` is normalized to lowercase (AniList uses "youtube"); the URL is
+ *     built ONLY for known sites (YouTube watch URL, Dailymotion video URL).
+ *   - Unknown sites keep their real id/site/key with `url: null`.
+ * @param {unknown} raw
+ * @returns {{ id: string, site: string, key: string, url: string|null } | null}
+ */
+export function normalizeAnilistCardTrailer(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const id = str(raw.id);
+  const site = str(raw.site);
+  if (id === null || site === null) return null;
+  if (/[\s\u0000-\u001f\u007f]/.test(id)) return null; // whitespace/control chars: invalid video key
+  const normalizedSite = site.toLowerCase();
+  const build = TRAILER_URL_BUILDERS[normalizedSite];
+  return {
+    id,
+    site: normalizedSite,
+    key: id,
+    url: build ? build(id) : null,
+  };
+}
+
 // --- image handling ----------------------------------------------------------
 
 /**
@@ -192,8 +232,13 @@ export function normalizeAnilistRelation(node) {
  *     (english -> romaji -> native), or null when no variant exists.
  *   - `titleEnglish` / `titleRomaji` / `titleNative`: the individual AniList
  *     variants, each null when unavailable.
+ *
+ * Trailer contract: `trailer` carries AniList's NATIVE trailer metadata
+ * (requested in the SAME GraphQL request - no extra API call, no TMDB):
+ * `{ id, site, key, url }` with the URL built only for known sites
+ * (YouTube/Dailymotion), or null when AniList has no usable trailer.
  * @param {unknown} node
- * @returns {{ id: number, anilistId: number, malId: number|null, title: string|null, titleEnglish: string|null, titleRomaji: string|null, titleNative: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, images: { poster: string|null } } | null}
+ * @returns {{ id: number, anilistId: number, malId: number|null, title: string|null, titleEnglish: string|null, titleRomaji: string|null, titleNative: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, images: { poster: string|null }, trailer: { id: string, site: string, key: string, url: string|null } | null } | null}
  */
 export function normalizeAnilistMediaCard(node) {
   const anilistId = normalizeId(node?.id);
@@ -214,6 +259,7 @@ export function normalizeAnilistMediaCard(node) {
     season: str(node?.season),
     seasonYear: positiveInt(node?.seasonYear),
     images: { poster: str(node?.coverImage?.large) ?? str(node?.coverImage?.medium) },
+    trailer: normalizeAnilistCardTrailer(node?.trailer),
   };
 }
 
