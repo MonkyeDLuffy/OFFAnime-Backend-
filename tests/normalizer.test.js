@@ -216,7 +216,7 @@ test('normalizeAnilistPage builds stable page shape and drops junk entries', () 
   const page = normalizeAnilistPage({
     pageInfo: { total: 2, currentPage: 1, lastPage: 1, hasNextPage: false, perPage: 20 },
     media: [
-      { id: 10, idMal: 10, title: { english: 'A' }, format: 'TV', status: 'FINISHED', coverImage: { large: 'https://img.example/a.jpg' } },
+      { id: 10, idMal: 10, title: { english: 'A' }, format: 'TV', status: 'FINISHED', coverImage: { large: 'https://img.example/a.jpg' }, bannerImage: 'https://img.example/b.jpg' },
       { idMal: 11 }, // missing id -> dropped
     ],
   });
@@ -224,6 +224,10 @@ test('normalizeAnilistPage builds stable page shape and drops junk entries', () 
   assert.equal(page.pageInfo.hasNextPage, false);
   assert.equal(page.results.length, 1);
   assert.equal(page.results[0].anilistId, 10);
+  // Card banners: genuine AniList bannerImage only (null when absent, never
+  // the poster URL disguised as a banner).
+  assert.equal(page.results[0].images.banner, 'https://img.example/b.jpg');
+  assert.deepEqual(page.results[0].images, { poster: 'https://img.example/a.jpg', banner: 'https://img.example/b.jpg' });
 });
 
 test('media cards expose title variants; English preferred; missing variants stay null', () => {

@@ -94,8 +94,10 @@ export async function getHomeFeed({ cache = cacheManager, search = searchAnime }
   // v5: cards carry the AniList-NATIVE trailer field (previously a TMDB-derived
   // trailer) - the version bump keeps stale pre-change responses from serving
   // the old trailer shape.
+  // v6: cards carry images.banner (AniList's genuine bannerImage) - the bump
+  // keeps stale pre-banner cached responses from hiding the new field.
   return cache.getOrLoad(
-    'api:home:v5',
+    'api:home:v6',
     async () => {
       const sections = {};
       const definitions = homeSections();

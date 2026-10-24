@@ -26,7 +26,7 @@ import {
   anilistPage,
 } from './helpers/test-server.js';
 
-const HOME_KEY = 'api:home:v5';
+const HOME_KEY = 'api:home:v6';
 
 /** @param {string} query */
 function anilistKind(query) {
@@ -75,6 +75,8 @@ function sectionHandler({ failSorts = [], perSection = 12, topRatedIds = null } 
         return anilistMedia({
           id: 100 + sort.length,
           idMal: 200 + sort.length,
+          title,
+          bannerImage: `https://img.example/banner-${sort}.jpg`,
           extra: { title: { romaji: title, english: null, native: 'テスト', userPreferred: title } },
         });
       }
@@ -107,13 +109,22 @@ test('GET /api/home -> 200 with populated AniList-backed sections + Top 10', asy
         // are covered by api-home-trailers.test.js).
         assert.ok('trailer' in card, `trailer field present on ${card.title}`);
         assert.ok(card.trailer === null || (card.trailer && typeof card.trailer === 'object'));
+        // Banner contract: images ALWAYS has poster + banner; banner is either
+        // AniList's genuine bannerImage URL or null (never a faked poster).
+        assert.ok('banner' in card.images, `images.banner present on ${card.title}`);
+        assert.ok(card.images.banner === null || card.images.banner.startsWith('https://'),
+          `images.banner is a URL or null on ${card.title}`);
+        assert.ok('poster' in card.images, `images.poster present on ${card.title}`);
       }
       // Anime without an English title: display title falls back to Romaji,
-      // titleEnglish stays null, native preserved.
+      // titleEnglish stays null, native preserved. Its banner is AniList's
+      // genuine bannerImage URL (never the poster URL).
       const noEnglish = body[section].find((card) => card.titleEnglish === null);
       assert.ok(noEnglish, `${section} includes an English-less anime`);
       assert.equal(noEnglish.title, noEnglish.titleRomaji);
       assert.equal(noEnglish.titleNative, 'テスト');
+      assert.ok(noEnglish.images.banner?.startsWith('https://img.example/banner-'),
+        `${section} English-less card carries the AniList banner URL`);
     }
 
     // Top 10 cards carry the same title fields.
@@ -126,6 +137,11 @@ test('GET /api/home -> 200 with populated AniList-backed sections + Top 10', asy
     assert.deepEqual(body.top10.map((a) => a.anilistId), body.topRated.slice(0, 10).map((a) => a.anilistId));
     const top10Ids = new Set(body.top10.map((a) => a.anilistId));
     assert.equal(top10Ids.size, body.top10.length, 'no duplicate entries within Top 10');
+    // Top 10 derives from topRated: the ranking's first card carries its
+    // AniList banner into the Top 10 collection.
+    const top10First = body.top10.find((c) => c.anilistId === 110);
+    assert.ok(top10First, 'topRated first card present in Top 10');
+    assert.equal(top10First.images.banner, 'https://img.example/banner-SCORE_DESC.jpg');
 
     // Exactly 4 AniList searches (one per section - Top 10 adds NO calls),
     // no Jikan/TMDB/MegaPlay.

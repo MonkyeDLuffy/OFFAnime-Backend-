@@ -238,7 +238,7 @@ export function normalizeAnilistRelation(node) {
  * `{ id, site, key, url }` with the URL built only for known sites
  * (YouTube/Dailymotion), or null when AniList has no usable trailer.
  * @param {unknown} node
- * @returns {{ id: number, anilistId: number, malId: number|null, title: string|null, titleEnglish: string|null, titleRomaji: string|null, titleNative: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, images: { poster: string|null }, trailer: { id: string, site: string, key: string, url: string|null } | null } | null}
+ * @returns {{ id: number, anilistId: number, malId: number|null, title: string|null, titleEnglish: string|null, titleRomaji: string|null, titleNative: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, images: { poster: string|null, banner: string|null }, trailer: { id: string, site: string, key: string, url: string|null } | null} | null}
  */
 export function normalizeAnilistMediaCard(node) {
   const anilistId = normalizeId(node?.id);
@@ -258,7 +258,10 @@ export function normalizeAnilistMediaCard(node) {
     episodes: positiveInt(node?.episodes),
     season: str(node?.season),
     seasonYear: positiveInt(node?.seasonYear),
-    images: { poster: str(node?.coverImage?.large) ?? str(node?.coverImage?.medium) },
+    images: {
+      poster: str(node?.coverImage?.large) ?? str(node?.coverImage?.medium),
+      banner: str(node?.bannerImage),
+    },
     trailer: normalizeAnilistCardTrailer(node?.trailer),
   };
 }
