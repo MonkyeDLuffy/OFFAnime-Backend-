@@ -1,0 +1,287 @@
+/**
+ * Phase 7 endpoint tests: GET /api/home.
+ *
+ * Uses the real Express app on an ephemeral port with a mocked global fetch
+ * routed by provider host. No live AniList/Jikan/TMDB/Supabase required.
+ *
+ * Covered: successful response (sections + Top 10), cached response (no extra
+ * provider calls), Top 10 cap/dedupe, section failure omitted (Top 10 follows
+ * its ranking source), total failure + structured error, total failure with
+ * stale-if-error fallback.
+ */
+
+// Env setup MUST be the first import (ESM evaluates imports depth-first in
+// order, so this runs before config/env.js loads).
+import './helpers/test-env.js';
+
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import {
+  installApiMocks,
+  startTestServer,
+  resetL1Cache,
+  expireL1Entry,
+  anilistMedia,
+  anilistPage,
+} from './helpers/test-server.js';
+
+const HOME_KEY = 'api:home:v6';
+
+/** @param {string} query */
+function anilistKind(query) {
+  if (query.includes('airingSchedules')) return 'schedule';
+  if (query.includes('recommendations')) return 'recommendations';
+  if (query.includes('relations')) return 'relations';
+  if (query.includes('Page(') && query.includes('media(')) return 'search';
+  if (query.includes('$idMal')) return 'byMal';
+  return 'byId';
+}
+
+/**
+ * Assert the title contract on a card: display `title` plus the three explicit
+ * AniList title variants (English/Romaji/native), never "undefined"/"null".
+ * @param {object} card
+ */
+function assertTitleFields(card) {
+  assert.ok(typeof card.title === 'string' || card.title === null);
+  for (const field of ['titleEnglish', 'titleRomaji', 'titleNative']) {
+    assert.ok(field in card, `${field} present`);
+    assert.ok(card[field] === null || typeof card[field] === 'string', `${field} string|null`);
+    assert.ok(card[field] !== 'undefined' && card[field] !== 'null', `${field} never a bogus string`);
+  }
+  // Display title prefers English, then Romaji, then native.
+  assert.equal(card.title, card.titleEnglish ?? card.titleRomaji ?? card.titleNative);
+}
+
+/**
+ * AniList handler returning a distinct page per section (by sort variable).
+ * Each section yields `perSection` entries so the Top 10 cap (10 of 12) is
+ * exercised by the default flow. The first entry of every section has NO
+ * English title so the Romaji fallback (titleEnglish: null) is covered in
+ * every collection.
+ */
+function sectionHandler({ failSorts = [], perSection = 12, topRatedIds = null } = {}) {
+  return (body) => {
+    if (anilistKind(body.query) !== 'search') throw new Error(`home must only search, got: ${body.query}`);
+    const sort = body.variables.sort?.[0] ?? '';
+    if (failSorts.includes(sort)) return { status: 500, json: { error: 'boom' } };
+    if (sort === 'SCORE_DESC' && topRatedIds) {
+      return anilistPage(topRatedIds.map((id) => anilistMedia({ id, idMal: id + 5000, title: `Top ${id}` })));
+    }
+    const entries = Array.from({ length: perSection }, (_, i) => {
+      const title = `Anime ${sort} ${i}`;
+      if (i === 0) {
+        return anilistMedia({
+          id: 100 + sort.length,
+          idMal: 200 + sort.length,
+          title,
+          bannerImage: `https://img.example/banner-${sort}.jpg`,
+          extra: { title: { romaji: title, english: null, native: 'テスト', userPreferred: title } },
+        });
+      }
+      return anilistMedia({ id: 100 + sort.length + i, idMal: 200 + sort.length + i, title });
+    });
+    return anilistPage(entries);
+  };
+}
+
+test('GET /api/home -> 200 with populated AniList-backed sections + Top 10', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({ anilist: sectionHandler({}) });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    // Existing contract sections preserved (trending/popular/seasonal/topRated).
+    for (const section of ['trending', 'popular', 'seasonal', 'topRated']) {
+      assert.ok(Array.isArray(body[section]) && body[section].length > 0, `${section} populated`);
+      for (const card of body[section]) {
+        // Canonical identity: id === anilistId, malId separate namespace.
+        assert.equal(card.id, card.anilistId);
+        assert.equal(typeof card.malId, 'number');
+        // Title contract on EVERY card of EVERY collection.
+        assertTitleFields(card);
+        // AniList-native trailer contract: the field is ALWAYS present
+        // (null when this fixture provides no trailer - deep trailer shapes
+        // are covered by api-home-trailers.test.js).
+        assert.ok('trailer' in card, `trailer field present on ${card.title}`);
+        assert.ok(card.trailer === null || (card.trailer && typeof card.trailer === 'object'));
+        // Banner contract: images ALWAYS has poster + banner; banner is either
+        // AniList's genuine bannerImage URL or null (never a faked poster).
+        assert.ok('banner' in card.images, `images.banner present on ${card.title}`);
+        assert.ok(card.images.banner === null || card.images.banner.startsWith('https://'),
+          `images.banner is a URL or null on ${card.title}`);
+        assert.ok('poster' in card.images, `images.poster present on ${card.title}`);
+      }
+      // Anime without an English title: display title falls back to Romaji,
+      // titleEnglish stays null, native preserved. Its banner is AniList's
+      // genuine bannerImage URL (never the poster URL).
+      const noEnglish = body[section].find((card) => card.titleEnglish === null);
+      assert.ok(noEnglish, `${section} includes an English-less anime`);
+      assert.equal(noEnglish.title, noEnglish.titleRomaji);
+      assert.equal(noEnglish.titleNative, 'テスト');
+      assert.ok(noEnglish.images.banner?.startsWith('https://img.example/banner-'),
+        `${section} English-less card carries the AniList banner URL`);
+    }
+
+    // Top 10 cards carry the same title fields.
+    for (const card of body.top10) assertTitleFields(card);
+
+    // Top 10: dedicated collection, capped at 10, ordered by the topRated
+    // (SCORE_DESC) ranking, deduplicated by AniList ID.
+    assert.ok(Array.isArray(body.top10), 'top10 collection present');
+    assert.equal(body.top10.length, 10);
+    assert.deepEqual(body.top10.map((a) => a.anilistId), body.topRated.slice(0, 10).map((a) => a.anilistId));
+    const top10Ids = new Set(body.top10.map((a) => a.anilistId));
+    assert.equal(top10Ids.size, body.top10.length, 'no duplicate entries within Top 10');
+    // Top 10 derives from topRated: the ranking's first card carries its
+    // AniList banner into the Top 10 collection.
+    const top10First = body.top10.find((c) => c.anilistId === 110);
+    assert.ok(top10First, 'topRated first card present in Top 10');
+    assert.equal(top10First.images.banner, 'https://img.example/banner-SCORE_DESC.jpg');
+
+    // Exactly 4 AniList searches (one per section - Top 10 adds NO calls),
+    // no Jikan/TMDB/MegaPlay.
+    assert.equal(mock.anilistCalls().length, 4);
+    assert.equal(mock.jikanCalls().length, 0);
+    assert.equal(mock.tmdbCalls().length, 0);
+    assert.equal(mock.megaplayCalls().length, 0);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> Top 10 deduplicates by AniList ID and stays <= 10', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: sectionHandler({ topRatedIds: [7, 8, 7, 9, 7, 10, 11, 12, 13, 14, 15, 16, 17] }),
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.ok(Array.isArray(body.top10));
+    const ids = body.top10.map((a) => a.anilistId);
+    assert.deepEqual(ids, [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]); // dup 7 collapsed, cap 10
+    assert.equal(new Set(ids).size, ids.length);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> second request served from cache (zero provider calls)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({ anilist: sectionHandler({}) });
+  const server = await startTestServer();
+  try {
+    const first = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(first.status, 200);
+    const callsAfterFirst = mock.calls.length;
+    assert.ok(callsAfterFirst > 0);
+
+    const second = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(second.status, 200);
+    assert.equal(mock.calls.length, callsAfterFirst);
+
+    const firstBody = await first.json();
+    const secondBody = await second.json();
+    assert.deepEqual(secondBody, firstBody);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> one failing section is OMITTED, others survive (Top 10 follows its ranking source)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({ anilist: sectionHandler({ failSorts: ['TRENDING_DESC'] }) });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.equal(body.trending, undefined);
+    assert.ok(Array.isArray(body.popular) && body.popular.length > 0);
+    assert.ok(Array.isArray(body.seasonal) && body.seasonal.length > 0);
+    assert.ok(Array.isArray(body.topRated) && body.topRated.length > 0);
+    // topRated loaded -> the Top 10 collection is still present.
+    assert.ok(Array.isArray(body.top10) && body.top10.length > 0);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> topRated failing omits Top 10 (no fabricated ranking)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({ anilist: sectionHandler({ failSorts: ['SCORE_DESC'] }) });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+
+    const body = await res.json();
+    assert.equal(body.topRated, undefined);
+    assert.equal(body.top10, undefined);
+    assert.ok(Array.isArray(body.trending) && body.trending.length > 0);
+    assert.ok(Array.isArray(body.popular) && body.popular.length > 0);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> ALL sections failing with no cache -> 502 structured error (never [])', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({ anilist: () => ({ status: 500, json: { error: 'boom' } }) });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 502);
+
+    const body = await res.json();
+    assert.equal(body.error.code, 'PROVIDER_ERROR');
+    assert.ok(body.error.message);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/home -> ALL sections failing with stale cache -> stale fallback served', async () => {
+  await resetL1Cache();
+  const server = await startTestServer();
+  let failing = false;
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (failing) return { status: 500, json: { error: 'boom' } };
+      return sectionHandler({})(body);
+    },
+  });
+  try {
+    // Prime the cache with a good response.
+    const good = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(good.status, 200);
+    const goodBody = await good.json();
+
+    // Expire the L1 entry (retained for stale-if-error), then fail everything.
+    expireL1Entry(HOME_KEY);
+    failing = true;
+
+    const res = await fetch(`${server.baseUrl}/api/home`);
+    assert.equal(res.status, 200);
+    const staleBody = await res.json();
+    assert.deepEqual(staleBody, goodBody);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});

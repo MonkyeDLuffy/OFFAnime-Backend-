@@ -1,0 +1,40 @@
+from,to,type,confidence,reason,step,staticGated
+"Method:src/identity/identity-resolver.js:IdentityResolver.resolveAniListToMal#1","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver.resolveMalToAniList#1","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver.resolve#1","Function:src/identity/id-types.js:parseIdentityType","CALLS",0.85,"import-resolved",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver._resolveAniListToMalFresh#1","Function:src/identity/identity-resolver.js:requirePayloadId","CALLS",0.85,"local-call",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver._resolveAniListToMalFresh#1","Function:src/identity/id-types.js:createIdentityResult","CALLS",0.85,"import-resolved",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver._resolveMalToAniListFresh#1","Function:src/identity/identity-resolver.js:requirePayloadId","CALLS",0.85,"local-call",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver._resolveMalToAniListFresh#1","Function:src/identity/id-types.js:createIdentityResult","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAnimeById#1","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAnimeByMalId#1","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getRelations#1","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getRecommendations#2","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/base-provider.js:BaseProvider.request#2","Function:src/providers/http-client.js:httpRequest","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/jikan/jikan.provider.js:JikanProvider.getAnimeByMalId#2","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/jikan/jikan.provider.js:JikanProvider.getAnimeByMalId#2","Function:src/providers/jikan/jikan.queries.js:animeFullPath","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/jikan/jikan.provider.js:JikanProvider.getAnimeByMalId#2","Function:src/providers/jikan/jikan.queries.js:animePath","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/jikan/jikan.provider.js:JikanProvider.getEpisodeList#2","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/jikan/jikan.provider.js:JikanProvider.getEpisodeList#2","Function:src/providers/jikan/jikan.queries.js:animeEpisodesPath","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/jikan/jikan.provider.js:JikanProvider.searchAnime#2","Function:src/providers/jikan/jikan.queries.js:animeSearchPath","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/megaplay/megaplay.provider.js:MegaplayProvider.resolveByAnilistId#2","Function:src/providers/megaplay/megaplay.queries.js:buildAniListStreamUrl","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/megaplay/megaplay.provider.js:MegaplayProvider.resolveByMalId#2","Function:src/providers/megaplay/megaplay.queries.js:buildMalStreamUrl","CALLS",0.85,"import-resolved",0,0
+"Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._details#3","Function:src/identity/id-types.js:parseRequiredId","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver.resolveStream#1","Function:src/identity/id-types.js:normalizeId","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver.resolveStream#1","Function:src/providers/megaplay/megaplay.queries.js:normalizeEpisode","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver.resolveStream#1","Function:src/providers/megaplay/megaplay.queries.js:normalizeLanguage","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver.resolveStream#1","Function:src/normalizers/megaplay-normalizer.js:isUsableStreamResult","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver._lookupStream#4","Function:src/streaming/stream-resolver.js:streamCacheKey","CALLS",0.85,"local-call",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver._lookupStream#4","Function:src/normalizers/megaplay-normalizer.js:isUsableStreamResult","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver._lookupStream#4","Function:src/streaming/stream-resolver.js:isUpstreamNotFound","CALLS",0.85,"local-call",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver._fetchAndNormalize#4","Function:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse","CALLS",0.85,"import-resolved",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver._ttlForStream#1","Function:src/streaming/stream-resolver.js:parseExpiryMs","CALLS",0.85,"local-call",0,0
+"Method:tests/stream-resolver.test.js:fakeMegaplay.resolveByMalId@50:4#2","Function:tests/stream-resolver.test.js:fn@160:109.mal@163:4","CALLS",0.85,"local-call",0,0
+"Method:tests/stream-resolver.test.js:fakeIdentity.resolveAniListToMal@62:4#1","Function:src/identity/id-types.js:createIdentityResult","CALLS",0.85,"import-resolved",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver.resolveAniListToMal#1","Function:src/identity/identity-resolver.js:isIdentityResult","USES",0.85,"scope-resolution: value-ref",0,0
+"Method:src/identity/identity-resolver.js:IdentityResolver.resolveMalToAniList#1","Function:src/identity/identity-resolver.js:isIdentityResult","USES",0.85,"scope-resolution: value-ref",0,0
+"Method:src/streaming/stream-resolver.js:StreamResolver._lookupStream#4","Function:src/normalizers/megaplay-normalizer.js:isUsableStreamResult","USES",0.85,"scope-resolution: value-ref",0,0
+"Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._search#3","Function:src/providers/tmdb/tmdb.queries.js:tvSearchPath","CALLS",0.7,"callable-value-flow",0,0
+"Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._search#3","Function:src/providers/tmdb/tmdb.queries.js:movieSearchPath","CALLS",0.7,"callable-value-flow",0,0
+"Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._details#3","Function:src/providers/tmdb/tmdb.queries.js:tvDetailsPath","CALLS",0.7,"callable-value-flow",0,0
+"Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._details#3","Function:src/providers/tmdb/tmdb.queries.js:movieDetailsPath","CALLS",0.7,"callable-value-flow",0,0

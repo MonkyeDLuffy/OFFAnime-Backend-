@@ -1,0 +1,17 @@
+# Cloudflare Pages configuration (deployment adapter settings only).
+#
+# No secrets or env vars here - ANILIST / JIKAN / TMDB / SUPABASE /
+# MEGAPLAY_PROXY_URL are configured in the Pages dashboard (Settings ->
+# Variables and Secrets). `process.env` is auto-populated from them at runtime
+# thanks to the compatibility date below (nodejs_compat_populate_process_env
+# is default for dates >= 2025-04-01).
+#
+# The backend has no static assets; `dist` is an empty output directory and the
+# `functions/` directory provides the Pages Function that serves /api/*.
+#
+# Local emulation: npx wrangler pages dev
+
+name = "offanime-backend"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"

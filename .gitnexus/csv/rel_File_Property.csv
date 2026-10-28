@@ -1,0 +1,1147 @@
+from,to,type,confidence,reason,step,staticGated
+"File:src/providers/anilist/anilist.provider.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider.getRecommendations.id@166:24","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.provider.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.page@238:6","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.provider.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.perPage@239:6","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.provider.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.tmdbId@53:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.mediaType@54:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.title@55:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.originalTitle@56:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.year@57:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.popularity@58:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.images@59:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbVisual.resolved@87:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbVisual.tmdbId@88:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbVisual.mediaType@89:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbVisual.images@90:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbVisual.poster@96:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbVisual.reason@97:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:createUnresolvedTmdbVisual.resolved@109:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:createUnresolvedTmdbVisual.tmdbId@110:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:createUnresolvedTmdbVisual.mediaType@111:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:createUnresolvedTmdbVisual.images@112:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:createUnresolvedTmdbVisual.poster@113:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:createUnresolvedTmdbVisual.reason@114:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbDetails.resolved@129:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbDetails.tmdbId@130:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbDetails.mediaType@131:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbDetails.images@132:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbDetails.poster@136:4","DEFINES",1,"",0,0
+"File:src/normalizers/tmdb.normalizer.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbDetails.reason@137:4","DEFINES",1,"",0,0
+"File:src/providers/http-client.js","Property:src/providers/http-client.js:httpRequest.status@92:13","DEFINES",1,"",0,0
+"File:src/providers/http-client.js","Property:src/providers/http-client.js:httpRequest.ok@92:38","DEFINES",1,"",0,0
+"File:src/providers/http-client.js","Property:src/providers/http-client.js:httpRequest.headers@92:55","DEFINES",1,"",0,0
+"File:src/providers/http-client.js","Property:src/providers/http-client.js:httpRequest.data@92:82","DEFINES",1,"",0,0
+"File:tests/api-details.test.js","Property:tests/api-details.test.js:anilistAnimeHandler.fn@44:9.data@48:15","DEFINES",1,"",0,0
+"File:tests/api-details.test.js","Property:tests/api-details.test.js:anilistAnimeHandler.fn@44:9.data@50:13","DEFINES",1,"",0,0
+"File:tests/api-details.test.js","Property:tests/api-details.test.js:fn@227:91.anilist@232:13.status@233:28","DEFINES",1,"",0,0
+"File:tests/api-details.test.js","Property:tests/api-details.test.js:fn@227:91.anilist@232:13.json@233:41","DEFINES",1,"",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/api-episodes-jikan.test.js:fn@51:89.anilist@54:13.data@56:15","DEFINES",1,"",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/api-episodes-jikan.test.js:fn@111:88.anilist@114:13.data@116:15","DEFINES",1,"",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/api-episodes-jikan.test.js:fn@180:93.anilist@183:13.data@185:15","DEFINES",1,"",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/api-episodes-jikan.test.js:fn@211:104.anilist@214:13.data@216:15","DEFINES",1,"",0,0
+"File:tests/api-home.test.js","Property:tests/api-home.test.js:sectionHandler.fn@41:9.status@44:43","DEFINES",1,"",0,0
+"File:tests/api-home.test.js","Property:tests/api-home.test.js:sectionHandler.fn@41:9.json@44:56","DEFINES",1,"",0,0
+"File:tests/api-home.test.js","Property:tests/api-home.test.js:fn@138:88.anilist@143:13.status@144:28","DEFINES",1,"",0,0
+"File:tests/api-home.test.js","Property:tests/api-home.test.js:fn@138:88.anilist@143:13.json@144:41","DEFINES",1,"",0,0
+"File:tests/health.test.js","Property:tests/health.test.js:startTestServer.baseUrl@26:4","DEFINES",1,"",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.title@132:4","DEFINES",1,"",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:buildDeps.provider@33:4","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:buildDeps.cache@34:4","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.mediaType@103:50","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.images@103:67","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.reason@103:149","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@170:82.id@174:33","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:installApiMocks.fn@84:21.url@85:19","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:installApiMocks.fn@84:21.init@85:37","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:installApiMocks.fn@84:21.method@85:43","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.id@157:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.idMal@158:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.title@159:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.description@160:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.coverImage@161:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.bannerImage@162:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.type@163:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.format@164:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.status@165:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.episodes@166:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.duration@167:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.season@168:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.seasonYear@169:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.genres@170:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.synonyms@171:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.startDate@172:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.endDate@173:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.averageScore@174:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.popularity@175:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistMedia.studios@176:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:anilistPage.data@186:11","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanAnime.data@195:4","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisodes.status@227:11","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisodes.json@227:24","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.mal_id@235:11","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.number@235:26","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.title@235:34","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.title_japanese@235:41","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.title_romanji@235:64","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.aired@235:91","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.score@235:127","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.filler@235:137","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.recap@235:152","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.forum_url@235:166","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:jikanEpisode.url@235:183","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbSearchResults.status@243:11","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbSearchResults.json@243:24","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.id@251:11","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.name@251:15","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.original_name@251:21","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.first_air_date@251:50","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.backdrop_path@251:80","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.poster_path@251:109","DEFINES",1,"",0,0
+"File:tests/helpers/test-server.js","Property:tests/helpers/test-server.js:tmdbTvCandidate.popularity@251:137","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createAnimeIdentity.id@73:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createAnimeIdentity.anilistId@74:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createAnimeIdentity.malId@75:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createIdentityResult.anilistId@138:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createIdentityResult.malId@139:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createIdentityResult.source@140:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createIdentityResult.confidence@141:4","DEFINES",1,"",0,0
+"File:src/identity/id-types.js","Property:src/identity/id-types.js:createIdentityResult.resolved@142:4","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:rawStream.data@36:11","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:rawStream.url@36:74","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeMegaplay.calls@43:4","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeL2.name@82:4","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeL2.map@83:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.id@123:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.anilistId@124:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.malId@126:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.title@129:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.description@136:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.images@139:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.type@146:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.format@147:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.status@148:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.episodes@149:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.duration@152:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.season@153:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.seasonYear@154:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.genres@157:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.studios@158:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.synonyms@159:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.startDate@162:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.endDate@163:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.averageScore@166:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.popularity@167:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.relations@170:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.source@173:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeJikanIntoCanonical.enrichment@181:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeTmdbIntoCanonical.images@235:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeTmdbIntoCanonical.source@239:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.merge.js","Property:src/normalizers/anime.merge.js:mergeTmdbIntoCanonical.enrichment@241:4","DEFINES",1,"",0,0
+"File:src/services/schedule.service.js","Property:src/services/schedule.service.js:getAiringSchedule.fn@61:4.window@68:8","DEFINES",1,"",0,0
+"File:src/services/schedule.service.js","Property:src/services/schedule.service.js:getAiringSchedule.fn@61:4.pageInfo@69:8","DEFINES",1,"",0,0
+"File:src/services/schedule.service.js","Property:src/services/schedule.service.js:getAiringSchedule.fn@61:4.results@74:8","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.romaji@86:18","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.english@86:32","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.native@86:47","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.userPreferred@86:61","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.romaji@90:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.english@91:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.native@92:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistTitle.userPreferred@93:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.poster@125:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.cover@126:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.relationType@143:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.id@144:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.anilistId@145:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.malId@146:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.title@147:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.type@148:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.format@149:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.images@150:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.id@163:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.anilistId@164:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.malId@165:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.title@166:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.type@167:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.format@168:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.status@169:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.episodes@170:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.season@171:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.seasonYear@172:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistMediaCard.images@173:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistPage.pageInfo@189:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistPage.results@196:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRecommendations.fn@208:9.rating@211:24","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.airingAt@230:8","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.episode@231:8","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.anime@232:8","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.title@255:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.description@256:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.images@257:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.type@258:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.format@259:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.status@260:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.episodes@261:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.duration@262:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.season@263:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.seasonYear@264:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.genres@265:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.studios@266:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.synonyms@267:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.startDate@268:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.endDate@269:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.averageScore@270:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.popularity@271:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.relations@272:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.source@273:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:createBaseAnime.enrichment@275:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.title@302:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.description@303:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.images@304:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.type@305:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.format@306:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.status@307:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.episodes@308:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.duration@309:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.season@310:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.seasonYear@311:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.genres@312:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.studios@313:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.synonyms@314:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.startDate@315:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.endDate@316:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.averageScore@317:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.popularity@318:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.relations@319:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.source@322:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAnime.enrichment@324:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.poster@354:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.small@356:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanTrailer.youtubeId@369:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanTrailer.url@370:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanTrailer.embedUrl@371:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAired.from@384:48","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAired.to@384:60","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAired.from@385:11","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAired.to@385:32","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.malId@416:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.title@417:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.type@423:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.sourceMaterial@424:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.episodes@425:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.status@426:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.airing@427:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.aired@428:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.duration@429:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.rating@430:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.score@431:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.scoredBy@432:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.rank@433:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.popularity@434:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.members@435:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.favorites@436:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.synopsis@437:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.background@438:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.season@439:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.year@440:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.genres@441:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.themes@442:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.demographics@443:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.studios@444:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.producers@445:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.images@446:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.trailer@447:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.source@448:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.malId@461:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.title@462:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.type@467:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.episodes@468:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.status@469:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.season@470:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.year@471:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanMediaCard.images@472:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanPage.pageInfo@501:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanPage.results@508:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanEpisodes.pageInfo@539:4","DEFINES",1,"",0,0
+"File:src/normalizers/anime.normalizer.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanEpisodes.episodes@546:4","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.reason@256:53","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.resolved@312:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.provider@313:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.idType@314:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.anilistId@315:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.malId@316:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.episode@317:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.language@318:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.sources@319:6","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.expiresAt@320:6","DEFINES",1,"",0,0
+"File:src/providers/megaplay/megaplay.provider.js","Property:src/providers/megaplay/megaplay.provider.js:MegaplayProvider._resolve.data@79:13","DEFINES",1,"",0,0
+"File:src/providers/megaplay/megaplay.provider.js","Property:src/providers/megaplay/megaplay.provider.js:MegaplayProvider._resolve.url@79:34","DEFINES",1,"",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","DEFINES",1,"",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:fn@57:69.media@58:68","DEFINES",1,"",0,0
+"File:tests/helpers/mock-fetch.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","DEFINES",1,"",0,0
+"File:tests/helpers/mock-fetch.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","DEFINES",1,"",0,0
+"File:tests/helpers/mock-fetch.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","DEFINES",1,"",0,0
+"File:tests/helpers/mock-fetch.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","DEFINES",1,"",0,0
+"File:tests/jikan-service.test.js","Property:tests/jikan-service.test.js:fn@97:72.pagination@99:4","DEFINES",1,"",0,0
+"File:tests/jikan-service.test.js","Property:tests/jikan-service.test.js:fn@97:72.data@100:4","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.id@251:6","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.anilistId@252:6","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.malId@253:6","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.totalEpisodes@254:6","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.pageInfo@255:6","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.episodes@256:6","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.id@262:4","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.anilistId@263:4","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.malId@264:4","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.totalEpisodes@265:4","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.pageInfo@266:4","DEFINES",1,"",0,0
+"File:src/services/anime.service.js","Property:src/services/anime.service.js:getAnimeEpisodes.episodes@267:4","DEFINES",1,"",0,0
+"File:tests/smoke.test.js","Property:tests/smoke.test.js:fn@63:70.loader@66:17.value@68:13","DEFINES",1,"",0,0
+"File:tests/identity-resolver.test.js","Property:tests/identity-resolver.test.js:buildResolver.resolver@40:11","DEFINES",1,"",0,0
+"File:tests/identity-resolver.test.js","Property:tests/identity-resolver.test.js:buildResolver.cache@40:64","DEFINES",1,"",0,0
+"File:tests/identity-resolver.test.js","Property:tests/identity-resolver.test.js:fn@441:91.id@442:20","DEFINES",1,"",0,0
+"File:tests/identity-resolver.test.js","Property:tests/identity-resolver.test.js:fn@441:91.idMal@442:29","DEFINES",1,"",0,0
+"File:src/services/health.service.js","Property:src/services/health.service.js:getHealthStatus.status@42:4","DEFINES",1,"",0,0
+"File:src/services/health.service.js","Property:src/services/health.service.js:getHealthStatus.service@43:4","DEFINES",1,"",0,0
+"File:src/services/health.service.js","Property:src/services/health.service.js:getHealthStatus.version@44:4","DEFINES",1,"",0,0
+"File:src/services/health.service.js","Property:src/services/health.service.js:getHealthStatus.environment@45:4","DEFINES",1,"",0,0
+"File:src/services/health.service.js","Property:src/services/health.service.js:getHealthStatus.uptimeSeconds@46:4","DEFINES",1,"",0,0
+"File:src/services/health.service.js","Property:src/services/health.service.js:getHealthStatus.timestamp@47:4","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.season@32:43","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.seasonYear@32:61","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.season@33:27","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.seasonYear@33:45","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.season@34:27","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.seasonYear@34:45","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.season@35:11","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:currentSeason.seasonYear@35:27","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:homeSections.trending@44:4","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:homeSections.popular@45:4","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:homeSections.seasonal@46:4","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Property:src/services/home.service.js:homeSections.topRated@47:4","DEFINES",1,"",0,0
+"File:src/middleware/request-logger.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.method@21:8","DEFINES",1,"",0,0
+"File:src/middleware/request-logger.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.path@22:8","DEFINES",1,"",0,0
+"File:src/middleware/request-logger.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.status@23:8","DEFINES",1,"",0,0
+"File:src/middleware/request-logger.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.latencyMs@24:8","DEFINES",1,"",0,0
+"File:src/errors/app-error.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","DEFINES",1,"",0,0
+"File:src/errors/app-error.js","Property:src/errors/app-error.js:AppError.toResponse.message@60:37","DEFINES",1,"",0,0
+"File:src/errors/app-error.js","Property:src/errors/app-error.js:AppError.toResponse.error@62:13","DEFINES",1,"",0,0
+"File:src/services/category.service.js","Property:src/services/category.service.js:resolveCategoryOptions.genre@70:22","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:extractSource.url@96:26","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:extractSource.url@103:23","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:noStream.usable@173:11","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:noStream.sources@173:26","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:noStream.reason@173:39","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:noStream.episode@173:47","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:noStream.expiresAt@173:62","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.usable@198:15","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.sources@198:29","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.episode@198:58","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.expiresAt@198:73","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.usable@205:8","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.sources@206:8","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.episode@207:8","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.expiresAt@208:8","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.usable@225:4","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.sources@226:4","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.episode@227:4","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Property:src/normalizers/megaplay-normalizer.js:normalizeMegaplayStreamResponse.expiresAt@228:4","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@38:93.anilist@41:13.data@46:8","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@83:87.anilist@86:13.data@88:15","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@111:99.anilist@114:13.data@117:8","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@228:83.anilist@231:13.data@234:8","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@288:88.anilist@291:13.data@293:15","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@323:88.anilist@326:13.data@328:15","DEFINES",1,"",0,0
+"File:tests/api-misc.test.js","Property:tests/api-misc.test.js:fn@349:88.anilist@352:13.data@354:15","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Property:src/utils/logger.js:serializeError.name@30:16","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Property:src/utils/logger.js:serializeError.message@30:34","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Property:src/utils/logger.js:write.ts@61:4","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Property:src/utils/logger.js:write.level@62:4","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Property:src/utils/logger.js:write.msg@63:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.namespace@27:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.cache_key@28:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.ttl_seconds@30:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.created_at@31:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.updated_at@32:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.expires_at@33:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.stale_until@34:4","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:buildManager.manager@298:11","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:buildManager.l2@298:24","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:fn@331:63.fn@336:64.loaded@338:15","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:fn@419:67.fn@425:64.survived@427:15","DEFINES",1,"",0,0
+"File:src/identity/identity-resolver.js","Property:src/config/constants.js:CACHE_TTL.MEDIUM","ACCESSES",1,"read",0,0
+"File:src/providers/index.js","Property:src/config/constants.js:PROVIDERS.ANILIST","ACCESSES",1,"read",0,0
+"File:src/providers/index.js","Property:src/config/constants.js:PROVIDERS.JIKAN","ACCESSES",1,"read",0,0
+"File:src/providers/index.js","Property:src/config/constants.js:PROVIDERS.TMDB","ACCESSES",1,"read",0,0
+"File:src/providers/index.js","Property:src/config/constants.js:PROVIDERS.MEGAPLAY","ACCESSES",1,"read",0,0
+"File:src/services/tmdb.service.js","Property:src/config/constants.js:CACHE_TTL.MEDIUM","ACCESSES",1,"read",0,0
+"File:src/utils/logger.js","Property:src/utils/logger.js:LEVELS.info","ACCESSES",1,"read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeIdentity.calls@61:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/stream-resolver.test.js:fakeL2.map@83:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.expires_at@33:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.stale_until@34:4","ACCESSES",0.9,"scope-resolution: return-shape member: read",0,0
+"File:scripts/anilist-smoke.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider.getRecommendations.id@166:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/anilist-smoke.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider.getRecommendations.id@166:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/anilist-smoke.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.status@23:8","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/anilist-smoke.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:scripts/anilist-smoke.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:scripts/jikan-smoke.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.status@23:8","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/jikan-smoke.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.score@431:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/jikan-smoke.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.trailer@447:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/jikan-smoke.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanTrailer.youtubeId@369:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:scripts/jikan-smoke.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.synopsis@437:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/jikan-smoke.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:scripts/supabase-smoke.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/supabase-smoke.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/supabase-smoke.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/supabase-smoke.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/supabase-smoke.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:scripts/supabase-smoke.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:scripts/tmdb-smoke.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.title@55:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:scripts/tmdb-smoke.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.originalTitle@56:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:scripts/tmdb-smoke.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.year@57:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:scripts/tmdb-smoke.js","Property:src/normalizers/tmdb.normalizer.js:normalizeTmdbCandidate.popularity@58:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:scripts/tmdb-smoke.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:src/server.js","Property:src/config/env.js:schema.PORT","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:src/server.js","Property:src/config/env.js:schema.HOST","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:src/services/category.service.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:src/services/category.service.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:src/services/category.service.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:src/services/category.service.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:src/services/category.service.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.status@23:8","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:src/services/category.service.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:src/services/category.service.js","Property:src/middleware/request-logger.js:requestLogger.fn@15:9.fn@19:21.status@23:8","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:src/services/category.service.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:src/utils/logger.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anilist-provider.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:mediaFixture.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:mediaFixture.idMal","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:mediaFixture.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.page@238:6","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.perPage@239:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anilist-provider.test.js","Property:src/services/category.service.js:resolveCategoryOptions.genre@70:22","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anilist-provider.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:mediaFixture.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anilist-provider.test.js","Property:tests/anilist-provider.test.js:mediaFixture.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.year","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): write",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanTrailer.url@370:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): write",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.cover@126:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.cover@126:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.format","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.seasonYear","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.format","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.seasonYear","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.synonyms","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.averageScore","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.score","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.background","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.trailer","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanTrailer.youtubeId@369:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.sourceMaterial@424:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.themes","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.source","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.startDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.endDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:anilistRaw.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-merge.test.js","Property:tests/anime-merge.test.js:jikanRaw.source","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-service.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/anime-service.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/anime-service.test.js","Property:tests/anime-service.test.js:mediaFixture.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-service.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/anime-service.test.js","Property:tests/anime-service.test.js:mediaFixture.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-service.test.js","Property:tests/anime-service.test.js:mediaFixture.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/anime-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/anime-service.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-details.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-details.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-episodes-jikan.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:src/services/category.service.js:SPECIAL_CATEGORIES.trending","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-home.test.js","Property:src/services/category.service.js:SPECIAL_CATEGORIES.popular","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-home.test.js","Property:src/services/category.service.js:SPECIAL_CATEGORIES.popular","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-home.test.js","Property:src/services/home.service.js:homeSections.seasonal@46:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-home.test.js","Property:src/services/home.service.js:homeSections.seasonal@46:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-home.test.js","Property:src/services/home.service.js:homeSections.topRated@47:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-home.test.js","Property:src/services/home.service.js:homeSections.topRated@47:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-home.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-home.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-home.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.relationType@143:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/services/category.service.js:resolveCategoryOptions.genre@70:22","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/services/category.service.js:resolveCategoryOptions.genre@70:22","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.airingAt@230:8","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.anime@232:8","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.anime@232:8","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistAiringSchedule.fn@224:9.anime@232:8","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@100:70.mediaType@103:50","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-misc.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-misc.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-misc.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.perPage@239:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-search.test.js","Property:src/services/category.service.js:resolveCategoryOptions.genre@70:22","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-search.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/api-search.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.sort@240:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:startTestServer.baseUrl@42:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/api-search.test.js","Property:tests/helpers/test-server.js:installApiMocks.calls@112:4","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/health.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/health.test.js","Property:src/services/health.service.js:getHealthStatus.service@43:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/health.test.js","Property:src/services/health.service.js:getHealthStatus.version@44:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/health.test.js","Property:src/services/health.service.js:getHealthStatus.timestamp@47:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/health.test.js","Property:src/providers/http-client.js:httpRequest.headers@92:55","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/health.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/health.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/health.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/health.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/helpers/test-env-megaplay.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/helpers/test-env-megaplay.js","Property:src/config/env.js:schema.REQUEST_TIMEOUT_MS","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/helpers/test-env-tmdb.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/helpers/test-env-tmdb.js","Property:src/config/env.js:schema.TMDB_API_KEY","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/helpers/test-env.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/identity-resolver.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/identity-resolver.test.js:fn@441:91.idMal@442:29","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:src/identity/id-types.js:createIdentityResult.confidence@141:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/identity-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.url","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): write",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.type","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.sourceMaterial@424:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.episodes","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.status","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.airing","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.aired","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.duration","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.rating","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.score","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.scoredBy@432:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.rank","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.popularity","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.members","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.favorites","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.season","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.year","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.genres","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.themes","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.demographics","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.studios","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.producers","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.trailer","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.source","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.synopsis","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.background","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.synopsis","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.synopsis","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.synopsis","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.images","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.trailer","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.genres","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.studios","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.producers","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.themes","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.demographics","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.score","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.scoredBy@432:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.rank","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.popularity","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.members","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.favorites","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.season","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.year","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.duration","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.rating","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.type","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanAnime.sourceMaterial@424:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.aired","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.aired","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/jikan-normalizer.test.js:fullAnime.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-normalizer.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-provider.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/jikan-provider.test.js:animeFixture.mal_id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-provider.test.js","Property:tests/jikan-provider.test.js:animeFixture.mal_id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-service.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/jikan-service.test.js","Property:tests/jikan-service.test.js:animeFixture.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/jikan-service.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/normalizers/megaplay-normalizer.js:extractSource.url@103:23","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/normalizers/megaplay-normalizer.js:extractSource.url@103:23","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/normalizers/megaplay-normalizer.js:extractSource.url@103:23","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/utils/logger.js:LEVELS.error","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-normalizer.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/megaplay-queries.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/megaplay-queries.test.js","Property:src/errors/app-error.js:AppError.toResponse.code@60:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/normalizer.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.type","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.format","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.status","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.episodes","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.duration","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.season","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.seasonYear","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.genres","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.studios","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.synonyms","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.startDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.endDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.averageScore","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.popularity","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.genres","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.synonyms","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.studios","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.season","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.seasonYear","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.duration","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.startDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.endDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.averageScore","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.popularity","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.episodes","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.startDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.endDate","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.description","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistRelation.relationType@143:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/normalizer.test.js","Property:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables.perPage@239:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/normalizer.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/anilist-provider.test.js:fn@57:69.pageInfo@58:24","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-provider.test.js:searchPayload.results","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.title","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/normalizer.test.js","Property:tests/normalizer.test.js:fullMedia.genres","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/smoke.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/smoke.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.language@318:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.language@318:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.idType@314:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.idType@314:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.idType@314:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.idType@314:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.usable@256:25","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse.language@318:6","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:tests/supabase-cache.test.js:buildManager.l1@298:20","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.episode@256:74","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/stream-resolver.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.sources@256:40","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:src/providers/http-client.js:httpRequest.headers@92:55","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:src/providers/http-client.js:httpRequest.headers@92:55","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:src/streaming/stream-resolver.js:StreamResolver._lookupStream.expiresAt@256:89","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:src/providers/http-client.js:httpRequest.headers@92:55","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.namespace@27:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.cache_key@28:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.ttl_seconds@30:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.expires_at@33:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.stale_until@34:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.updated_at@32:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.stale_until@34:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.expires_at@33:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:fn@331:63.fn@336:64.loaded@338:15","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:makeRow.value@29:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/supabase-cache.test.js:fn@419:67.fn@425:64.survived@427:15","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/supabase-cache.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-merge.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.mediaType@103:50","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@170:82.anilistId@174:42","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.large@355:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeJikanImages.small@356:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-merge.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-merge.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.enrichment@133:4","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): write",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.poster@103:135","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.mediaType@103:50","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.title@132:4","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-normalizer.test.js:fn@130:84.title@132:4","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): write",0,0
+"File:tests/tmdb-normalizer.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-provider.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.method@35:30","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.init@35:24","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:src/providers/http-client.js:httpRequest.headers@92:55","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.fn@34:21.url@35:19","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/tmdb-provider.test.js:detailsPayload.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-provider.test.js","Property:tests/tmdb-provider.test.js:detailsPayload.id","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:src/config/env.js:schema.LOG_LEVEL","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.images@103:67","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.tmdbId@103:37","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-service.test.js","Property:src/normalizers/anime.normalizer.js:normalizeAnilistImages.banner@127:4","ACCESSES",0.5,"scope-resolution: unique-name property (workspace-unique): write",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.reason@103:149","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.resolved@103:21","ACCESSES",0.5,"scope-resolution: unique-name property (ranked): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.reason@103:149","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@170:82.id@174:33","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.images@103:67","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/helpers/mock-fetch.js:installMockFetch.calls@53:11","ACCESSES",0.5,"scope-resolution: unique-name property (imported-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.images@103:67","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@100:70.images@103:67","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0
+"File:tests/tmdb-service.test.js","Property:tests/tmdb-service.test.js:fn@170:82.id@174:33","ACCESSES",0.5,"scope-resolution: unique-name property (same-file): read",0,0

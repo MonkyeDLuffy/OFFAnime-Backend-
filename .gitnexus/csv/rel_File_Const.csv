@@ -1,0 +1,225 @@
+from,to,type,confidence,reason,step,staticGated
+"File:src/routes/tmdb.routes.js","Const:src/routes/tmdb.routes.js:router","DEFINES",1,"",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:query","DEFINES",1,"",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:provider","DEFINES",1,"",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:raw","DEFINES",1,"",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:candidates","DEFINES",1,"",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:match","DEFINES",1,"",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:visual","DEFINES",1,"",0,0
+"File:src/controllers/anime.controller.js","Const:src/controllers/anime.controller.js:smartDetailsController","DEFINES",1,"",0,0
+"File:src/identity/identity-resolver.js","Const:src/identity/identity-resolver.js:UNRESOLVED_TTL_SECONDS","DEFINES",1,"",0,0
+"File:src/identity/identity-resolver.js","Const:src/identity/identity-resolver.js:identityResolver","DEFINES",1,"",0,0
+"File:tests/megaplay-normalizer.test.js","Const:tests/megaplay-normalizer.test.js:MEGAPLAY_URL","DEFINES",1,"",0,0
+"File:src/utils/html.js","Const:src/utils/html.js:HTML_ENTITIES","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:MEDIA_FIELDS","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:GET_ANIME_BY_ID_QUERY","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:GET_ANIME_BY_MAL_ID_QUERY","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:SEARCH_ANIME_QUERY","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:GET_RELATIONS_QUERY","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:GET_RECOMMENDATIONS_QUERY","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:GET_SEASONAL_ANIME_QUERY","DEFINES",1,"",0,0
+"File:src/providers/anilist/anilist.queries.js","Const:src/providers/anilist/anilist.queries.js:GET_AIRING_SCHEDULE_QUERY","DEFINES",1,"",0,0
+"File:src/routes/health.routes.js","Const:src/routes/health.routes.js:router","DEFINES",1,"",0,0
+"File:tests/normalizer.test.js","Const:tests/normalizer.test.js:fullMedia","DEFINES",1,"",0,0
+"File:src/server.js","Const:src/server.js:app","DEFINES",1,"",0,0
+"File:tests/api-details.test.js","Const:tests/api-details.test.js:DETAILS_KEY","DEFINES",1,"",0,0
+"File:src/config/env.js","Const:src/config/env.js:rawEnv","DEFINES",1,"",0,0
+"File:src/config/env.js","Const:src/config/env.js:schema","DEFINES",1,"",0,0
+"File:src/config/env.js","Const:src/config/env.js:config","DEFINES",1,"",0,0
+"File:tests/api-home.test.js","Const:tests/api-home.test.js:HOME_KEY","DEFINES",1,"",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","DEFINES",1,"",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:shouldDelete","DEFINES",1,"",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:store","DEFINES",1,"",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:entry","DEFINES",1,"",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:updated","DEFINES",1,"",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:deleted","DEFINES",1,"",0,0
+"File:tests/tmdb-normalizer.test.js","Const:tests/tmdb-normalizer.test.js:rawTv","DEFINES",1,"",0,0
+"File:src/routes/search.routes.js","Const:src/routes/search.routes.js:router","DEFINES",1,"",0,0
+"File:src/routes/anime.routes.js","Const:src/routes/anime.routes.js:router","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:APP_NAME","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:APP_VERSION","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:API_PREFIX","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:PROVIDERS","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:ID_TYPES","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:CACHE_TTL","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:CACHE_STATE","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:STREAM_LANGUAGES","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:STREAM_CACHE_TTL","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:STREAM_LIMITS","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:ANILIST_SEASONS","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:ANILIST_FORMATS","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:ANILIST_STATUSES","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:ANILIST_SORTS","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:ANILIST_GENRES","DEFINES",1,"",0,0
+"File:src/config/constants.js","Const:src/config/constants.js:SEARCH_LIMITS","DEFINES",1,"",0,0
+"File:src/providers/index.js","Const:src/providers/index.js:anilistProvider","DEFINES",1,"",0,0
+"File:src/providers/index.js","Const:src/providers/index.js:jikanProvider","DEFINES",1,"",0,0
+"File:src/providers/index.js","Const:src/providers/index.js:tmdbProvider","DEFINES",1,"",0,0
+"File:src/providers/index.js","Const:src/providers/index.js:megaplayProvider","DEFINES",1,"",0,0
+"File:src/providers/index.js","Const:src/providers/index.js:providers","DEFINES",1,"",0,0
+"File:tests/tmdb-service.test.js","Const:tests/tmdb-service.test.js:canonical","DEFINES",1,"",0,0
+"File:src/services/top-search.service.js","Const:src/services/top-search.service.js:SUGGESTION_COUNT","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:MAL_KEY","DEFINES",1,"",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:STREAM_URL","DEFINES",1,"",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistRaw","DEFINES",1,"",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","DEFINES",1,"",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanRaw","DEFINES",1,"",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","DEFINES",1,"",0,0
+"File:src/services/schedule.service.js","Const:src/services/schedule.service.js:DEFAULT_WINDOW_MS","DEFINES",1,"",0,0
+"File:src/services/schedule.service.js","Const:src/services/schedule.service.js:DAY_MS","DEFINES",1,"",0,0
+"File:tests/jikan-provider.test.js","Const:tests/jikan-provider.test.js:animeFixture","DEFINES",1,"",0,0
+"File:tests/jikan-provider.test.js","Const:tests/jikan-provider.test.js:searchPayload","DEFINES",1,"",0,0
+"File:src/providers/jikan/jikan.provider.js","Const:src/providers/jikan/jikan.provider.js:MAX_SEARCH_LIMIT","DEFINES",1,"",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","DEFINES",1,"",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Const:src/streaming/stream-resolver.js:StreamResolver.resolveStream.identity@169:4","DEFINES",1,"",0,0
+"File:src/streaming/stream-resolver.js","Const:src/streaming/stream-resolver.js:streamResolver","DEFINES",1,"",0,0
+"File:tests/anime-service.test.js","Const:tests/anime-service.test.js:mediaFixture","DEFINES",1,"",0,0
+"File:scripts/anilist-smoke.js","Const:scripts/anilist-smoke.js:anilistId","DEFINES",1,"",0,0
+"File:scripts/anilist-smoke.js","Const:scripts/anilist-smoke.js:raw","DEFINES",1,"",0,0
+"File:scripts/anilist-smoke.js","Const:scripts/anilist-smoke.js:anime","DEFINES",1,"",0,0
+"File:tests/anilist-provider.test.js","Const:tests/anilist-provider.test.js:mediaFixture","DEFINES",1,"",0,0
+"File:tests/jikan-normalizer.test.js","Const:tests/jikan-normalizer.test.js:fullAnime","DEFINES",1,"",0,0
+"File:tests/jikan-service.test.js","Const:tests/jikan-service.test.js:animeFixture","DEFINES",1,"",0,0
+"File:src/services/tmdb.service.js","Const:src/services/tmdb.service.js:UNRESOLVED_TTL_SECONDS","DEFINES",1,"",0,0
+"File:src/services/tmdb.service.js","Const:src/services/tmdb.service.js:MAX_SEARCH_ATTEMPTS","DEFINES",1,"",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:malId","DEFINES",1,"",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:raw","DEFINES",1,"",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:anime","DEFINES",1,"",0,0
+"File:src/services/home.service.js","Const:src/services/home.service.js:SECTION_SIZE","DEFINES",1,"",0,0
+"File:src/errors/app-error.js","Const:src/errors/app-error.js:ERROR_CODES","DEFINES",1,"",0,0
+"File:src/routes/home.routes.js","Const:src/routes/home.routes.js:router","DEFINES",1,"",0,0
+"File:src/services/category.service.js","Const:src/services/category.service.js:SPECIAL_CATEGORIES","DEFINES",1,"",0,0
+"File:src/routes/streaming.routes.js","Const:src/routes/streaming.routes.js:router","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:HTTP_URL_RE","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:SOURCE_CONTAINERS","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:SOURCE_URL_FIELDS","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:SOURCE_QUALITY_FIELDS","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:SOURCE_TYPE_FIELDS","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:EPISODE_FIELDS","DEFINES",1,"",0,0
+"File:src/normalizers/megaplay-normalizer.js","Const:src/normalizers/megaplay-normalizer.js:EXPIRY_FIELDS","DEFINES",1,"",0,0
+"File:tests/tmdb-provider.test.js","Const:tests/tmdb-provider.test.js:searchPayload","DEFINES",1,"",0,0
+"File:tests/tmdb-provider.test.js","Const:tests/tmdb-provider.test.js:detailsPayload","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Const:src/utils/logger.js:LEVELS","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Const:src/utils/logger.js:activeLevel","DEFINES",1,"",0,0
+"File:src/utils/logger.js","Const:src/utils/logger.js:logger","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Const:tests/supabase-cache.test.js:TEST_URL","DEFINES",1,"",0,0
+"File:tests/supabase-cache.test.js","Const:tests/supabase-cache.test.js:TEST_KEY","DEFINES",1,"",0,0
+"File:src/routes/jikan.routes.js","Const:src/routes/jikan.routes.js:router","DEFINES",1,"",0,0
+"File:scripts/anilist-smoke.js","Const:scripts/anilist-smoke.js:anilistId","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/anilist-smoke.js","Const:scripts/anilist-smoke.js:raw","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:malId","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:malId","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:malId","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/jikan-smoke.js","Const:scripts/jikan-smoke.js:raw","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:TEST_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:scripts/supabase-smoke.js","Const:scripts/supabase-smoke.js:deleted","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:query","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:raw","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:candidates","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:match","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:scripts/tmdb-smoke.js","Const:scripts/tmdb-smoke.js:visual","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:tests/anilist-provider.test.js","Const:tests/anilist-provider.test.js:mediaFixture","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/anilist-provider.test.js","Const:tests/anilist-provider.test.js:mediaFixture","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistRaw","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanRaw","ACCESSES",0.55,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistRaw","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:anilistAnime","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/anime-merge.test.js","Const:tests/anime-merge.test.js:jikanAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/api-details.test.js","Const:tests/api-details.test.js:DETAILS_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/api-home.test.js","Const:tests/api-home.test.js:HOME_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/jikan-normalizer.test.js","Const:tests/jikan-normalizer.test.js:fullAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/jikan-normalizer.test.js","Const:tests/jikan-normalizer.test.js:fullAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/jikan-normalizer.test.js","Const:tests/jikan-normalizer.test.js:fullAnime","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/jikan-provider.test.js","Const:tests/jikan-provider.test.js:animeFixture","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/jikan-provider.test.js","Const:tests/jikan-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/jikan-provider.test.js","Const:tests/jikan-provider.test.js:animeFixture","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/jikan-provider.test.js","Const:tests/jikan-provider.test.js:animeFixture","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/normalizer.test.js","Const:tests/normalizer.test.js:fullMedia","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:MAL_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:MAL_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:STREAM_URL","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:STREAM_URL","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:MAL_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/stream-resolver.test.js","Const:tests/stream-resolver.test.js:ANI_KEY","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/supabase-cache.test.js","Const:tests/supabase-cache.test.js:TEST_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/supabase-cache.test.js","Const:tests/supabase-cache.test.js:TEST_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/supabase-cache.test.js","Const:tests/supabase-cache.test.js:TEST_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/supabase-cache.test.js","Const:tests/supabase-cache.test.js:TEST_KEY","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:resolvedVisual","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-merge.test.js","Const:tests/tmdb-merge.test.js:canonical","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-normalizer.test.js","Const:tests/tmdb-normalizer.test.js:rawTv","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-normalizer.test.js","Const:tests/tmdb-normalizer.test.js:rawTv","ACCESSES",0.53,"scope-resolution: read",0,0
+"File:tests/tmdb-provider.test.js","Const:tests/tmdb-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-provider.test.js","Const:tests/tmdb-provider.test.js:detailsPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-service.test.js","Const:tests/tmdb-service.test.js:canonical","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-service.test.js","Const:tests/tmdb-service.test.js:canonical","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-service.test.js","Const:tests/tmdb-service.test.js:canonical","ACCESSES",0.51,"scope-resolution: read",0,0
+"File:tests/tmdb-service.test.js","Const:tests/tmdb-service.test.js:canonical","ACCESSES",0.49000000000000005,"scope-resolution: read",0,0
+"File:src/routes/anime.routes.js","Const:src/controllers/anime.controller.js:smartDetailsController","ACCESSES",0.9,"import-resolved",0,0

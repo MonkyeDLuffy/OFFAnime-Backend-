@@ -1,0 +1,17 @@
+from,to,type,confidence,reason,step,staticGated
+"Class:src/errors/app-error.js:AppError","comm_0","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:CacheError","comm_0","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:InternalError","comm_0","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:NotFoundError","comm_1","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:NotImplementedError","comm_0","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:ProviderError","comm_2","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:RateLimitError","comm_3","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:TimeoutError","comm_3","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/errors/index.js:ValidationError","comm_4","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","comm_5","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","comm_5","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/providers/base-provider.js:BaseProvider","comm_5","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","comm_5","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/providers/megaplay/megaplay.provider.js:MegaplayProvider","comm_5","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","comm_5","MEMBER_OF",1,"leiden-algorithm",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","comm_6","MEMBER_OF",1,"leiden-algorithm",0,0

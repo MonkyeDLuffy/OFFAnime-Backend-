@@ -1,0 +1,33 @@
+{
+  "name": "offanime-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modular, serverless-first backend for OffAnime.cc (Phase 1: foundation & architecture).",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "offanime",
+    "anime",
+    "backend",
+    "serverless",
+    "express"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "overrides": {
+    "qs": "^6.16.0",
+    "iconv-lite": "0.6.3"
+  }
+}

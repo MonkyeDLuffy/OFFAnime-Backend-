@@ -1,0 +1,11 @@
+from,to,type,confidence,reason,step,staticGated
+"Function:src/controllers/jikan.controller.js:jikanFromAnilistController","Method:src/identity/identity-resolver.js:IdentityResolver.resolveAniListToMal#1","CALLS",0.85,"import-resolved",0,0
+"Function:src/controllers/streaming.controller.js:streamResolveController","Method:src/streaming/stream-resolver.js:StreamResolver.resolveStream#1","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/anime.service.js:getAnimeDetails","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAnimeById#1","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/anime.service.js:searchAnime","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.searchAnime#2","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/anime.service.js:getAnimeRecommendations","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getRecommendations#2","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/anime.service.js:getAnimeSeasons","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getRelations#1","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/jikan.service.js:getAnimeByMalId","Method:src/providers/jikan/jikan.provider.js:JikanProvider.getAnimeByMalId#2","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/jikan.service.js:getEpisodes","Method:src/providers/jikan/jikan.provider.js:JikanProvider.getEpisodeList#2","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/jikan.service.js:searchAnime","Method:src/providers/jikan/jikan.provider.js:JikanProvider.searchAnime#2","CALLS",0.85,"import-resolved",0,0
+"Function:src/services/schedule.service.js:getAiringSchedule","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAiringSchedule#1","CALLS",0.85,"import-resolved",0,0

@@ -1,0 +1,16 @@
+from,to,type,confidence,reason,step,staticGated
+"File:src/routes/tmdb.routes.js","Route:GET /tmdb/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/health.routes.js","Route:GET /health","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/search.routes.js","Route:GET /search","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/search.routes.js","Route:GET /top-search","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/anime.routes.js","Route:GET /details/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/anime.routes.js","Route:GET /smart/details/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/anime.routes.js","Route:GET /episodes/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/anime.routes.js","Route:GET /recommendations/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/anime.routes.js","Route:GET /seasons/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/anime.routes.js","Route:GET /category/:type","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/home.routes.js","Route:GET /home","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/home.routes.js","Route:GET /schedule","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/streaming.routes.js","Route:GET /stream/resolve/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/jikan.routes.js","Route:GET /jikan/anime/:malId","HANDLES_ROUTE",1,"decorator-express.get",0,0
+"File:src/routes/jikan.routes.js","Route:GET /jikan/from-anilist/:id","HANDLES_ROUTE",1,"decorator-express.get",0,0

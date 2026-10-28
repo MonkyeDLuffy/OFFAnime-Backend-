@@ -1,0 +1,231 @@
+from,to,type,confidence,reason,step,staticGated
+"File:scripts/anilist-smoke.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:scripts/anilist-smoke.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:scripts/jikan-smoke.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:scripts/jikan-smoke.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:scripts/tmdb-smoke.js","File:src/providers/tmdb/tmdb.provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:scripts/tmdb-smoke.js","File:src/normalizers/tmdb.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:scripts/tmdb-smoke.js","File:src/normalizers/tmdb.matching.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/app.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/app.js","File:src/routes/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/app.js","File:src/middleware/request-id.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/app.js","File:src/middleware/request-logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/app.js","File:src/middleware/not-found.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/app.js","File:src/middleware/error-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/anime.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/anime.controller.js","File:src/utils/query.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/anime.controller.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/anime.controller.js","File:src/services/category.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/health.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/health.controller.js","File:src/services/health.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/home.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/home.controller.js","File:src/services/home.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/jikan.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/jikan.controller.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/jikan.controller.js","File:src/identity/identity-resolver.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/jikan.controller.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/jikan.controller.js","File:src/services/jikan.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/schedule.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/schedule.controller.js","File:src/utils/query.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/schedule.controller.js","File:src/services/schedule.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/search.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/search.controller.js","File:src/utils/query.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/search.controller.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/search.controller.js","File:src/services/top-search.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/streaming.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/streaming.controller.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/streaming.controller.js","File:src/streaming/stream-resolver.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/tmdb.controller.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/tmdb.controller.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/tmdb.controller.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/controllers/tmdb.controller.js","File:src/services/tmdb.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/errors/index.js","File:src/errors/app-error.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/identity/id-types.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/identity/id-types.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/identity/identity-resolver.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/identity/identity-resolver.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/identity/identity-resolver.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/identity/identity-resolver.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/error-handler.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/error-handler.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/error-handler.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/not-found.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/not-implemented.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/request-id.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/middleware/request-logger.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/normalizers/anime.merge.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/normalizers/anime.normalizer.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/normalizers/anime.normalizer.js","File:src/utils/html.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/normalizers/anime.normalizer.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/normalizers/tmdb.normalizer.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/normalizers/tmdb.normalizer.js","File:src/providers/tmdb/tmdb.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/anilist/anilist.provider.js","File:src/providers/base-provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/anilist/anilist.provider.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/anilist/anilist.provider.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/anilist/anilist.provider.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/anilist/anilist.provider.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/anilist/anilist.provider.js","File:src/providers/anilist/anilist.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/base-provider.js","File:src/providers/http-client.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/base-provider.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/http-client.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/http-client.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/http-client.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/index.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/index.js","File:src/providers/anilist/anilist.provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/index.js","File:src/providers/jikan/jikan.provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/index.js","File:src/providers/tmdb/tmdb.provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/index.js","File:src/providers/megaplay/megaplay.provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/index.js","File:src/providers/base-provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/jikan/jikan.provider.js","File:src/providers/base-provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/jikan/jikan.provider.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/jikan/jikan.provider.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/jikan/jikan.provider.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/jikan/jikan.provider.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/jikan/jikan.provider.js","File:src/providers/jikan/jikan.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.provider.js","File:src/providers/base-provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.provider.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.provider.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.provider.js","File:src/providers/megaplay/megaplay.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.queries.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.queries.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/megaplay/megaplay.queries.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/tmdb/tmdb.provider.js","File:src/providers/base-provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/tmdb/tmdb.provider.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/tmdb/tmdb.provider.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/tmdb/tmdb.provider.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/tmdb/tmdb.provider.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/providers/tmdb/tmdb.provider.js","File:src/providers/tmdb/tmdb.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/anime.routes.js","File:src/controllers/anime.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/health.routes.js","File:src/controllers/health.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/home.routes.js","File:src/controllers/home.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/home.routes.js","File:src/controllers/schedule.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/health.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/home.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/search.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/anime.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/streaming.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/jikan.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/index.js","File:src/routes/tmdb.routes.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/jikan.routes.js","File:src/controllers/jikan.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/search.routes.js","File:src/controllers/search.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/streaming.routes.js","File:src/utils/async-handler.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/streaming.routes.js","File:src/controllers/streaming.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/routes/tmdb.routes.js","File:src/controllers/tmdb.controller.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/server.js","File:src/app.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/server.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/server.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/normalizers/anime.merge.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/services/jikan.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/anime.service.js","File:src/services/tmdb.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/category.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/category.service.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/category.service.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/health.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/health.service.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/home.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/home.service.js","File:src/utils/logger.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/home.service.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/jikan.service.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/jikan.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/jikan.service.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/jikan.service.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/jikan.service.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/schedule.service.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/schedule.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/schedule.service.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/schedule.service.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/tmdb.service.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/tmdb.service.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/tmdb.service.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/tmdb.service.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/tmdb.service.js","File:src/normalizers/tmdb.normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/tmdb.service.js","File:src/normalizers/tmdb.matching.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/services/top-search.service.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/identity/identity-resolver.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/config/constants.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/providers/megaplay/megaplay.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/streaming/stream-resolver.js","File:src/normalizers/megaplay-normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/utils/logger.js","File:src/config/env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:src/utils/query.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/anilist-provider.test.js","File:src/providers/anilist/anilist.provider.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anilist-provider.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anilist-provider.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anime-merge.test.js","File:src/normalizers/anime.merge.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anime-merge.test.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anime-merge.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anime-service.test.js","File:src/services/anime.service.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anime-service.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/anime-service.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/api-details.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-details.test.js","File:tests/helpers/test-server.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-episodes-jikan.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-episodes-jikan.test.js","File:tests/helpers/test-server.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-home.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-home.test.js","File:tests/helpers/test-server.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-misc.test.js","File:tests/helpers/test-env-tmdb.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-misc.test.js","File:tests/helpers/test-server.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-search.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/api-search.test.js","File:tests/helpers/test-server.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/health.test.js","File:src/app.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/helpers/test-server.js","File:src/app.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/identity-resolver.test.js","File:src/identity/identity-resolver.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/identity-resolver.test.js","File:src/providers/anilist/anilist.provider.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/identity-resolver.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/identity-resolver.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/identity-resolver.test.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-normalizer.test.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-normalizer.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-provider.test.js","File:src/providers/jikan/jikan.provider.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-provider.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-provider.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-service.test.js","File:src/services/jikan.service.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-service.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/jikan-service.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/megaplay-normalizer.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-normalizer.test.js","File:src/normalizers/megaplay-normalizer.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-provider.test.js","File:tests/helpers/test-env-megaplay.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-provider.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-provider.test.js","File:src/providers/megaplay/megaplay.provider.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-provider.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-queries.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/megaplay-queries.test.js","File:src/providers/megaplay/megaplay.queries.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/normalizer.test.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/normalizer.test.js","File:src/utils/html.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/normalizer.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/smoke.test.js","File:src/providers/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/smoke.test.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/smoke.test.js","File:src/streaming/stream-resolver.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/smoke.test.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/smoke.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/stream-resolver.test.js","File:tests/helpers/test-env.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/stream-resolver.test.js","File:src/streaming/stream-resolver.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/stream-resolver.test.js","File:src/identity/id-types.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/stream-resolver.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import",0,0
+"File:tests/supabase-cache.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/supabase-cache.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-merge.test.js","File:src/normalizers/anime.merge.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-merge.test.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-merge.test.js","File:src/normalizers/tmdb.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-merge.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-normalizer.test.js","File:src/normalizers/tmdb.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-normalizer.test.js","File:src/normalizers/tmdb.matching.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-normalizer.test.js","File:src/providers/tmdb/tmdb.queries.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-provider.test.js","File:src/providers/tmdb/tmdb.provider.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-provider.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-provider.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-service.test.js","File:src/services/tmdb.service.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-service.test.js","File:src/providers/tmdb/tmdb.provider.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-service.test.js","File:src/normalizers/anime.normalizer.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-service.test.js","File:tests/helpers/mock-fetch.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-service.test.js","File:src/errors/index.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0
+"File:tests/tmdb-service.test.js","File:src/normalizers/anime.merge.js","IMPORTS",1,"javascript-scope: import (deferred)",0,0

@@ -1,0 +1,63 @@
+from,to,type,confidence,reason,step,staticGated
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L12:Quick start","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L21:Why this architecture","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L46:Project structure","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L88:API contracts (frontend)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L88:API contracts (frontend)","Section:README.md:L118:Response overview","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L141:Identity system (critical)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L156:Cache architecture","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L182:Request coalescing","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L189:Error handling","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L207:Observability","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L215:Streaming (planned flow)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L230:Deployment readiness (Vercel / Cloudflare)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L245:Environment variables","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L251:Phase 2 — AniList","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L251:Phase 2 — AniList","Section:README.md:L253:Role","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L251:Phase 2 — AniList","Section:README.md:L260:Provider architecture","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L251:Phase 2 — AniList","Section:README.md:L296:Canonical anime shape","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L251:Phase 2 — AniList","Section:README.md:L336:ID rules (critical)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L251:Phase 2 — AniList","Section:README.md:L345:Tests","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L251:Phase 2 — AniList","Section:README.md:L358:Later connection","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L365:Phase 3 — Jikan","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L365:Phase 3 — Jikan","Section:README.md:L367:Role","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L365:Phase 3 — Jikan","Section:README.md:L375:Provider architecture","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L365:Phase 3 — Jikan","Section:README.md:L405:Normalized Jikan shape","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L365:Phase 3 — Jikan","Section:README.md:L423:AniList-vs-Jikan precedence (explicit, documented)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L365:Phase 3 — Jikan","Section:README.md:L441:Cache behavior","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L365:Phase 3 — Jikan","Section:README.md:L448:Tests","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L462:Phase 4 — Identity Resolver","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L467:Namespace separation (critical)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L475:Resolver architecture","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L489:Resolver methods","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L497:Identity result shape","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L509:Unresolved mappings vs provider failures","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L517:Cache behavior","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L527:Error semantics","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L535:No title-based/fuzzy mapping","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L542:Future MegaPlay use case (not implemented yet)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L462:Phase 4 — Identity Resolver","Section:README.md:L552:Tests","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L565:Role","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L573:Provider architecture","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L605:Matching strategy (conservative, deterministic)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L627:Visual shape","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L641:Banner precedence (explicit)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L655:Cache & failure behavior","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L561:Phase 5 — TMDB Visual Enrichment","Section:README.md:L667:Tests","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L1:OffAnime Backend","Section:README.md:L681:Phase 6 — Supabase L2 Cache + Schema","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L681:Phase 6 — Supabase L2 Cache + Schema","Section:README.md:L685:Role","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L681:Phase 6 — Supabase L2 Cache + Schema","Section:README.md:L691:Cache flow","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L681:Phase 6 — Supabase L2 Cache + Schema","Section:README.md:L703:Schema + migration","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L731:or, with the CLI:","Section:README.md:L735:SupabaseStore","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L731:or, with the CLI:","Section:README.md:L758:Environment variables","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L731:or, with the CLI:","Section:README.md:L769:Tests","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L731:or, with the CLI:","Section:README.md:L785:Roadmap (later phases)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L731:or, with the CLI:","Section:README.md:L795:Phase 7 — Frontend API Endpoints","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L799:Activated routes & orchestration","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L836:ID namespace rules (enforced)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L848:Canonical response","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L866:Cache keys & TTL strategy","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L889:Resilience & performance","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L903:Episodes (no streaming)","CONTAINS",1,"markdown-heading",0,0
+"Section:README.md:L795:Phase 7 — Frontend API Endpoints","Section:README.md:L909:Tests","CONTAINS",1,"markdown-heading",0,0

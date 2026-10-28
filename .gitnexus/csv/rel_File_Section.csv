@@ -1,0 +1,4 @@
+from,to,type,confidence,reason,step,staticGated
+"File:README.md","Section:README.md:L1:OffAnime Backend","CONTAINS",1,"markdown-heading",0,0
+"File:README.md","Section:README.md:L730:Supabase Dashboard -> SQL Editor -> paste the migration file -> Run","CONTAINS",1,"markdown-heading",0,0
+"File:README.md","Section:README.md:L731:or, with the CLI:","CONTAINS",1,"markdown-heading",0,0

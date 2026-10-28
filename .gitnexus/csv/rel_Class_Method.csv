@@ -1,0 +1,69 @@
+from,to,type,confidence,reason,step,staticGated
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.constructor#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.executeQuery#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAnimeById#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAnimeByMalId#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.searchAnime#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getRelations#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getRecommendations#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getSeasonalAnime#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider.getAiringSchedule#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider._requireMedia#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider._buildSearchVariables#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/anilist/anilist.provider.js:AnilistProvider._buildPageVariables#2","HAS_METHOD",1,"",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","Method:src/identity/identity-resolver.js:IdentityResolver.constructor#1","HAS_METHOD",1,"",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","Method:src/identity/identity-resolver.js:IdentityResolver.resolveAniListToMal#1","HAS_METHOD",1,"",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","Method:src/identity/identity-resolver.js:IdentityResolver.resolveMalToAniList#1","HAS_METHOD",1,"",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","Method:src/identity/identity-resolver.js:IdentityResolver.resolve#1","HAS_METHOD",1,"",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","Method:src/identity/identity-resolver.js:IdentityResolver._resolveAniListToMalFresh#1","HAS_METHOD",1,"",0,0
+"Class:src/identity/identity-resolver.js:IdentityResolver","Method:src/identity/identity-resolver.js:IdentityResolver._resolveMalToAniListFresh#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider.constructor#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider.isConfigured#0","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider.searchTv#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider.getTvDetails#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider.searchMovie#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider.getMovieDetails#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._search#3","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._details#3","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._authenticatedRequest#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/tmdb/tmdb.provider.js:TmdbProvider._assertConfigured#0","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:ValidationError","Method:src/errors/index.js:ValidationError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:NotFoundError","Method:src/errors/index.js:NotFoundError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:NotImplementedError","Method:src/errors/index.js:NotImplementedError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:ProviderError","Method:src/errors/index.js:ProviderError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:TimeoutError","Method:src/errors/index.js:TimeoutError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:RateLimitError","Method:src/errors/index.js:RateLimitError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:CacheError","Method:src/errors/index.js:CacheError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:InternalError","Method:src/errors/index.js:InternalError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/jikan/jikan.provider.js:JikanProvider.constructor#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/jikan/jikan.provider.js:JikanProvider.getAnimeByMalId#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/jikan/jikan.provider.js:JikanProvider.getEpisodeList#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/jikan/jikan.provider.js:JikanProvider.searchAnime#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/jikan/jikan.provider.js:JikanProvider._validatePagination#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/jikan/jikan.provider.js:JikanProvider._timeoutOptions#0","HAS_METHOD",1,"",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","Method:src/streaming/stream-resolver.js:StreamResolver.constructor#1","HAS_METHOD",1,"",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","Method:src/streaming/stream-resolver.js:StreamResolver.resolveStream#1","HAS_METHOD",1,"",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","Method:src/streaming/stream-resolver.js:StreamResolver._lookupStream#4","HAS_METHOD",1,"",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","Method:src/streaming/stream-resolver.js:StreamResolver._fetchAndNormalize#4","HAS_METHOD",1,"",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","Method:src/streaming/stream-resolver.js:StreamResolver._ttlForStream#1","HAS_METHOD",1,"",0,0
+"Class:src/streaming/stream-resolver.js:StreamResolver","Method:src/streaming/stream-resolver.js:StreamResolver._toStreamResponse#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/megaplay/megaplay.provider.js:MegaplayProvider","Method:src/providers/megaplay/megaplay.provider.js:MegaplayProvider.constructor#0","HAS_METHOD",1,"",0,0
+"Class:src/providers/megaplay/megaplay.provider.js:MegaplayProvider","Method:src/providers/megaplay/megaplay.provider.js:MegaplayProvider.resolveByAnilistId#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/megaplay/megaplay.provider.js:MegaplayProvider","Method:src/providers/megaplay/megaplay.provider.js:MegaplayProvider.resolveByMalId#2","HAS_METHOD",1,"",0,0
+"Class:src/providers/megaplay/megaplay.provider.js:MegaplayProvider","Method:src/providers/megaplay/megaplay.provider.js:MegaplayProvider._resolve#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/base-provider.js:BaseProvider","Method:src/providers/base-provider.js:BaseProvider.constructor#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/base-provider.js:BaseProvider","Method:src/providers/base-provider.js:BaseProvider.buildUrl#1","HAS_METHOD",1,"",0,0
+"Class:src/providers/base-provider.js:BaseProvider","Method:src/providers/base-provider.js:BaseProvider.request#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/app-error.js:AppError","Method:src/errors/app-error.js:AppError.constructor#2","HAS_METHOD",1,"",0,0
+"Class:src/errors/app-error.js:AppError","Method:src/errors/app-error.js:AppError.toResponse#0","HAS_METHOD",1,"",0,0
+"Class:src/errors/index.js:InternalError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:CacheError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:RateLimitError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:TimeoutError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:ProviderError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:NotImplementedError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:NotFoundError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/errors/index.js:ValidationError","Method:src/errors/app-error.js:AppError.constructor#2","METHOD_OVERRIDES",0.9,"single-ancestor override: AppError::constructor()",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Method:src/providers/base-provider.js:BaseProvider.constructor#1","METHOD_OVERRIDES",0.9,"single-ancestor override: BaseProvider::constructor()",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Method:src/providers/base-provider.js:BaseProvider.constructor#1","METHOD_OVERRIDES",0.9,"single-ancestor override: BaseProvider::constructor()",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Method:src/providers/base-provider.js:BaseProvider.constructor#1","METHOD_OVERRIDES",0.9,"single-ancestor override: BaseProvider::constructor()",0,0

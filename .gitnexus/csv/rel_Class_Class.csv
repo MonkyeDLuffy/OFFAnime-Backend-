@@ -1,0 +1,13 @@
+from,to,type,confidence,reason,step,staticGated
+"Class:src/errors/index.js:InternalError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:CacheError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:RateLimitError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:TimeoutError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:ProviderError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:NotImplementedError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:NotFoundError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/errors/index.js:ValidationError","Class:src/errors/app-error.js:AppError","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/providers/anilist/anilist.provider.js:AnilistProvider","Class:src/providers/base-provider.js:BaseProvider","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/providers/jikan/jikan.provider.js:JikanProvider","Class:src/providers/base-provider.js:BaseProvider","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/providers/megaplay/megaplay.provider.js:MegaplayProvider","Class:src/providers/base-provider.js:BaseProvider","EXTENDS",0.85,"scope-resolution: inherits",0,0
+"Class:src/providers/tmdb/tmdb.provider.js:TmdbProvider","Class:src/providers/base-provider.js:BaseProvider","EXTENDS",0.85,"scope-resolution: inherits",0,0

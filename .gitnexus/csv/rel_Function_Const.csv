@@ -1,0 +1,27 @@
+from,to,type,confidence,reason,step,staticGated
+"Function:src/config/env.js:loadConfig","Const:src/config/env.js:schema","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/config/env.js:getRedactedConfig","Const:src/config/env.js:schema","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/normalizers/megaplay-normalizer.js:extractSource","Const:src/normalizers/megaplay-normalizer.js:SOURCE_QUALITY_FIELDS","ACCESSES",0.49000000000000005,"scope-resolution: read",0,0
+"Function:src/normalizers/megaplay-normalizer.js:extractSource","Const:src/normalizers/megaplay-normalizer.js:SOURCE_TYPE_FIELDS","ACCESSES",0.49000000000000005,"scope-resolution: read",0,0
+"Function:src/normalizers/megaplay-normalizer.js:expiryOf","Const:src/normalizers/megaplay-normalizer.js:EXPIRY_FIELDS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/category.service.js:allowedCategories","Const:src/services/category.service.js:SPECIAL_CATEGORIES","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/schedule.service.js:getAiringSchedule","Const:src/services/schedule.service.js:DAY_MS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/schedule.service.js:getAiringSchedule","Const:src/services/schedule.service.js:DAY_MS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/schedule.service.js:getAiringSchedule","Const:src/services/schedule.service.js:DEFAULT_WINDOW_MS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/schedule.service.js:getAiringSchedule","Const:src/services/schedule.service.js:DAY_MS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/tmdb.service.js:enrichWithTmdb","Const:src/services/tmdb.service.js:UNRESOLVED_TTL_SECONDS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/services/tmdb.service.js:resolveTmdbVisual","Const:src/services/tmdb.service.js:MAX_SEARCH_ATTEMPTS","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:src/utils/logger.js:write","Const:src/utils/logger.js:activeLevel","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:tests/jikan-provider.test.js:fn@54:71.mock@55:2","Const:tests/jikan-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/jikan-provider.test.js:fn@94:69.mock@95:2","Const:tests/jikan-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/stream-resolver.test.js:rawStream","Const:tests/stream-resolver.test.js:STREAM_URL","ACCESSES",0.53,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@26:65.mock@27:2","Const:tests/tmdb-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@42:72.mock@43:2","Const:tests/tmdb-provider.test.js:detailsPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@55:53.mock@56:2","Const:tests/tmdb-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@55:53.mock@56:2","Const:tests/tmdb-provider.test.js:detailsPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@71:94.mock@72:2","Const:tests/tmdb-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@83:83.mock@84:2","Const:tests/tmdb-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:tests/tmdb-provider.test.js:fn@96:82.mock@97:2","Const:tests/tmdb-provider.test.js:searchPayload","ACCESSES",0.51,"scope-resolution: read",0,0
+"Function:src/middleware/error-handler.js:errorHandler","Const:src/utils/logger.js:logger","ACCESSES",0.9,"import-resolved",0,0
+"Function:src/middleware/request-logger.js:requestLogger","Const:src/utils/logger.js:logger","ACCESSES",0.9,"import-resolved",0,0
+"Function:src/routes/index.js:registerRoutes","Const:src/config/constants.js:API_PREFIX","ACCESSES",0.9,"import-resolved",0,0
