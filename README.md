@@ -201,11 +201,13 @@ GET /api/details/20?api_key=<BACKEND_API_SECRET>
 
 `/home`, `/search`, `/top-search`, `/schedule`, `/category/:type`,
 `/details/:id`, `/smart/details/:id`, `/episodes/:id`, `/recommendations/:id`,
-`/seasons/:id`, `/jikan/anime/:malId`, `/jikan/from-anilist/:id`, `/tmdb/:id`.
+`/seasons/:id`, `/jikan/anime/:malId`, `/jikan/from-anilist/:id`, `/tmdb/:id`,
+`/stream/resolve/anilist/:id`, `/stream/resolve/mal/:id`.
 
-**NOT approved:** the streaming/playback route (`/stream/resolve/:id`), every
-non-GET method (POST/PUT/DELETE/...), and any unapproved/unknown path. A valid
-key alone in the query string does NOT authorize those - they return `401`.
+**NOT approved:** every non-GET method (POST/PUT/DELETE/...), and any
+unapproved/unknown path. A valid key alone in the query string does NOT
+authorize those - they return `401`. The legacy `/api/stream/resolve/:id`
+route remains header-only (it is not in the query-key allowlist).
 CORS preflights and user-agent strings prove nothing (both are trivially
 forgeable by scripts); the allowlist + method check is the only gate.
 

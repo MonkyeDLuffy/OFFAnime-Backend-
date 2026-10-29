@@ -80,7 +80,7 @@ import { cacheManager } from '../cache/cache-manager.js';
 import { identityResolver } from '../identity/identity-resolver.js';
 import { isProxyConfigured, buildProxyWatchUrl } from './proxy-playback.js';
 import { ProviderError, NotImplementedError, ValidationError } from '../errors/index.js';
-import { normalizeId, ID_TYPES } from '../identity/id-types.js';
+import { normalizeId, ID_TYPES, parseIdentityType } from '../identity/id-types.js';
 import {
   PROVIDERS,
   STREAM_LANGUAGES,
@@ -175,25 +175,94 @@ export class StreamResolver {
  * @throws {TimeoutError|RateLimitError|ProviderError} on provider failure
  *   (stale-if-error already applied through the cache layer).
    */
-  async resolveStream({ anilistId, episode, language } = {}) {
-    const id = normalizeId(anilistId);
-    if (id === null) {
-      throw new ValidationError('resolveStream requires a valid AniList ID', { received: anilistId });
+  /**
+   * Resolve a playable stream for an anime episode, explicitly keyed by ID
+   * namespace. AniList IDs and MAL IDs are different namespaces - the namespace
+   * must be explicit; a bare number is never accepted as ambiguous.
+   *
+   * Supported input shapes:
+   *   { idType: 'anilist', id: <anilistId>, episode, language }  (explicit)
+   *   { anilistId, episode, language }                          (legacy; implies anilist)
+   *   { idType: 'mal', id: <malId>, episode, language }         (explicit MAL)
+   *
+   * @param {object} params
+   * @param {'anilist'|'mal'} [params.idType] Explicit ID namespace. Required
+   *   unless the legacy `anilistId` is provided.
+   * @param {number|string} [params.id] The ID for `params.idType`.
+   * @param {number|string} [params.anilistId] Legacy AniList ID (implies
+   *   `idType: 'anilist'`). Kept for backward compatibility with the existing
+   *   `/api/stream/resolve/:id` route.
+   * @param {number|string} [params.episode=1] Positive, bounded episode.
+   * @param {'sub'|'dub'} [params.language='sub'] Documented language contract.
+   * @returns {Promise<object>} Normalized streaming response:
+   *   { resolved: true, provider, idType, anilistId, malId, episode, language,
+   *     playbackUrl, sources, expiresAt }. `anilistId`/`malId` mirror the
+   *   resolved namespaces; the unset side is null when not yet known. The
+   *     playbackUrl is ALWAYS the frontend-safe proxy watch URL - never a
+   *     direct MegaPlay URL.
+   * @throws {ValidationError} invalid idType/id/episode/language.
+   * @throws {NotFoundError} anime does not exist (from the identity layer -
+   *   never a stream-availability conclusion).
+   * @throws {TimeoutError|RateLimitError|ProviderError} on provider failure
+   *   (stale-if-error already applied through the cache layer).
+   */
+  async resolveStream({ idType, id, anilistId, episode, language } = {}) {
+    let ns, resolvedId;
+    if (idType !== undefined) {
+      ns = parseIdentityType(idType); // throws ValidationError for unknown types
+      resolvedId = normalizeId(id);
+    } else if (anilistId !== undefined) {
+      // Legacy shape: anilistId implies the AniList namespace.
+      ns = ID_TYPES.ANILIST;
+      resolvedId = normalizeId(anilistId);
+    } else {
+      throw new ValidationError(
+        'resolveStream requires an explicit idType ("anilist"|"mal") or anilistId',
+        { received: { idType, id, anilistId } },
+      );
     }
+
+    if (resolvedId === null) {
+      throw new ValidationError(
+        `resolveStream requires a valid ${ns === ID_TYPES.ANILIST ? 'AniList' : 'MAL'} ID`,
+        { received: id ?? anilistId },
+      );
+    }
+
     const ep = normalizeEpisode(episode);
     const lang = normalizeLanguage(language);
 
+    return ns === ID_TYPES.ANILIST
+      ? this._resolveByAnilist(resolvedId, ep, lang)
+      : this._resolveByMalId(resolvedId, ep, lang);
+  }
+
+  /**
+   * AniList-primary resolution flow (unchanged from the legacy route).
+   *
+   *   1) MegaPlay by AniList ID -> usable stream -> return (idType=anilist).
+   *   2) Genuine no-stream -> IdentityResolver.resolveAniListToMal -> MegaPlay
+   *      by MAL ID -> usable stream -> return (idType=mal, resolved MAL ID).
+   *   3) Neither -> PRIMARY (AniList) proxy playback URL anyway; malId is
+   *      included only when genuinely resolved by the IdentityResolver.
+   *
+   * @param {number} anilistId
+   * @param {number} episode
+   * @param {'sub'|'dub'} language
+   * @returns {Promise<object>}
+   */
+  async _resolveByAnilist(anilistId, episode, language) {
     // 1) AniList ID MUST always be attempted first. No MAL resolution unless
     //    the AniList-ID lookup cannot provide a usable stream.
-    const aniResult = await this._lookupStream(ID_TYPES.ANILIST, id, ep, lang);
+    const aniResult = await this._lookupStream(ID_TYPES.ANILIST, anilistId, episode, language);
     if (isUsableStreamResult(aniResult)) {
       return this._toStreamResponse(aniResult, {
         idType: ID_TYPES.ANILIST,
-        anilistId: id,
+        anilistId: anilistId,
         malId: null, // identity was not needed - never guessed
-        resolvedId: id, // the AniList ID was used - idType=anilist
-        episode: ep,
-        language: lang,
+        resolvedId: anilistId, // the AniList ID was used - idType=anilist
+        episode,
+        language,
       });
     }
 
@@ -201,18 +270,18 @@ export class StreamResolver {
     //    ONLY (a real provider-confirmed AniList -> MAL mapping). No title
     //    search, no fuzzy matching, no guessing, no numeric inference.
     let resolvedMalId = null;
-    const identity = await this.identity.resolveAniListToMal(id);
+    const identity = await this.identity.resolveAniListToMal(anilistId);
     if (identity.resolved && identity.malId !== null) {
       resolvedMalId = identity.malId;
-      const malResult = await this._lookupStream(ID_TYPES.MAL, resolvedMalId, ep, lang);
+      const malResult = await this._lookupStream(ID_TYPES.MAL, resolvedMalId, episode, language);
       if (isUsableStreamResult(malResult)) {
         return this._toStreamResponse(malResult, {
           idType: ID_TYPES.MAL,
-          anilistId: id, // AniList ID remains the canonical identity
+          anilistId: anilistId, // AniList ID remains the canonical identity
           malId: resolvedMalId, // from actual identity resolution only
           resolvedId: resolvedMalId, // the RESOLVED MAL ID was used - idType=mal
-          episode: ep,
-          language: lang,
+          episode,
+          language,
         });
       }
     }
@@ -227,11 +296,75 @@ export class StreamResolver {
     //    IdentityResolver - never guessed, never back-filled.
     return this._toStreamResponse(aniResult, {
       idType: ID_TYPES.ANILIST,
-      anilistId: id, // AniList ID remains the canonical identity
+      anilistId: anilistId, // AniList ID remains the canonical identity
       malId: resolvedMalId, // null when identity is unresolved - never guessed
-      resolvedId: id, // the AniList ID was used - idType=anilist
-      episode: ep,
-      language: lang,
+      resolvedId: anilistId, // the AniList ID was used - idType=anilist
+      episode,
+      language,
+    });
+  }
+
+  /**
+   * MAL-primary resolution flow (the /mal/:id route).
+   *
+   *   1) MegaPlay by MAL ID -> usable stream -> return (idType=mal).
+   *   2) Genuine no-stream -> IdentityResolver.resolveMalToAniList -> MegaPlay
+   *      by AniList ID -> usable stream -> return (idType=anilist, resolved
+   *      AniList ID).
+   *   3) Neither -> PRIMARY (MAL) proxy playback URL anyway; anilistId is
+   *      included only when genuinely resolved by the IdentityResolver.
+   *
+   * The MAL ID is NEVER reused as an AniList ID and vice versa; the namespace
+   * is fixed by the route and confirmed by the IdentityResolver only.
+   *
+   * @param {number} malId
+   * @param {number} episode
+   * @param {'sub'|'dub'} language
+   * @returns {Promise<object>}
+   */
+  async _resolveByMalId(malId, episode, language) {
+    // 1) MAL ID first - the route explicitly names the MAL namespace.
+    const malResult = await this._lookupStream(ID_TYPES.MAL, malId, episode, language);
+    if (isUsableStreamResult(malResult)) {
+      return this._toStreamResponse(malResult, {
+        idType: ID_TYPES.MAL,
+        anilistId: null, // not known unless the IdentityResolver confirms it
+        malId: malId,
+        resolvedId: malId, // the MAL ID was used - idType=mal
+        episode,
+        language,
+      });
+    }
+
+    // 2) Genuine no-stream -> resolve MAL->AniList through the IdentityResolver
+    //    ONLY (a real provider-confirmed MAL -> AniList mapping). No guessing.
+    let resolvedAnilistId = null;
+    const identity = await this.identity.resolveMalToAniList(malId);
+    if (identity.resolved && identity.anilistId !== null) {
+      resolvedAnilistId = identity.anilistId;
+      const aniResult = await this._lookupStream(ID_TYPES.ANILIST, resolvedAnilistId, episode, language);
+      if (isUsableStreamResult(aniResult)) {
+        return this._toStreamResponse(aniResult, {
+          idType: ID_TYPES.ANILIST,
+          anilistId: resolvedAnilistId, // from actual identity resolution only
+          malId: malId, // the requested MAL ID remains the canonical input
+          resolvedId: resolvedAnilistId, // the RESOLVED AniList ID was used - idType=anilist
+          episode,
+          language,
+        });
+      }
+    }
+
+    // 3) Neither direct MegaPlay lookup produced a usable stream. The PRIMARY
+    //    (MAL) namespace stands; the proxy handles availability. anilistId is
+    //    included only when genuinely resolved - never guessed.
+    return this._toStreamResponse(malResult, {
+      idType: ID_TYPES.MAL,
+      anilistId: resolvedAnilistId, // null when unresolved - never guessed
+      malId: malId,
+      resolvedId: malId, // the MAL ID was used - idType=mal
+      episode,
+      language,
     });
   }
 

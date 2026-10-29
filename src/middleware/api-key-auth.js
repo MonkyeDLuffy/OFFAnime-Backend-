@@ -95,6 +95,12 @@ export const QUERY_KEY_APPROVED_GET_PATHS = Object.freeze([
   /^\/jikan\/anime\/[^/]+$/,
   /^\/jikan\/from-anilist\/[^/]+$/,
   /^\/tmdb\/[^/]+$/,
+  // Streaming resolution endpoints accept ?api_key= for direct/manual browser
+  // access. Header authentication (X-API-Key / Authorization Bearer) remains
+  // the preferred production approach; query keys are restricted to these
+  // explicitly approved read-only GET paths.
+  /^\/stream\/resolve\/anilist\/[^/]+$/,
+  /^\/stream\/resolve\/mal\/[^/]+$/,
 ]);
 
 /**

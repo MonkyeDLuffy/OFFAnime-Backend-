@@ -197,8 +197,9 @@ a user session token in `Authorization: Bearer` on `/api/auth/*` requests.
 approved allowlist of GET paths only (`/home`, `/search`, `/top-search`,
 `/schedule`, `/category/:type`, `/details/:id`, `/smart/details/:id`,
 `/episodes/:id`, `/recommendations/:id`, `/seasons/:id`, `/jikan/anime/:malId`,
-`/jikan/from-anilist/:id`, `/tmdb/:id`). NOT approved on `/stream/resolve`
-or any non-GET method. Header + query must be identical when both present
+`/jikan/from-anilist/:id`, `/tmdb/:id`, `/stream/resolve/anilist/:id`,
+`/stream/resolve/mal/:id`). NOT approved on the legacy `/stream/resolve/:id`
+route or any non-GET method. Header + query must be identical when both present
 (conflict → 401). Query keys leak into logs/history — never ship them in
 client code.
 
@@ -259,8 +260,10 @@ All routes are mounted under **`/api`**. Auth requirement: 🔓 public,
 ### Streaming
 
 | Method | Path | Auth | Use |
-| --- | --- | --- | --- |
-| GET | `/api/stream/resolve/:id` | 🔐 | Resolve a playable stream. `:id` = AniList ID. Query: `ep=1` (alias `episode=1`; `ep` wins), `language=sub\|dub`. Flow: MegaPlay by AniList ID → IdentityResolver → MegaPlay by MAL ID → none = 404. Playback URL is ALWAYS the frontend-safe proxy watch URL (`{MEGAPLAY_PROXY_URL}/watch/{resolvedId}?ep=..&lang=..&idType=anilist\|mal`) — direct MegaPlay URLs are never exposed. Response: `{ resolved, provider, idType, anilistId, malId, episode, language, sources, expiresAt, playbackUrl }`. Proxy unconfigured → typed `501 NOT_IMPLEMENTED`. Query `?api_key` is NOT accepted here. |
+| ------ | ---- | ---- | --- |
+| GET | `/api/stream/resolve/anilist/:id` | 🔐 | Resolve a playable stream by AniList ID. Query: `ep=1` (alias `episode=1`; `ep` wins), `language=sub\|dub`, and optionally `api_key=` for direct/manual browser access. Playback URL is ALWAYS the frontend-safe proxy watch URL — direct MegaPlay URLs are never exposed. Response: `{ resolved, provider, idType, anilistId, malId, episode, language, sources, expiresAt, playbackUrl }`. Proxy unconfigured → typed `501 NOT_IMPLEMENTED`. |
+| GET | `/api/stream/resolve/mal/:id` | 🔐 | Resolve a playable stream by MAL ID. Same query contract as the AniList route. `idType` is `mal` and playback uses the MAL ID. |
+| GET | `/api/stream/resolve/:id` | 🔐 | Legacy route; `:id` is ALWAYS an AniList ID. Same query contract except `?api_key=` is NOT accepted here (header-only). |
 
 ### Jikan (MAL) namespace
 

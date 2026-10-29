@@ -104,14 +104,46 @@ test('INVALID query key on an approved GET endpoint -> 401', async () => {
   }
 });
 
-test('query-only auth is REJECTED on the unapproved streaming route (header-only policy)', async () => {
+test('query-only auth is ACCEPTED on the approved streaming routes', async () => {
   const server = await startTestServer();
   try {
-    const res = await rawFetch(`${server.baseUrl}/api/stream/resolve/abc?api_key=${SECRET}`);
-    // 401, NOT the 400 validation error -> the middleware rejected it before
-    // the controller; a valid key alone does not authorize this route.
-    assert.equal(res.status, 401);
-    assert.equal((await res.json()).error.code, 'UNAUTHORIZED_ERROR');
+    // Valid query key on an approved streaming route reaches the controller;
+    // the invalid ID then produces a 400 from the controller (not a 401 from
+    // the middleware). This proves query auth is now allowed on streaming.
+    const res = await rawFetch(`${server.baseUrl}/api/stream/resolve/anilist/abc?api_key=${SECRET}`);
+    assert.equal(res.status, 400);
+    assert.equal((await res.json()).error.code, 'VALIDATION_ERROR');
+  } finally {
+    await server.stop();
+  }
+});
+
+test('query-only auth is ACCEPTED on the approved MAL streaming route (the exact task request shape)', async () => {
+  const server = await startTestServer();
+  try {
+    // mal/:id with ?ep=1&language=sub&api_key=... — valid key accepted by
+    // middleware; invalid id -> controller 400 (not middleware 401).
+    const res = await rawFetch(
+      `${server.baseUrl}/api/stream/resolve/mal/abc?ep=1&language=sub&api_key=${SECRET}`
+    );
+    assert.equal(res.status, 400);
+    assert.equal((await res.json()).error.code, 'VALIDATION_ERROR');
+  } finally {
+    await server.stop();
+  }
+});
+
+test('valid query key on the approved mal streaming route with header present (identical) -> header policy applies', async () => {
+  await resetL1Cache();
+  const server = await startTestServer();
+  try {
+    const res = await rawFetch(
+      `${server.baseUrl}/api/stream/resolve/mal/abc?ep=1&language=sub&api_key=${SECRET}`,
+      { headers: { 'X-API-Key': SECRET } }
+    );
+    // Identical header + query -> treated as header credential -> controller reached -> 400
+    assert.equal(res.status, 400);
+    assert.equal((await res.json()).error.code, 'VALIDATION_ERROR');
   } finally {
     await server.stop();
   }
@@ -181,7 +213,7 @@ test('IDENTICAL header + query credentials -> treated as one credential -> 200',
   }
 });
 
-test('identical header + query on an UNAPPROVED route -> header policy applies (controller reached)', async () => {
+test('identical header + query on an APPROVED streaming route -> header policy applies (controller reached)', async () => {
   const server = await startTestServer();
   try {
     const res = await rawFetch(`${server.baseUrl}/api/stream/resolve/abc?api_key=${SECRET}`, {

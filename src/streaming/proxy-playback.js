@@ -84,5 +84,9 @@ export function buildProxyWatchUrl({ idType, id, episode, language } = {}, optio
   const ep = normalizeEpisode(episode);
   const lang = normalizeLanguage(language);
   const base = options.baseUrl !== undefined ? String(options.baseUrl).trim().replace(/\/+$/, '') : proxyBaseUrl();
-  return `${base}/watch/${validId}?ep=${ep}&lang=${lang}&idType=${idType}`;
+  const url = new URL(`${base}/watch/${validId}`);
+  url.searchParams.set('ep', String(ep));
+  url.searchParams.set('lang', lang);
+  url.searchParams.set('idType', idType);
+  return url.toString();
 }
