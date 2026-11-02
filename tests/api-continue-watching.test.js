@@ -5,21 +5,25 @@
  * Verified:
  *   - a VERIFIED session is required for every operation (401 without one;
  *     query-parameter API keys are never sufficient - this is user data),
- *   - save -> 201 (fresh row) / repeat save -> 200 (same single row updated:
- *     NO duplicates; episode/position advance, created_at preserved),
- *   - episode completion: position is clamped to the duration and the anime
- *     entry REMAINS (finishing one episode never closes the anime),
- *   - multiple anime are tracked independently and list newest-watch-first,
- *   - invalid progress payloads -> 400 VALIDATION_ERROR without storage access,
+ *   - save accepts { anilistId, episode } with optional progress; title,
+ *     poster, banner and other anime metadata are NOT required (the frontend
+ *     hydrates display data through the existing anime endpoints),
+ *   - save -> 200 { saved: true, entry }; repeat save updates the SAME row
+ *     (upsert by user_id + anilist_id): episode/progress advance, no
+ *     duplicates, updated_at moves forward,
+ *   - GET returns only the verified user's entries, newest-watch first,
+ *     with `progress` omitted when null,
+ *   - invalid progress (negative / non-numeric) -> 400 VALIDATION_ERROR,
+ *     missing anilistId/episode -> 400, storage never touched,
  *   - identity comes ONLY from the verified session: a userId supplied in the
  *     request body is ignored entirely; cross-user isolation (A never sees or
  *     removes B's rows),
  *   - the backend forwards the user token + anon key so Postgres RLS (see
  *     supabase/migrations/20261102000004_continue_watching.sql) enforces
  *     ownership; the service-role key is never used,
- *   - login -> logout -> re-login: both data sets are fetchable with the
- *     login session and persist across sessions (nothing is deleted on
- *     logout),
+ *   - login -> both data sets fetchable -> logout (data NOT deleted) ->
+ *     re-login: Continue Watching and Watchlist both persist across
+ *     sessions/devices,
  *   - storage failures surface as typed 502 errors, never as raw 500s.
  */
 
@@ -53,32 +57,16 @@ function authHandler(tokenToUser) {
   };
 }
 
-/**
- * Minimal sample payloads exercising every optional column.
- * @param {object} [overrides]
- */
+/** Minimal progress payload: anilistId + episode are the only required fields. */
 function progressPayload(overrides = {}) {
-  return {
-    anilistId: 16498,
-    malId: 21,
-    title: 'One Piece',
-    titleEnglish: 'One Piece',
-    titleRomaji: 'One Piece',
-    posterUrl: 'https://img.example/one-piece-poster.jpg',
-    bannerUrl: 'https://img.example/one-piece-banner.jpg',
-    episode: 10,
-    position: 300.5,
-    duration: 1440,
-    language: 'sub',
-    ...overrides,
-  };
+  return { anilistId: 16498, episode: 10, ...overrides };
 }
 
 /**
  * Stateful in-memory emulation of the continue_watching PostgREST surface with
- * the production semantics that matter (PK conflict -> in-place update with
- * created_at preserved + updated_at refreshed by the DB trigger). Every REST
- * call is recorded so tests can assert identity/filters/headers.
+ * the production semantics that matter (PK conflict -> in-place update of
+ * episode/progress/updated_at; created_at preserved). Every REST call is
+ * recorded so tests can assert identity/filters/headers.
  */
 function createContinueWatchingState() {
   return {
@@ -101,17 +89,22 @@ function routeContinueWatchingRest(state, url, call) {
   });
 
   if ((call.method ?? 'GET') === 'POST') {
-    // Emulates ON CONFLICT (user_id, anilist_id) DO UPDATE + the touch trigger:
-    // provided columns overwrite, created_at is preserved, updated_at moves.
+    // Emulates ON CONFLICT (user_id, anilist_id) DO UPDATE: episode,
+    // progress and updated_at move forward; created_at is preserved.
     const body = state.calls[state.calls.length - 1].body;
     const key = `${body.user_id}:${body.anilist_id}`;
     const existing = state.rows.get(key);
+    const now = new Date().toISOString();
     if (existing) {
-      const row = { ...existing, ...body, created_at: existing.created_at, updated_at: new Date().toISOString() };
+      const row = {
+        ...existing,
+        ...body,
+        created_at: existing.created_at,
+        updated_at: now,
+      };
       state.rows.set(key, row);
       return jsonResponse([row], 200);
     }
-    const now = new Date().toISOString();
     const row = { ...body, created_at: now, updated_at: now };
     state.rows.set(key, row);
     return jsonResponse([row], 201);
@@ -127,7 +120,7 @@ function routeContinueWatchingRest(state, url, call) {
   const userId = (parsed.searchParams.get('user_id') ?? '').replace(/^eq\./, '');
   const rows = [...state.rows.values()]
     .filter((row) => row.user_id === userId)
-    .sort((a, b) => String(b.last_watched_at).localeCompare(String(a.last_watched_at)));
+    .sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
   return jsonResponse(rows, 200);
 }
 
@@ -139,7 +132,6 @@ function makeRestRouter({ cw, throttle, watchlist } = {}) {
       return routeThrottleRest(throttle, url, call);
     }
     if (path.endsWith('/rest/v1/watchlist')) {
-      // GET-only emulation: newest first, scoped by the user_id filter.
       assert.equal(call.method ?? 'GET', 'GET', 'watchlist mock only supports list');
       const parsed = new URL(url);
       const userId = (parsed.searchParams.get('user_id') ?? '').replace(/^eq\./, '');
@@ -193,8 +185,6 @@ test('query-parameter API keys are NOT accepted on user data endpoints', async (
   });
   const server = await startTestServer();
   try {
-    // The GET path is NOT in the query-key approved list (user data), so a
-    // query-only key must not bypass authentication.
     const res = await rawFetch(`${server.baseUrl}/api/user/continue-watching?api_key=${TEST_API_SECRET}`);
     assert.equal(res.status, 401);
     assert.equal((await res.json()).error.code, 'UNAUTHORIZED_ERROR');
@@ -205,7 +195,7 @@ test('query-parameter API keys are NOT accepted on user data endpoints', async (
   }
 });
 
-test('save -> 201 fresh row; repeat save -> 200: same record updated, no duplicates, created_at preserved', async () => {
+test('save {anilistId, episode} without title/poster -> 200, progress omitted from response', async () => {
   await resetL1Cache();
   const cw = createContinueWatchingState();
   const installed = installApiMocks({
@@ -214,49 +204,92 @@ test('save -> 201 fresh row; repeat save -> 200: same record updated, no duplica
   });
   const server = await startTestServer();
   try {
-    // FIRST SAVE
-    const first = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
+    const saved = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
       token: TOKEN_A,
       body: progressPayload(),
     });
-    assert.equal(first.status, 201);
-    const firstBody = await first.json();
-    assert.ok(firstBody.saved);
-    const entry = firstBody.entry;
+    assert.equal(saved.status, 200);
+    const savedBody = await saved.json();
+    assert.ok(savedBody.saved);
+    const entry = savedBody.entry;
     assert.equal(entry.anilistId, 16498);
-    assert.equal(entry.malId, 21);
-    assert.equal(entry.title, 'One Piece');
-    assert.equal(entry.titleEnglish, 'One Piece');
-    assert.equal(entry.titleRomaji, 'One Piece');
-    assert.ok(entry.posterUrl);
-    assert.ok(entry.bannerUrl);
     assert.equal(entry.episode, 10);
-    assert.equal(entry.positionSeconds, 300.5);
-    assert.equal(entry.durationSeconds, 1440);
-    assert.equal(entry.language, 'sub');
-    assert.ok(entry.createdAt && entry.updatedAt && entry.lastWatchedAt);
-    assert.equal(cw.rows.size, 1, 'exactly one row for (user, anime)');
+    assert.equal(entry.progress, undefined, 'progress omitted when not provided');
+    assert.ok(entry.updatedAt);
+    assert.equal(cw.rows.size, 1);
+  } finally {
+    await server.stop();
+    installed.restore();
+  }
+});
 
-    // REPEAT SAVE: progress moves forward - same row updated in place.
+test('save {anilistId, episode, progress} -> entry includes progress', async () => {
+  await resetL1Cache();
+  const cw = createContinueWatchingState();
+  const installed = installApiMocks({
+    supabaseAuth: authHandler({ [TOKEN_A]: USER_A }),
+    supabaseRest: makeRestRouter({ cw }),
+  });
+  const server = await startTestServer();
+  try {
+    const saved = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
+      token: TOKEN_A,
+      body: progressPayload({ progress: 35 }),
+    });
+    assert.equal(saved.status, 200);
+    const entry = (await saved.json()).entry;
+    assert.equal(entry.progress, 35);
+
+    // GET reflects the stored progress.
+    const list = await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: TOKEN_A });
+    assert.equal(list.status, 200);
+    const listBody = await list.json();
+    assert.equal(listBody.count, 1);
+    assert.equal(listBody.items[0].progress, 35);
+    assert.equal(listBody.items[0].episode, 10);
+  } finally {
+    await server.stop();
+    installed.restore();
+  }
+});
+
+test('repeat save same anime -> 200: same single row updated, no duplicates', async () => {
+  await resetL1Cache();
+  const cw = createContinueWatchingState();
+  const installed = installApiMocks({
+    supabaseAuth: authHandler({ [TOKEN_A]: USER_A }),
+    supabaseRest: makeRestRouter({ cw }),
+  });
+  const server = await startTestServer();
+  try {
+    const first = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
+      token: TOKEN_A,
+      body: progressPayload({ episode: 10, progress: 35 }),
+    });
+    assert.equal(first.status, 200);
+    const firstEntry = (await first.json()).entry;
+    const firstUpdatedAt = firstEntry.updatedAt;
+
     const second = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
       token: TOKEN_A,
-      body: progressPayload({ episode: 11, position: 720, language: 'dub', malId: 21 }),
+      body: progressPayload({ episode: 11, progress: 300 }),
     });
-    assert.equal(second.status, 200, 'an update of existing progress is a 200');
-    const secondBody = await second.json();
-    assert.equal(secondBody.entry.episode, 11);
-    assert.equal(secondBody.entry.positionSeconds, 720);
-    assert.equal(secondBody.entry.language, 'dub');
-    assert.equal(secondBody.entry.createdAt, entry.createdAt, 'created_at preserved across updates');
-    assert.ok(secondBody.entry.updatedAt > entry.updatedAt, 'updated_at advanced');
+    assert.equal(second.status, 200);
+    const secondEntry = (await second.json()).entry;
+    assert.equal(secondEntry.episode, 11);
+    assert.equal(secondEntry.progress, 300);
+    assert.ok(secondEntry.updatedAt > firstUpdatedAt, 'updated_at advanced');
     assert.equal(cw.rows.size, 1, 'upsert never created a duplicate row');
+
+    const list = await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: TOKEN_A });
+    assert.equal((await list.json()).count, 1);
   } finally {
     await server.stop();
     installed.restore();
   }
 });
 
-test('episode completion: position clamps to duration and the anime entry REMAINS', async () => {
+test('multiple anime tracked independently, ordered newest-watch first', async () => {
   await resetL1Cache();
   const cw = createContinueWatchingState();
   const installed = installApiMocks({
@@ -265,65 +298,27 @@ test('episode completion: position clamps to duration and the anime entry REMAIN
   });
   const server = await startTestServer();
   try {
-    //finished episode: position beyond duration
-    const done = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
+    await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
       token: TOKEN_A,
-      body: progressPayload({ episode: 10, position: 9999, duration: 1440 }),
+      body: progressPayload({ anilistId: 16498, episode: 5, progress: 100 }),
     });
-    assert.equal(done.status, 201);
-    const doneBody = await done.json();
-    assert.equal(doneBody.entry.positionSeconds, 1440, 'position clamped, never rejected');
-
-    // Next episode starts - the same anime keeps progressing (one row).
-    const next = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
+    await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
       token: TOKEN_A,
-      body: progressPayload({ episode: 11, position: 5, duration: 1440, language: 'sub' }),
+      body: progressPayload({ anilistId: 21, episode: 1, progress: 10 }),
     });
-    assert.equal(next.status, 200);
-    assert.equal(cw.rows.size, 1, 'no anime-completed concept: entry stays');
-  } finally {
-    await server.stop();
-    installed.restore();
-  }
-});
-
-test('multiple anime are tracked independently and ordered newest-watch first', async () => {
-  await resetL1Cache();
-  const cw = createContinueWatchingState();
-  const installed = installApiMocks({
-    supabaseAuth: authHandler({ [TOKEN_A]: USER_A }),
-    supabaseRest: makeRestRouter({ cw }),
-  });
-  const server = await startTestServer();
-  try {
-    const a = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
-      token: TOKEN_A,
-      body: progressPayload({ anilistId: 16498, title: 'One Piece' }),
-    });
-    assert.equal(a.status, 201);
-    // Save a second anime - it was watched later, so it sorts first.
-    const b = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
-      token: TOKEN_A,
-      body: progressPayload({ anilistId: 21, malId: 1, title: 'Another Anime', duration: undefined }),
-    });
-    assert.equal(b.status, 201);
 
     const list = await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: TOKEN_A });
     assert.equal(list.status, 200);
     const listBody = await list.json();
     assert.equal(listBody.count, 2);
     assert.deepEqual(listBody.items.map((item) => item.anilistId), [21, 16498], 'most recent anime first');
-    assert.equal(listBody.items[0].title, 'Another Anime');
-    assert.equal(listBody.items[0].episode, 10);
-    // Anime without a reported duration stores null (optional column).
-    assert.equal(listBody.items[0].durationSeconds, null);
   } finally {
     await server.stop();
     installed.restore();
   }
 });
 
-test('invalid progress payloads -> 400 VALIDATION_ERROR, storage never touched', async () => {
+test('invalid progress / missing ids -> 400 VALIDATION_ERROR, storage never touched', async () => {
   await resetL1Cache();
   const cw = createContinueWatchingState();
   const installed = installApiMocks({
@@ -334,32 +329,23 @@ test('invalid progress payloads -> 400 VALIDATION_ERROR, storage never touched',
   try {
     const invalid = [
       progressPayload({ anilistId: 'not-an-id' }),
-      progressPayload({ malId: 'nope' }),
-      progressPayload({ title: '' }),
-      progressPayload({ title: '   ' }),
-      progressPayload({ posterUrl: undefined }),
+      progressPayload({ episode: 'nope' }),
       progressPayload({ episode: 0 }),
-      progressPayload({ episode: -1 }),
-      progressPayload({ position: -5 }),
-      progressPayload({ position: 'abc' }),
-      progressPayload({ position: {} }),   // JSON round-trips to NaN
-      progressPayload({ duration: 0 }),
-      progressPayload({ duration: -3 }),
-      progressPayload({ language: 'september' }),
-      progressPayload({ language: '' }),
-      { anilistId: 20 }, // everything else missing
-      {}, // nothing at all
+      progressPayload({ progress: -5 }),
+      progressPayload({ progress: 'abc' }),
+      progressPayload({ progress: {} }),
+      { episode: 1 },        // missing anilistId
+      { anilistId: 21 },     // missing episode
+      {},                    // nothing
     ];
     for (const body of invalid) {
       const res = await request(server.baseUrl, 'POST', '/api/user/continue-watching', { token: TOKEN_A, body });
       assert.equal(res.status, 400, `expected 400 for payload ${JSON.stringify(body)}`);
-      const problem = await res.json();
-      assert.equal(problem.error.code, 'VALIDATION_ERROR', JSON.stringify(body));
+      assert.equal((await res.json()).error.code, 'VALIDATION_ERROR', JSON.stringify(body));
     }
     assert.equal(cw.calls.length, 0, 'invalid payloads must never reach storage');
     assert.equal(cw.rows.size, 0);
 
-    // DELETE with a malformed id -> 400 as well, no storage call.
     const badDelete = await request(server.baseUrl, 'DELETE', '/api/user/continue-watching/nope', { token: TOKEN_A });
     assert.equal(badDelete.status, 400);
     assert.equal((await badDelete.json()).error.code, 'VALIDATION_ERROR');
@@ -373,11 +359,9 @@ test('invalid progress payloads -> 400 VALIDATION_ERROR, storage never touched',
 test('identity comes ONLY from the verified session (body userId is ignored)', async () => {
   await resetL1Cache();
   const cw = createContinueWatchingState();
-  // A row owned by user B must never appear for user A.
   cw.rows.set(`${USER_B}:30`, {
-    user_id: USER_B, anilist_id: 30, mal_id: null, title: 'B anime', poster_url: 'https://img/b.jpg',
-    episode: 1, position_seconds: 1, language: 'sub',
-    last_watched_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    user_id: USER_B, anilist_id: 30, episode: 1, progress: null,
+    created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
   });
   const installed = installApiMocks({
     supabaseAuth: authHandler({ [TOKEN_A]: USER_A, [TOKEN_B]: USER_B }),
@@ -385,25 +369,21 @@ test('identity comes ONLY from the verified session (body userId is ignored)', a
   });
   const server = await startTestServer();
   try {
-    // Attempt a confused-deputy save: session = A, body claims userId = B.
     const res = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
       token: TOKEN_A,
-      body: progressPayload({ anilistId: 99, userId: USER_B, malId: undefined }),
+      body: progressPayload({ anilistId: 99, userId: USER_B }),
     });
-    assert.equal(res.status, 201);
+    assert.equal(res.status, 200);
 
     const stored = [...cw.rows.values()].find((row) => row.anilist_id === 99);
     assert.equal(stored.user_id, USER_A, 'the stored owner must be the VERIFIED session user');
     assert.equal(cw.calls.find((c) => c.method === 'POST').body.user_id, USER_A);
-    assert.equal(stored.mal_id, undefined, 'absent optional malId stays absent');
 
-    // User A's list contains only A's rows (never B's).
     const listA = await (await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: TOKEN_A })).json();
     assert.deepEqual(listA.items.map((item) => item.anilistId), [99]);
     const listB = await (await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: TOKEN_B })).json();
     assert.deepEqual(listB.items.map((item) => item.anilistId), [30]);
 
-    // The list calls filtered by the VERIFIED user id.
     const getCalls = cw.calls.filter((c) => c.method === 'GET');
     assert.ok(getCalls.some((c) => String(c.url).includes(`user_id=eq.${USER_A}`)));
     assert.ok(getCalls.some((c) => String(c.url).includes(`user_id=eq.${USER_B}`)));
@@ -417,9 +397,8 @@ test('cross-user isolation: removing another user\'s entry is impossible (scoped
   await resetL1Cache();
   const cw = createContinueWatchingState();
   cw.rows.set(`${USER_B}:30`, {
-    user_id: USER_B, anilist_id: 30, mal_id: null, title: 'B anime', poster_url: 'https://img/b.jpg',
-    episode: 1, position_seconds: 1, language: 'sub',
-    last_watched_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    user_id: USER_B, anilist_id: 30, episode: 1, progress: null,
+    created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
   });
   const installed = installApiMocks({
     supabaseAuth: authHandler({ [TOKEN_A]: USER_A }),
@@ -427,12 +406,10 @@ test('cross-user isolation: removing another user\'s entry is impossible (scoped
   });
   const server = await startTestServer();
   try {
-    // User A tries to delete user B's anime id.
     const res = await request(server.baseUrl, 'DELETE', '/api/user/continue-watching/30', { token: TOKEN_A });
-    assert.equal(res.status, 200); // idempotent success for A (nothing of A's was removed)
+    assert.equal(res.status, 200);
     assert.deepEqual(await res.json(), { ok: true, anilistId: 30 });
-    // User B's row survives (the DELETE filter carried A's verified id only).
-    assert.equal(cw.rows.has(`${USER_B}:30`), true);
+    assert.equal(cw.rows.has(`${USER_B}:30`), true, "B's row survives A's delete attempt");
     const deleteCall = cw.calls.find((c) => c.method === 'DELETE');
     assert.ok(String(deleteCall.url).includes(`user_id=eq.${USER_A}`));
   } finally {
@@ -475,7 +452,7 @@ test('tampered session -> 401 AUTH_SESSION_EXPIRED; storage never touched', asyn
   await resetL1Cache();
   const cw = createContinueWatchingState();
   const installed = installApiMocks({
-    supabaseAuth: authHandler({ [TOKEN_A]: USER_A }), // 'tampered-token' is unknown
+    supabaseAuth: authHandler({ [TOKEN_A]: USER_A }),
     supabaseRest: makeRestRouter({ cw }),
   });
   const server = await startTestServer();
@@ -494,7 +471,7 @@ test('storage failure -> typed 502 PROVIDER_ERROR (never a raw 500)', async () =
   await resetL1Cache();
   const installed = installApiMocks({
     supabaseAuth: authHandler({ [TOKEN_A]: USER_A }),
-    supabaseRest: () => jsonResponse({ code: '42501', message: 'permission denied for table continue_watching' }, 403),
+    supabaseRest: () => jsonResponse({ code: 'PGRST205', message: 'Could not find the table' }, 404),
   });
   const server = await startTestServer();
   try {
@@ -504,8 +481,8 @@ test('storage failure -> typed 502 PROVIDER_ERROR (never a raw 500)', async () =
     assert.equal(body.error.code, 'PROVIDER_ERROR');
     assert.equal(body.error.details.provider, 'supabase');
     assert.equal(body.error.details.operation, 'list');
-    assert.equal(body.error.details.upstreamStatus, 403);
-    assert.equal(body.error.details.upstreamCode, '42501');
+    assert.equal(body.error.details.upstreamStatus, 404);
+    assert.equal(body.error.details.upstreamCode, 'PGRST205');
   } finally {
     await server.stop();
     installed.restore();
@@ -522,7 +499,7 @@ test('every storage call acts AS THE VERIFIED USER (anon apikey + user Bearer; n
   const server = await startTestServer();
   try {
     await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
-      token: TOKEN_A, body: progressPayload(),
+      token: TOKEN_A, body: progressPayload({ progress: 7 }),
     });
     await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: TOKEN_A });
     await request(server.baseUrl, 'DELETE', '/api/user/continue-watching/16498', { token: TOKEN_A });
@@ -532,13 +509,11 @@ test('every storage call acts AS THE VERIFIED USER (anon apikey + user Bearer; n
       assert.equal(restCall.headers.Authorization, `Bearer ${TOKEN_A}`, 'continue watching must act as the user');
       assert.equal(String(restCall.headers.Authorization).includes('service-role'), false);
     }
-    // The save targeted the (user_id, anilist_id) conflict pair -> single upsert,
-    // no read-before-write, updated_at/created_at never sent by the backend.
     const postCall = cw.calls.find((c) => c.method === 'POST');
     assert.ok(String(postCall.url).includes('on_conflict=user_id'), 'upsert needs an explicit conflict target');
-    assert.equal(postCall.body.created_at === undefined, true, 'created_at is DB-managed');
-    assert.equal(postCall.body.updated_at === undefined, true, 'updated_at is DB-managed (trigger)');
-    assert.ok(postCall.body.last_watched_at, 'last_watched_at moves on every save');
+    assert.equal(postCall.body.title === undefined, true, 'title is not stored');
+    assert.equal(postCall.body.poster_url === undefined, true, 'poster is not stored');
+    assert.ok(postCall.body.updated_at, 'updated_at moves on every save');
   } finally {
     await server.stop();
     installed.restore();
@@ -562,7 +537,6 @@ test('login -> both data sets fetchable -> logout -> re-login: data persists acr
         return { status: 200, json: gotrueUser({ id: userId, email: 'viewer@example.com' }) };
       }
       if (url.includes('/auth/v1/token?grant_type=password')) {
-        // Each login acts as a NEW device/session: fresh access token.
         return gotrueSessionResponse({
           userId: USER_A,
           email: 'viewer@example.com',
@@ -596,20 +570,18 @@ test('login -> both data sets fetchable -> logout -> re-login: data persists acr
     // Both user-data sets synchronize with the SAME verified session token.
     const wl = await request(server.baseUrl, 'GET', '/api/watchlist', { token: firstToken });
     assert.equal(wl.status, 200);
-    const wlBody = await wl.json();
-    assert.equal(wlBody.count, 1, 'the existing watchlist keeps working after login');
-    assert.equal(wlBody.items[0].animeId, 1535);
+    assert.equal((await wl.json()).count, 1, 'the existing watchlist keeps working after login');
 
     const cwList = await request(server.baseUrl, 'GET', '/api/user/continue-watching', { token: firstToken });
     assert.equal(cwList.status, 200);
     assert.equal((await cwList.json()).count, 0, 'continue watching empty before first progress');
 
-    // Watch an episode -> progress saved (this is the new feature).
+    // Watch an episode -> progress saved.
     const saved = await request(server.baseUrl, 'POST', '/api/user/continue-watching', {
       token: firstToken,
-      body: progressPayload({ anilistId: 16498, episode: 10, position: 300 }),
+      body: progressPayload({ anilistId: 16498, episode: 10, progress: 300 }),
     });
-    assert.equal(saved.status, 201);
+    assert.equal(saved.status, 200);
     assert.equal(cw.rows.size, 1);
 
     // LOGOUT: revokes the session but NEVER deletes persistent records.
@@ -631,7 +603,7 @@ test('login -> both data sets fetchable -> logout -> re-login: data persists acr
     assert.equal(resumed.count, 1, 'continue watching survives logout/login (cross-device)');
     assert.equal(resumed.items[0].anilistId, 16498);
     assert.equal(resumed.items[0].episode, 10);
-    assert.equal(resumed.items[0].positionSeconds, 300);
+    assert.equal(resumed.items[0].progress, 300);
     const wl2 = await (await request(server.baseUrl, 'GET', '/api/watchlist', { token: secondToken })).json();
     assert.equal(wl2.count, 1, 'watchlist also survives (cross-device)');
   } finally {

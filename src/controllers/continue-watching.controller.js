@@ -15,9 +15,8 @@
  *     by the service via the shared identity layer.
  *
  * RESPONSE SHAPES (frontend contract):
- *   save   200 { saved: true, entry: {...} }                (updated in place)
- *          201 { saved: true, entry: {...} }                (fresh row)
- *   list   200 { items: [...entries], count }
+ *   save   200 { saved: true, entry: { anilistId, episode, progress?, updatedAt } }
+ *   list   200 { items: [{ anilistId, episode, progress?, updatedAt }], count }
  *   remove 200 { ok: true, anilistId }
  */
 
@@ -42,7 +41,8 @@ export const continueWatchingListController = asyncHandler(async (req, res) => {
 /**
  * POST /api/user/continue-watching - saves/updates progress. The upsert
  * targets (verified user, anilistId): a repeat save UPDATES the existing row
- * (200) instead of creating a duplicate; a first save returns 201.
+ * instead of creating a duplicate.
+ * Request body: { anilistId, episode, progress? }  (progress optional)
  * @type {import('express').RequestHandler}
  */
 export const continueWatchingSaveController = asyncHandler(async (req, res) => {
@@ -51,12 +51,13 @@ export const continueWatchingSaveController = asyncHandler(async (req, res) => {
     accessToken: req.accessToken,
     input: req.body,
   });
-  res.status(result.created ? 201 : 200).json(result);
+  res.status(200).json(result);
 });
 
 /**
  * DELETE /api/user/continue-watching/:anilistId - idempotent (removing an
- * absent entry is still a success).
+ * absent entry is still a success). Only affects Continue Watching, never
+ * the user's watchlist.
  * @type {import('express').RequestHandler}
  */
 export const continueWatchingRemoveController = asyncHandler(async (req, res) => {

@@ -518,31 +518,23 @@ user session (`Authorization: Bearer <accessToken>` or the session cookie).
 Cookie-authenticated mutations are CSRF-guarded like `/api/auth/*`.
 
 ```text
-POST /api/user/continue-watching   body: {
-  "anilistId": 21, "malId": 21,
-  "title": "One Piece", "titleEnglish": "One Piece", "titleRomaji": "One Piece",
-  "posterUrl": "https://img.example/one-piece-poster.jpg",
-  "bannerUrl": "https://img.example/one-piece-banner.jpg",
-  "episode": 10, "position": 540, "duration": 1440, "language": "sub"
-}
-  -> 201 { "saved": true, "entry": {...} }   (first time)
-  -> 200 { "saved": true, "entry": {...} }   (same row updated in place)
+POST /api/user/continue-watching   body: { "anilistId": 21, "episode": 1 }
+                                 body: { "anilistId": 21, "episode": 1, "progress": 35 }  (progress optional)
+  -> 200 { "saved": true, "entry": { "anilistId": 21, "episode": 1, "progress": 35, "updatedAt": "..." } }
 
 GET /api/user/continue-watching
-  -> 200 { "items": [ {...entry..., "lastWatchedAt": "..."} ], "count": 1 }
-     (newest watched first; up to 1000 rows)
+  -> 200 { "items": [ { "anilistId": 21, "episode": 1, "progress": 35, "updatedAt": "..." } ], "count": 1 }
+     (newest watched first; up to 1000 rows; `progress` omitted when not reported)
 
 DELETE /api/user/continue-watching/21
-  -> 200 { "ok": true, "anilistId": 21 }     (idempotent)
+  -> 200 { "ok": true, "anilistId": 21 }     (idempotent; never touches the watchlist)
 ```
 
-The saved entry carries `anilistId`, optional `malId`, `title`,
-`titleEnglish`, `titleRomaji`, `posterUrl`, `bannerUrl`, `episode`,
-`positionSeconds`, optional `durationSeconds`, `language`, and
-`lastWatchedAt`/`createdAt`/`updatedAt`. `positionSeconds` is clamped to
-`durationSeconds` when a duration is reported (a finished episode stays within
-its duration); finishing one episode never marks an anime "completed" - an
-entry disappears only when the user removes it.
+The saved entry carries `anilistId`, `episode`, optional `progress` (seconds,
+omitted when the player did not report it) and `updatedAt`. Anime display
+metadata (titles, artwork) is NOT stored here - the frontend hydrates it
+through the existing anime details/episode APIs. Finishing one episode never
+marks an anime "completed" - an entry disappears only when the user removes it.
 
 Errors: `400 VALIDATION_ERROR` (invalid/missing fields), `401
 UNAUTHORIZED_ERROR` / `AUTH_SESSION_EXPIRED` (missing/expired session),
