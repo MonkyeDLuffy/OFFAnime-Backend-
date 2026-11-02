@@ -45,11 +45,39 @@ export const AUTH_PROVIDER_NAME = 'supabase-auth';
 
 /**
  * Whether the auth service is usable (server env configured). When false,
- * auth endpoints fail closed (see assertConfigured).
+ * auth endpoints fail closed (see assertConfigured). The public anon key is
+ * the normal credential; a NEW secret API key (sb_secret_...) substitutes for
+ * it ONLY when IP forwarding is enabled (see canForwardClientIp).
  * @returns {boolean}
  */
 export function isAuthConfigured() {
-  return Boolean(config.SUPABASE_URL) && Boolean(config.SUPABASE_ANON_KEY);
+  return Boolean(config.SUPABASE_URL)
+    && (Boolean(config.SUPABASE_ANON_KEY) || canForwardClientIp());
+}
+
+/**
+ * Whether the end-user IP can be forwarded to Supabase Auth via the
+ * `Sb-Forwarded-For` header. Supabase requires BOTH:
+ *   1. a NEW secret API key (legacy anon/service_role keys are NOT accepted
+ *      for IP forwarding), configured as AUTH_GOTRUE_SECRET_KEY, and
+ *   2. the project feature enabled in Dashboard -> Authentication ->
+ *      Rate Limits -> IP address forwarding, plus AUTH_GOTRUE_IP_FORWARDING=true.
+ * Why this matters: without forwarding, Supabase's per-IP auth rate limits
+ * apply to THIS BACKEND'S shared egress IP, so traffic from unrelated users
+ * can exhaust the quota and 429 everyone. With forwarding they apply per END
+ * USER. When unavailable, requests are unchanged (legacy anon key).
+ * @returns {boolean}
+ */
+export function canForwardClientIp() {
+  return Boolean(config.AUTH_GOTRUE_IP_FORWARDING) && Boolean(config.AUTH_GOTRUE_SECRET_KEY);
+}
+
+/**
+ * The credential sent as `apikey`/Bearer on GoTrue requests.
+ * @returns {string}
+ */
+function credentialKey() {
+  return canForwardClientIp() ? config.AUTH_GOTRUE_SECRET_KEY : config.SUPABASE_ANON_KEY;
 }
 
 /**
@@ -216,26 +244,28 @@ function mapGoTrueError(status, body, cause) {
  * non-2xx so callers can map provider error bodies. Transport failures and
  * timeouts map onto typed errors exactly like the shared provider client.
  * @param {string} path Path under /auth/v1 (may include a query string).
- * @param {{ method?: string, body?: unknown, accessToken?: string }} [options]
+ * @param {{ method?: string, body?: unknown, accessToken?: string, forwardedIp?: string | null }} [options]
  * @returns {Promise<{ status: number, data: unknown }>}
  */
-async function gotrue(path, { method = 'GET', body, accessToken } = {}) {
+async function gotrue(path, { method = 'GET', body, accessToken, forwardedIp } = {}) {
   assertConfigured();
   const url = `${String(config.SUPABASE_URL).replace(/\/+$/, '')}${AUTH_PATH}${path}`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), config.REQUEST_TIMEOUT_MS);
   const startedAt = Date.now();
+  const key = credentialKey();
   try {
     const response = await fetch(url, {
       method,
       headers: {
-        apikey: config.SUPABASE_ANON_KEY,
-        // The anon key doubles as the Authorization credential for GoTrue
+        apikey: key,
+        // The credential key doubles as the Authorization value for GoTrue
         // (standard Supabase behavior) EXCEPT when a user access token is
         // presented, which must identify the CALLING user.
-        ...(accessToken
-          ? { Authorization: `Bearer ${accessToken}` }
-          : { Authorization: `Bearer ${config.SUPABASE_ANON_KEY}` }),
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : { Authorization: `Bearer ${key}` }),
+        // Per-END-USER rate limiting (requires the secret key + dashboard
+        // feature; canForwardClientIp gates it). The IP is never logged.
+        ...(canForwardClientIp() && forwardedIp ? { 'Sb-Forwarded-For': forwardedIp } : {}),
         ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
         Accept: 'application/json',
       },
@@ -295,13 +325,17 @@ function assertOk(response) {
 
 /**
  * Create a new account (Supabase Auth signup). Email confirmation behavior is
- * entirely the provider's (dashboard setting): a session is returned only when
- * the provider auto-confirms.
+ * entirely the provider's (dashboard setting): with "Confirm email" DISABLED
+ * (OFFANIME's configuration) the account is immediately usable and the
+ * response carries a full session - no verification email is sent.
+ *
+ * NO AUTOMATIC RETRIES: a failed signup is never re-attempted internally.
  * @param {{ email: string, password: string }} credentials
+ * @param {{ forwardedIp?: string | null }} [options]
  * @returns {Promise<AuthResult>}
  */
-export async function signUp({ email, password }) {
-  const response = assertOk(await gotrue('/signup', { method: 'POST', body: { email, password } }));
+export async function signUp({ email, password }, { forwardedIp } = {}) {
+  const response = assertOk(await gotrue('/signup', { method: 'POST', body: { email, password }, forwardedIp }));
   return toAuthResult(response.data);
 }
 
@@ -311,9 +345,9 @@ export async function signUp({ email, password }) {
  * @param {{ email: string, password: string }} credentials
  * @returns {Promise<AuthResult>}
  */
-export async function signInWithPassword({ email, password }) {
+export async function signInWithPassword({ email, password }, { forwardedIp } = {}) {
   const response = assertOk(
-    await gotrue('/token?grant_type=password', { method: 'POST', body: { email, password } }),
+    await gotrue('/token?grant_type=password', { method: 'POST', body: { email, password }, forwardedIp }),
   );
   return toAuthResult(response.data);
 }
@@ -324,9 +358,13 @@ export async function signInWithPassword({ email, password }) {
  * @param {string} refreshToken
  * @returns {Promise<AuthResult>}
  */
-export async function refreshSession(refreshToken) {
+export async function refreshSession(refreshToken, { forwardedIp } = {}) {
   const response = assertOk(
-    await gotrue('/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: refreshToken } }),
+    await gotrue('/token?grant_type=refresh_token', {
+      method: 'POST',
+      body: { refresh_token: refreshToken },
+      forwardedIp,
+    }),
   );
   return toAuthResult(response.data);
 }
@@ -338,8 +376,8 @@ export async function refreshSession(refreshToken) {
  * @param {string} accessToken
  * @returns {Promise<SafeUser>}
  */
-export async function verifyAccessToken(accessToken) {
-  const response = assertOk(await gotrue('/user', { accessToken }));
+export async function verifyAccessToken(accessToken, { forwardedIp } = {}) {
+  const response = assertOk(await gotrue('/user', { accessToken, forwardedIp }));
   return toSafeUser(response.data);
 }
 
@@ -362,8 +400,8 @@ export async function revokeSession(accessToken) {
  * @param {string} email
  * @returns {Promise<void>}
  */
-export async function requestPasswordReset(email) {
-  assertOk(await gotrue('/recover', { method: 'POST', body: { email } }));
+export async function requestPasswordReset(email, { forwardedIp } = {}) {
+  assertOk(await gotrue('/recover', { method: 'POST', body: { email }, forwardedIp }));
 }
 
 /**
@@ -371,8 +409,8 @@ export async function requestPasswordReset(email) {
  * @param {{ email: string, type: 'signup' | 'recovery' }} params
  * @returns {Promise<void>}
  */
-export async function resendEmail({ email, type }) {
-  assertOk(await gotrue('/resend', { method: 'POST', body: { email, type } }));
+export async function resendEmail({ email, type }, { forwardedIp } = {}) {
+  assertOk(await gotrue('/resend', { method: 'POST', body: { email, type }, forwardedIp }));
 }
 
 /**
@@ -382,13 +420,13 @@ export async function resendEmail({ email, type }) {
  * @param {{ type: 'signup' | 'recovery', token?: string, tokenHash?: string, email?: string }} params
  * @returns {Promise<AuthResult>}
  */
-export async function verifyEmailToken({ type, token, tokenHash, email }) {
+export async function verifyEmailToken({ type, token, tokenHash, email }, { forwardedIp } = {}) {
   const body = {
     type,
     ...(tokenHash ? { token_hash: tokenHash } : { token }),
     ...(email ? { email } : {}),
   };
-  const response = assertOk(await gotrue('/verify', { method: 'POST', body }));
+  const response = assertOk(await gotrue('/verify', { method: 'POST', body, forwardedIp }));
   return toAuthResult(response.data);
 }
 
@@ -397,7 +435,7 @@ export async function verifyEmailToken({ type, token, tokenHash, email }) {
  * @param {{ accessToken: string, password: string }} params
  * @returns {Promise<SafeUser>}
  */
-export async function updatePassword({ accessToken, password }) {
-  const response = assertOk(await gotrue('/user', { method: 'PUT', accessToken, body: { password } }));
+export async function updatePassword({ accessToken, password }, { forwardedIp } = {}) {
+  const response = assertOk(await gotrue('/user', { method: 'PUT', accessToken, body: { password }, forwardedIp }));
   return toSafeUser(response.data);
 }

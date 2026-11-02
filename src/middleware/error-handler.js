@@ -48,5 +48,13 @@ export function errorHandler(err, req, res, next) {
 
   if (res.headersSent) return next(err);
 
+  // 429 responses carry BOTH a machine-readable retry indication in the body
+  // (details.retryAfterMs / details.retryAfterSeconds) and the standard
+  // Retry-After header (seconds) so clients/proxies can back off uniformly.
+  const retryAfterMs = typeof appError.retryAfterMs === 'number' ? appError.retryAfterMs : undefined;
+  if (appError.statusCode === 429 && retryAfterMs !== undefined && retryAfterMs > 0) {
+    res.set('Retry-After', String(Math.max(1, Math.ceil(retryAfterMs / 1000))));
+  }
+
   res.status(appError.statusCode).json(appError.toResponse());
 }

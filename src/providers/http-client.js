@@ -26,6 +26,10 @@ import { ProviderError, RateLimitError, TimeoutError } from '../errors/index.js'
  * @property {number} [timeoutMs] Overrides config.REQUEST_TIMEOUT_MS.
  * @property {string} [provider='http'] Provider id for logs/errors.
  * @property {AbortSignal} [signal] Optional external cancellation signal.
+ * @property {boolean} [allowNon2xx=false] When TRUE, HTTP 429 and non-2xx
+ *   responses are RETURNED (not thrown) so infrastructure clients (e.g. the
+ *   Supabase PostgREST wrapper) can read the upstream error body and build
+ *   precise, typed failures. Transport errors and timeouts always throw.
  */
 
 /**
@@ -54,6 +58,7 @@ export async function httpRequest(url, options = {}) {
     timeoutMs = config.REQUEST_TIMEOUT_MS,
     provider = 'http',
     signal,
+    allowNon2xx = false,
   } = options;
 
   const controller = new AbortController();
@@ -72,7 +77,7 @@ export async function httpRequest(url, options = {}) {
 
     logger.debug('provider.http', { provider, method, url, status: response.status, latencyMs });
 
-    if (response.status === 429) {
+    if (response.status === 429 && !allowNon2xx) {
       const retryAfter = Number(response.headers.get('retry-after'));
       throw new RateLimitError(`${provider} rate limited`, {
         provider,
@@ -82,7 +87,7 @@ export async function httpRequest(url, options = {}) {
 
     const data = await parseBody(response);
 
-    if (!response.ok) {
+    if (!response.ok && !allowNon2xx) {
       throw new ProviderError(`${provider} responded with HTTP ${response.status}`, {
         provider,
         statusCode: 502,

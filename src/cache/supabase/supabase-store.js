@@ -41,7 +41,11 @@
 import { CacheStore, makeEntry, DEFAULT_STALE_WINDOW_SECONDS } from '../cache-store.js';
 import { config } from '../../config/env.js';
 import { CacheError } from '../../errors/index.js';
+import { logger } from '../../utils/logger.js';
 import { SupabaseRestClient } from './supabase-client.js';
+
+/** One-time diagnostic when L2 is missing the REQUIRED service-role key. */
+let warnedAboutMissingServiceRole = false;
 
 export class SupabaseStore extends CacheStore {
   /**
@@ -57,17 +61,44 @@ export class SupabaseStore extends CacheStore {
     this._url = url !== undefined ? url : config.SUPABASE_URL;
     this._apiKey =
       apiKey !== undefined ? apiKey : config.SUPABASE_SERVICE_ROLE_KEY || config.SUPABASE_ANON_KEY;
+    // The caller explicitly passed a key (tests) or the SERVICE-ROLE env var is
+    // set. A key that only came from the anon fallback is NOT sufficient (RLS).
+    this._serviceRoleAvailable =
+      apiKey !== undefined
+        ? apiKey.length > 0
+        : Boolean(config.SUPABASE_SERVICE_ROLE_KEY);
     this._staleWindowSeconds = staleWindowSeconds ?? DEFAULT_STALE_WINDOW_SECONDS;
     this._timeoutMs = timeoutMs;
+    // Most likely production root cause for "Supabase cache read/write failed"
+    // pairs: URL + anon key configured, but no service-role key while RLS is
+    // enabled -> every PostgREST operation is denied. Surface it once.
+    if (!warnedAboutMissingServiceRole
+      && apiKey === undefined
+      && Boolean(config.SUPABASE_URL)
+      && !Boolean(config.SUPABASE_SERVICE_ROLE_KEY)
+      && Boolean(config.SUPABASE_ANON_KEY)) {
+      warnedAboutMissingServiceRole = true;
+      logger.warn('cache.l2Disabled', {
+        layer: 'L2',
+        reason: 'missing_service_role_key',
+        detail: 'SUPABASE_SERVICE_ROLE_KEY is required for the L2 cache (RLS on cache_entries blocks the anon key). Running L1-only.',
+      });
+    }
   }
 
   /**
    * Whether L2 has the configuration needed to operate. When false, the cache
    * manager simply skips L2 and uses L1 + providers.
+   *
+   * The service-role key is REQUIRED (not the anon key): the migration enables
+   * row-level security on cache_entries with NO policies, so the anon key
+   * CANNOT read or write it - silently falling back to the anon key would
+   * guarantee 401 failures ("Supabase cache read failed" / "...write failed")
+   * on every operation. A project without the service-role key runs L1-only.
    * @returns {boolean}
    */
   isConfigured() {
-    return Boolean(this._url && this._apiKey);
+    return Boolean(this._url && this._apiKey && this._serviceRoleAvailable);
   }
 
   /**
@@ -103,7 +134,7 @@ export class SupabaseStore extends CacheStore {
       const row = Array.isArray(rows) ? rows[0] : null;
       return this._rowToEntry(row);
     } catch (err) {
-      throw this._wrapError('Supabase cache read failed', err);
+      throw this._wrapError('Supabase cache read failed', 'read', err);
     }
   }
 
@@ -133,7 +164,7 @@ export class SupabaseStore extends CacheStore {
         updated_at: new Date(now).toISOString(),
       });
     } catch (err) {
-      throw this._wrapError('Supabase cache write failed', err);
+      throw this._wrapError('Supabase cache write failed', 'write', err);
     }
   }
 
@@ -147,7 +178,7 @@ export class SupabaseStore extends CacheStore {
     try {
       await this._client().delete({ namespace, cache_key: cacheKey });
     } catch (err) {
-      throw this._wrapError('Supabase cache delete failed', err);
+      throw this._wrapError('Supabase cache delete failed', 'delete', err);
     }
   }
 
@@ -160,7 +191,7 @@ export class SupabaseStore extends CacheStore {
     try {
       await this._client().deleteAll();
     } catch (err) {
-      throw this._wrapError('Supabase cache clear failed', err);
+      throw this._wrapError('Supabase cache clear failed', 'clear', err);
     }
   }
 
@@ -216,19 +247,32 @@ export class SupabaseStore extends CacheStore {
   }
 
   /**
-   * Wrap any failure into a typed CacheError. The credential is never included
-   * in messages or details. Cache errors are degradation signals for the
-   * CacheManager (continue with L1/provider), never source-of-truth failures.
+   * Wrap any failure into a typed CacheError with a PRECISE diagnostic
+   * (failing operation + upstream status + PostgREST/Postgres error code so
+   * production logs show exactly WHY L2 fails - missing table (42P01), RLS
+   * permission (42501), duplicate-key (23505), wrong key (HTTP 401)...).
+   * The credential is never included in messages or details. Cache errors are
+   * degradation signals for the CacheManager (continue with L1/provider),
+   * never source-of-truth failures.
    * @param {string} message
+   * @param {string} operation 'read' | 'write' | 'delete' | 'clear'
    * @param {unknown} err
    * @returns {CacheError}
    */
-  _wrapError(message, err) {
+  _wrapError(message, operation, err) {
     if (err instanceof CacheError) return err;
     return new CacheError(message, {
       layer: 'L2',
       cause: err instanceof Error ? err : undefined,
-      details: { provider: 'supabase' },
+      details: {
+        provider: 'supabase',
+        operation,
+        ...(err && typeof err === 'object' ? {
+          ...(err.upstreamStatus !== undefined ? { upstreamStatus: err.upstreamStatus } : {}),
+          ...(err.upstreamCode !== undefined ? { upstreamCode: err.upstreamCode } : {}),
+          ...(err.upstreamMessage !== undefined ? { upstreamMessage: err.upstreamMessage } : {}),
+        } : {}),
+      },
     });
   }
 }

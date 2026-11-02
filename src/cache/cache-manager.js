@@ -21,10 +21,12 @@
  *   - L2 (Supabase) is optional at runtime. When it is not configured (Phase 1)
  *     the manager runs L1-only and the app still works.
  *
- * PHASE 1 SCOPE: L1 is a real in-memory store, coalescing is real, and the
- * fresh/stale/stale-if-error decision logic is real. L2 is wired in but
- * DISABLED until the Supabase phase implements SupabaseStore (its methods throw
- * NotImplementedError, and `isConfigured()` returns false without env vars).
+ * L2 CIRCUIT BREAKER: when L2 fails repeatedly (broken table, denied key, real
+ * outage), a broken Supabase would otherwise be contacted on EVERY request,
+ * adding latency + log noise. After CACHE_L2_FAILURE_THRESHOLD consecutive
+ * failures the breaker opens: L2 is skipped (clean L1-only fallback, provider
+ * behavior unchanged) for an exponentially growing cooldown. The breaker never
+ * rejects data - it only suppresses a failing OPTIMIZATION layer.
  */
 
 import { MemoryStore } from './memory/memory-store.js';
@@ -42,12 +44,27 @@ export class CacheManager {
    * @param {(SupabaseStore | import('./cache-store.js').CacheStore) | null} [deps.l2]
    * @param {RequestCoalescer} [deps.coalescer]
    * @param {number} [deps.defaultTtlSeconds]
+   * @param {number} [deps.l2FailureThreshold] Consecutive L2 failures before the
+   *   breaker opens (defaults to config.CACHE_L2_FAILURE_THRESHOLD).
+   * @param {number} [deps.l2BreakerOpenMs] Initial breaker cooldown.
+   * @param {number} [deps.l2BreakerMaxOpenMs] Maximum breaker cooldown.
    */
-  constructor({ l1, l2, coalescer, defaultTtlSeconds } = {}) {
+  constructor({
+    l1, l2, coalescer, defaultTtlSeconds,
+    l2FailureThreshold = config.CACHE_L2_FAILURE_THRESHOLD,
+    l2BreakerOpenMs = config.CACHE_L2_BREAKER_OPEN_MS,
+    l2BreakerMaxOpenMs = config.CACHE_L2_BREAKER_MAX_OPEN_MS,
+  } = {}) {
     this.l1 = l1 ?? new MemoryStore();
     this.l2 = l2 ?? new SupabaseStore();
     this.coalescer = coalescer ?? new RequestCoalescer();
     this.defaultTtlSeconds = defaultTtlSeconds ?? config.CACHE_DEFAULT_TTL_SECONDS;
+    this._l2FailureThreshold = l2FailureThreshold;
+    this._l2BreakerOpenMs = l2BreakerOpenMs;
+    this._l2BreakerMaxOpenMs = l2BreakerMaxOpenMs;
+    this._l2Failures = 0; // consecutive failures since the last success
+    this._l2OpenUntil = 0; // breaker closed until this epoch ms
+    this._l2Trips = 0; // how many times the breaker opened (cooldown backoff)
     this.log = rootLogger.child({ component: 'cache' });
   }
 
@@ -189,9 +206,38 @@ export class CacheManager {
     return usableA ?? usableB;
   }
 
-  /** L2 is usable only when it's a configured Supabase store. */
+  /** L2 is usable only when it's a configured Supabase store AND the breaker is closed. */
   _l2Enabled() {
+    if (Date.now() < this._l2OpenUntil) return false; // breaker open -> L1-only fallback
     return this.l2 && (typeof this.l2.isConfigured !== 'function' || this.l2.isConfigured());
+  }
+
+  /* L2 circuit-breaker bookkeeping ------------------------------------------------
+   * Failures/successes of the SUPABASE store only. Any successful operation
+   * closes the breaker; the first ops after cooldown act as a probe. */
+
+  /** @param {import('./cache-store.js').CacheStore} store */
+  _noteL2Success(store) {
+    if (store !== this.l2) return;
+    this._l2Failures = 0;
+    this._l2OpenUntil = 0;
+    this._l2Trips = 0;
+  }
+
+  /** @param {import('./cache-store.js').CacheStore} store */
+  _noteL2Failure(store) {
+    if (store !== this.l2) return;
+    this._l2Failures += 1;
+    if (this._l2Failures >= this._l2FailureThreshold) {
+      const openMs = Math.min(
+        this._l2BreakerOpenMs * 2 ** this._l2Trips,
+        this._l2BreakerMaxOpenMs,
+      );
+      this._l2OpenUntil = Date.now() + openMs;
+      this._l2Trips += 1;
+      this._l2Failures = 0;
+      this.log.warn('cache.l2BreakerOpen', { layer: 'L2', openMs, trips: this._l2Trips });
+    }
   }
 
   /**
@@ -201,8 +247,11 @@ export class CacheManager {
    */
   async _safeGet(store, key) {
     try {
-      return await store.get(key);
+      const result = await store.get(key);
+      this._noteL2Success(store);
+      return result;
     } catch (err) {
+      this._noteL2Failure(store);
       this.log.warn('cache.getError', { key, layer: store?.name, err });
       return null;
     }
@@ -211,7 +260,9 @@ export class CacheManager {
   async _safeSet(store, key, value, ttlSeconds) {
     try {
       await store.set(key, value, ttlSeconds);
+      this._noteL2Success(store);
     } catch (err) {
+      this._noteL2Failure(store);
       this.log.warn('cache.setError', { key, layer: store?.name, err });
     }
   }
@@ -219,7 +270,9 @@ export class CacheManager {
   async _safeDelete(store, key) {
     try {
       await store.delete(key);
+      this._noteL2Success(store);
     } catch (err) {
+      this._noteL2Failure(store);
       this.log.warn('cache.deleteError', { key, layer: store?.name, err });
     }
   }

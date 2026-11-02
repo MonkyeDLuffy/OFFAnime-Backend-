@@ -283,7 +283,9 @@ test('namespace safety: tmdb:visual:v2:anilist:123 queries the tmdb namespace', 
     await buildStore().get('tmdb:visual:v2:anilist:123');
     const url = new URL(mock.calls[0].url);
     assert.equal(url.searchParams.get('namespace'), 'eq.tmdb');
-    assert.equal(url.searchParams.get('cache_key'), 'eq.visual:anilist:123');
+    // The version segment (v2) is part of the cache_key, not the namespace
+    // (matches the _splitKey contract asserted above in this file).
+    assert.equal(url.searchParams.get('cache_key'), 'eq.visual:v2:anilist:123');
   } finally {
     mock.restore();
   }

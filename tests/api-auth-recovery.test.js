@@ -4,7 +4,7 @@
  *                                    no user enumeration)
  *   POST /api/auth/verify          - exchange a one-time link token
  *   POST /api/auth/password-update - set a new password (session required)
- *   POST /api/auth/resend          - resend confirmation/recovery email
+ *   POST /api/auth/resend          - RESERVED: honest 501 (not activated)
  */
 
 import './helpers/test-env-auth.js';
@@ -201,19 +201,21 @@ test('POST /api/auth/password-update without a session -> 401 (no password chang
   }
 });
 
-test('POST /api/auth/resend -> 200 ok (confirmation email re-sent)', async () => {
+test('POST /api/auth/resend -> 501 NOT_IMPLEMENTED (reserved, deliberately not activated)', async () => {
   await resetL1Cache();
-  const installed = installApiMocks({
-    supabaseAuth: () => ({ status: 200, json: {} }),
-  });
+  const installed = installApiMocks({});
   const server = await startTestServer();
   try {
     const res = await request(server.baseUrl, 'POST', '/api/auth/resend', {
       body: { type: 'signup', email: 'pending@example.com' },
     });
-    assert.equal(res.status, 200);
-    assert.deepEqual(await res.json(), { ok: true });
-    assert.ok(installed.supabaseAuthCalls()[0].url.includes('/auth/v1/resend'));
+    assert.equal(res.status, 501);
+    const body = await res.json();
+    assert.equal(body.error.code, 'NOT_IMPLEMENTED');
+    assert.equal(body.error.details.feature, 'auth.resend');
+    // The endpoint must not call Supabase Auth at all until a future email
+    // feature explicitly activates it (email confirmation is disabled).
+    assert.equal(installed.supabaseAuthCalls().length, 0);
   } finally {
     await server.stop();
     installed.restore();

@@ -107,6 +107,40 @@ const schema = {
   // always scoped to the upstream-issued session lifetime (expires_in).
   AUTH_REFRESH_COOKIE_MAX_AGE_SECONDS: { default: '2592000', transform: toNumber },
 
+  // --- Login attempt limiting + signup anti-abuse (DB-backed, cross-instance) -
+  // Failed login attempts are tracked per NORMALIZED ACCOUNT (hashed email) in
+  // Supabase (auth_attempt_limits table + atomic RPC), so the policy works
+  // across all serverless instances. When the tracker store is unavailable the
+  // limiter FAILS OPEN (login availability first; GoTrue keeps its own limits).
+  AUTH_ATTEMPT_LIMITS_ENABLED: { default: 'true', transform: toBoolean },
+  // Per-account policy: block after AUTH_LOGIN_MAX_FAILURES failed logins
+  // within AUTH_LOGIN_FAILURE_WINDOW_SECONDS; the lock lasts
+  // AUTH_LOGIN_LOCK_SECONDS. Successful logins clear the counter.
+  AUTH_LOGIN_MAX_FAILURES: { default: '5', transform: toNumber },
+  AUTH_LOGIN_FAILURE_WINDOW_SECONDS: { default: '900', transform: toNumber },
+  AUTH_LOGIN_LOCK_SECONDS: { default: '900', transform: toNumber },
+  // SEPARATE IP abuse layer: failed logins (any accounts) from one IP may not
+  // exceed this within the same failure window before that IP is locked.
+  AUTH_LOGIN_IP_MAX_FAILURES: { default: '20', transform: toNumber },
+  // Signup throttling per source IP (independent of GoTrue's own limits):
+  // all signup attempts from one IP within the window; exceeding it blocks
+  // that IP for AUTH_SIGNUP_IP_LOCK_SECONDS.
+  AUTH_SIGNUP_IP_MAX_ATTEMPTS: { default: '10', transform: toNumber },
+  AUTH_SIGNUP_IP_WINDOW_SECONDS: { default: '3600', transform: toNumber },
+  AUTH_SIGNUP_IP_LOCK_SECONDS: { default: '900', transform: toNumber },
+  // Duplicate-suppression: successful signups are remembered (hashed email) so
+  // repeated signup POSTs for the same address skip the upstream GoTrue call.
+  AUTH_SIGNUP_DEDUPE_TTL_SECONDS: { default: '600', transform: toNumber },
+
+  // OPTIONAL: forward the end-user IP to Supabase Auth so ITS rate limits
+  // (which would otherwise apply to this backend's shared egress IP, blocking
+  // unrelated users) apply per END USER instead. Requires the NEW secret API
+  // key (sb_secret_...) in AUTH_GOTRUE_SECRET_KEY and the project feature
+  // enabled in Dashboard -> Authentication -> Rate Limits -> IP address
+  // forwarding. With legacy anon/service_role keys this CANNOT work.
+  AUTH_GOTRUE_IP_FORWARDING: { default: 'false', transform: toBoolean },
+  AUTH_GOTRUE_SECRET_KEY: { required: false, secret: true, default: '' },
+
   CACHE_DEFAULT_TTL_SECONDS: { default: '300', transform: toNumber },
   REQUEST_TIMEOUT_MS: { default: '10000', transform: toNumber },
   // Bounded deadline for OPTIONAL details enrichment (Jikan/TMDB). A slow
@@ -114,6 +148,15 @@ const schema = {
   // deadline the enrichment is skipped exactly like a provider failure
   // (AniList core data is unaffected). 0 disables the deadline.
   ENRICHMENT_TIMEOUT_MS: { default: '5000', transform: toNumber },
+
+  // --- L2 (Supabase) cache circuit breaker ------------------------------------
+  // After CACHE_L2_FAILURE_THRESHOLD consecutive L2 failures, the manager skips
+  // Supabase entirely (clean L1-only fallback) for CACHE_L2_BREAKER_OPEN_MS,
+  // doubling per subsequent trip up to CACHE_L2_BREAKER_MAX_OPEN_MS. Prevents
+  // a broken/misconfigured Supabase from being hammered on every request.
+  CACHE_L2_FAILURE_THRESHOLD: { default: '5', transform: toNumber },
+  CACHE_L2_BREAKER_OPEN_MS: { default: '30000', transform: toNumber },
+  CACHE_L2_BREAKER_MAX_OPEN_MS: { default: '300000', transform: toNumber },
 
   LOG_LEVEL: { default: 'info', description: 'debug | info | warn | error' },
 };

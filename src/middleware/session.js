@@ -24,6 +24,7 @@ import { config } from '../config/env.js';
 import { AUTH_COOKIES } from '../config/constants.js';
 import { UnauthorizedError, SessionExpiredError, ForbiddenError } from '../errors/index.js';
 import { verifyAccessToken, isAuthConfigured } from '../services/supabase-auth.service.js';
+import { extractClientIp } from '../utils/client-ip.js';
 
 /**
  * Minimal RFC 6265 cookie parser for the session cookies (no dependency).
@@ -114,7 +115,9 @@ export function csrfOriginGuard() {
 
 /**
  * Require a valid user session (access token via header or cookie), verified
- * with Supabase Auth. Attaches `req.user` (safe shape) and `req.sessionVia`.
+ * with Supabase Auth. Attaches `req.user` (safe shape), `req.sessionVia`, and
+ * `req.accessToken` (the RAW verified token - forwarded to PostgREST for
+ * user-owned tables so RLS evaluates as the end user; never logged).
  * @returns {import('express').RequestHandler}
  */
 export function requireUser() {
@@ -127,8 +130,9 @@ export function requireUser() {
       return next(new SessionExpiredError('User authentication is not configured'));
     }
     try {
-      req.user = await verifyAccessToken(accessToken);
+      req.user = await verifyAccessToken(accessToken, { forwardedIp: extractClientIp(req) });
       req.sessionVia = via;
+      req.accessToken = accessToken;
       return next();
     } catch {
       // The upstream rejected the token (expired/revoked/malformed) - never

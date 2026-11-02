@@ -105,6 +105,9 @@ All routes are mounted under `/api`. Phase 7 status:
 | `GET /api/top-search` | **Live** | Popularity-ranked AniList suggestions, cached |
 | `GET /api/schedule` | **Live** | AniList airing schedule; `from`/`to` (epoch seconds), `page`; cached |
 | `GET /api/tmdb/:id` | **Live** | TMDB visual enrichment + media assets (logo, backdrops, trailer) for an AniList ID (`?type=mal` supported); unresolved match -> 200 |
+| `GET /api/watchlist` | **Live** | Account-backed watchlist (verified session required); `{ items: [{ animeId, addedAt }], count }` |
+| `POST /api/watchlist` | **Live** | Add `{ animeId }` (AniList ID); idempotent; 201 first time / 200 repeat |
+| `DELETE /api/watchlist/:animeId` | **Live** | Remove (AniList ID); idempotent; 200 always |
 
 `501` responses (reserved for any future unimplemented route) use the standard
 error shape (below) with `code: "NOT_IMPLEMENTED"` - reserved routes never
@@ -289,7 +292,8 @@ its behalf:
 User accounts are handled by **Supabase Auth (GoTrue)**, called server-side by
 this backend (`src/services/supabase-auth.service.js`). The backend NEVER
 stores or hashes passwords, and never uses the service-role key for
-authentication - GoTrue is called with the **public anon key** only, so a
+authentication - GoTrue is called with the **public anon key** (or, only when
+IP forwarding is explicitly enabled, a NEW `sb_secret_...` secret key), so a
 future user-data layer can keep enforcing per-user RLS (the backend never acts
 as a database superuser on a user's behalf).
 
@@ -297,7 +301,7 @@ as a database superuser on a user's behalf).
 end against a mocked GoTrue. No frontend exists yet; the browser flow has NOT
 been tested end to end. Do not consider the login migration "complete" until a
 frontend consumes these endpoints through its trusted proxy and the full
-signup -> confirm -> login -> me -> refresh -> logout cycle is exercised
+signup -> login -> me -> refresh -> logout cycle is exercised
 against a real Supabase project.
 
 ### Endpoints
@@ -312,7 +316,7 @@ against a real Supabase project.
 | POST   | `/api/auth/password-reset` | yes     | no           | Request reset email (uniform response) |
 | POST   | `/api/auth/verify`         | yes     | no           | Exchange one-time email token -> session |
 | POST   | `/api/auth/password-update`| yes     | yes          | Set new password (verified session) |
-| POST   | `/api/auth/resend`         | yes     | no           | Resend confirmation/recovery email |
+| POST   | `/api/auth/resend`         | yes     | no           | RESERVED - honest 501 (email confirmation is disabled) |
 
 "API key" means the `BACKEND_API_SECRET` credential (X-API-Key header) - i.e.
 auth requests arrive **through the trusted server-side proxy** exactly like
@@ -362,10 +366,52 @@ server-to-server) pass.
 origin list (the spec forbids credentialed wildcard CORS). Cookie mode REQUIRES
 `CORS_ORIGIN` to list the frontend origins.
 
-**Email flows:** confirmation / recovery emails are sent by Supabase (dashboard
-SMTP + "Site URL" and redirect settings). One-time link tokens are exchanged
-via `POST /api/auth/verify` (`type: 'signup'|'recovery'`, `token` or
-`tokenHash`) so even link completion stays within the backend API.
+**Email flows (email confirmation REMOVED):** OFFANIME does not require email
+verification. Set "Confirm email" OFF in the Supabase Dashboard
+(Authentication -> Sign In / Providers -> Email): signup then auto-confirms
+the account, the API returns a session immediately (201 with
+`{ user, session }`), and NO verification email is sent. Password-reset emails
+continue to work through Supabase (dashboard SMTP + "Site URL"); the one-time
+reset link token is exchanged via `POST /api/auth/verify`
+(`type: 'recovery'`, `token` or `tokenHash`). `POST /api/auth/resend` is
+intentionally RESERVED (honest 501) until a future email feature activates it.
+
+### Login rate limiting & signup anti-abuse
+
+Layered, DB-backed counters (shared across ALL serverless instances - never
+in-memory-only), implemented in `src/services/auth-throttle.service.js`:
+
+- **Per-account login limit:** 5 failed attempts within 15 minutes -> the
+  account is blocked for 15 minutes (`429 RATE_LIMIT_ERROR` with
+  `details.retryAfterSeconds` AND a `Retry-After` header). Only FAILED
+  credential attempts count; a successful login clears the counter; the
+  cooldown expiry resets the window. Attempts are keyed by a HASHED normalized
+  email (no plaintext address stored), and the lock response is identical for
+  known/unknown addresses (no enumeration).
+- **Per-IP failure layer (separate):** 20 failed logins per IP per 15 minutes
+  throttle credential-stuffing floods across accounts. Other IPs are
+  unaffected, and this layer never locks an innocent account on its own.
+- **Signup anti-abuse:** 10 signup attempts per IP per hour (registered
+  atomically BEFORE the upstream GoTrue call, so floods do not burn Supabase
+  Auth quota). A short-lived marker for recently successful signups answers
+  duplicate POSTs for the same (normalized) address with 409 immediately,
+  without another upstream call. Failed signups are never retried
+  automatically.
+- **Storage:** `auth_attempt_limits` + `auth_signup_dedupe` tables and the
+  `register_auth_attempt` RPC (per-bucket advisory lock -> atomic increments);
+  migrations `20261102000001_*.sql` and `20261102000002_*.sql`. The SQL
+  cooldown logic is self-verified by
+  `supabase/tests/auth_attempt_limits_selftest.sql`.
+- **Availability:** if the tracker store is unreachable the layers FAIL OPEN
+  (logins/signups keep working; Supabase Auth's own limits still apply). They
+  never replace input validation and never become a single point of failure.
+- **Supabase Auth upstream limits (cannot be removed from backend code):**
+  GoTrue applies its own per-IP limits to the BACKEND'S egress IP
+  (sign-ups/sign-ins 30 per 5 min, token endpoint 150 per 5 min by default)
+  and - while "Confirm email" was ON - a built-in 2-emails/hour limit that was
+  the production `429` on signup. Raise the limits in Authentication -> Rate
+  Limits and/or enable IP forwarding
+  (`AUTH_GOTRUE_IP_FORWARDING=true` + `AUTH_GOTRUE_SECRET_KEY`, see below).
 
 ### Error codes (auth)
 
@@ -378,18 +424,73 @@ echoed.
 
 ### Supabase dashboard + RLS checklist
 
+- **Email confirmation OFF:** Authentication -> Sign In / Providers -> Email
+  -> toggle "Confirm email" OFF. (Signup then returns a session immediately
+  and sends no verification email; password reset emails keep working.)
+- **Rate limits:** Authentication -> Rate Limits. Raise the sign-ups/sign-ins
+  and token-endpoint limits for expected traffic; while using the built-in
+  email provider the "emails per hour" limit is 2 and cannot be raised without
+  custom SMTP. For correctly PER-USER upstream limits enable "IP address
+  forwarding" and configure `AUTH_GOTRUE_IP_FORWARDING=true` +
+  `AUTH_GOTRUE_SECRET_KEY` (new `sb_secret_...` key - legacy keys are not
+  accepted).
 - Use the **anon key** in `SUPABASE_ANON_KEY` (backend env). The
-  **service-role key** (`SUPABASE_SERVICE_ROLE_KEY`) is for the L2 cache table
-  ONLY - never for auth, never in the frontend.
-- Apply `supabase/migrations/20260101000000_create_user_profiles_rls.sql` as
-  the RLS baseline when user-owned tables are introduced: RLS enabled,
-  policies keyed on `auth.uid()`, every row carries `user_id`.
+  **service-role key** (`SUPABASE_SERVICE_ROLE_KEY`) is REQUIRED for the L2
+  cache table and the auth-limiter tables (all have RLS enabled with no
+  policies) - it is NEVER used for user-owned data queries, never for auth,
+  never in the frontend.
+- Apply the migrations (SQL Editor, idempotent):
+  `20260101000000_create_user_profiles_rls.sql` (RLS baseline),
+  `20260913000000_create_cache_entries.sql` +
+  `20261102000000_fix_cache_entries.sql` (L2 cache + production repair),
+  `20261102000001_auth_rate_limits.sql` (login/Signup limiter),
+  `20261102000002_auth_signup_dedupe.sql` (duplicate suppression),
+  `20261102000003_watchlist.sql` (watchlist + RLS).
 - When a backend feature queries user-owned tables, it MUST forward the USER's
   access token to PostgREST (`Authorization: Bearer <user token>`,
   `apikey: <anon key>`) so RLS evaluates as that user. Never query user-owned
   data with the service-role key.
 - Users cannot access another user's data by changing IDs: identity comes from
   the verified token, and RLS scopes every row to its owner.
+- Diagnose exactly why Supabase operations fail with
+  `node scripts/supabase-diagnose.js` (prints the raw PostgREST status + error
+  code for the cache and limiter tables and maps them to the fix).
+
+### Watchlist (account-backed, frontend contract)
+
+Persistent per-account watchlist stored in Supabase (`public.watchlist`,
+migration `20261102000003_watchlist.sql`). Records are keyed by the
+**AniList ID** (the canonical anime identity used everywhere in this API) and
+scoped to `auth.uid()` through RLS; the backend forwards the verified user's
+access token to PostgREST, so one user can never read or modify another
+user's list. The user id ALWAYS comes from the verified session - a userId in
+the request body is ignored.
+
+All three routes require BOTH the trusted-proxy API key (`X-API-Key`) AND a
+verified user session (`Authorization: Bearer <accessToken>` or the session
+cookie). Cookie-authenticated mutations are CSRF-guarded like `/api/auth/*`.
+
+```text
+GET /api/watchlist
+  -> 200 { "items": [ { "animeId": 1535, "addedAt": "2026-11-02T12:00:00+00:00" } ], "count": 1 }
+     (newest first; up to 1000 rows - the PostgREST server-side max-rows cap)
+
+POST /api/watchlist          body: { "animeId": 1535 }
+  -> 201 { "added": true,  "animeId": 1535, "addedAt": "2026-11-02T12:00:00+00:00" }   (first time)
+  -> 200 { "added": false, "animeId": 1535, "addedAt": null }                          (already saved, idempotent)
+
+DELETE /api/watchlist/1535
+  -> 200 { "ok": true, "animeId": 1535 }                                               (idempotent)
+```
+
+Errors: `400 VALIDATION_ERROR` (invalid animeId), `401 UNAUTHORIZED_ERROR` /
+`AUTH_SESSION_EXPIRED` (missing/expired session), `403` (CSRF/cookie policy),
+`502 PROVIDER_ERROR` (storage temporarily unavailable, with
+`details.provider/operation/upstreamStatus` for diagnosis).
+
+Only identifiers + save timestamps are stored; the frontend hydrates titles,
+artwork, and episode info through the existing anime endpoints (e.g.
+`GET /api/details/:animeId`) so displayed data is always current.
 
 ## Identity system (critical)
 
@@ -414,8 +515,26 @@ Two tiers, with L1 as a performance optimization only:
   A cold start starts empty, and the backend remains fully correct with an
   empty L1.
 - **L2 - Supabase** (`supabase/supabase-store.js`): persistent and shared
-  across instances. Stub in Phase 1; the manager auto-runs L1-only until the
-  Supabase env vars are configured and the store is implemented.
+  across instances. Requires `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` and
+  the `cache_entries` migration (`supabase/migrations/20260913000000_*.sql`
+  plus the production-repair `20261102000000_fix_cache_entries.sql`). The
+  service-role key is REQUIRED because the table has RLS enabled with no
+  policies (the anon key would fail every operation). Without the keys the
+  manager cleanly runs L1-only - no error spam.
+- **L2 circuit breaker:** after `CACHE_L2_FAILURE_THRESHOLD` consecutive L2
+  failures the manager skips Supabase entirely (L1-only) for a growing
+  cooldown (30s doubling up to 5min, `CACHE_L2_BREAKER_OPEN_MS` /
+  `CACHE_L2_BREAKER_MAX_OPEN_MS`), so a broken/misconfigured L2 adds no
+  per-request latency or log noise and is never hammered. The first
+  operation after the cooldown acts as a probe; any success closes the
+  breaker.
+- **L2 failure diagnostics:** `CacheError.details` carries the EXACT operation
+  and upstream error (`operation`, `upstreamStatus`, `upstreamCode`,
+  `upstreamMessage`) - e.g. `42P01` missing table, `42P10` missing unique
+  index, `23505` duplicate key, HTTP `401` wrong key/RLS. Writes always send
+  the explicit upsert conflict target (`?on_conflict=namespace,cache_key`)
+  which requires the unique `(namespace, cache_key)` index from the
+  migration.
 
 `CacheManager.getOrLoad(key, loader)` implements the resilience strategy:
 
@@ -559,10 +678,25 @@ Key variables for API protection (see "API key protection" above):
 Key variables for user authentication (see "User authentication" above):
 
 - Backend (server-side only): `SUPABASE_URL` + `SUPABASE_ANON_KEY` (public
-  key, but kept server-side) - used for ALL GoTrue calls. `SUPABASE_SERVICE_ROLE_KEY`
-  remains cache-only and is never used for authentication.
+  key, but kept server-side) - used for ALL GoTrue calls and for user-owned
+  data through RLS (watchlist). `SUPABASE_SERVICE_ROLE_KEY` is REQUIRED for
+  the L2 cache table and the auth-limiter tables ONLY - never for
+  authentication, never for user-owned data queries.
 - Backend (optional): `AUTH_COOKIES_ENABLED` (default `true`),
   `AUTH_REFRESH_COOKIE_MAX_AGE_SECONDS` (default 30 days).
+- Login/signup throttling (see "Login rate limiting & signup anti-abuse"):
+  `AUTH_ATTEMPT_LIMITS_ENABLED` (default `true`), `AUTH_LOGIN_MAX_FAILURES`
+  (5), `AUTH_LOGIN_FAILURE_WINDOW_SECONDS` (900), `AUTH_LOGIN_LOCK_SECONDS`
+  (900), `AUTH_LOGIN_IP_MAX_FAILURES` (20), `AUTH_SIGNUP_IP_MAX_ATTEMPTS`
+  (10), `AUTH_SIGNUP_IP_WINDOW_SECONDS` (3600), `AUTH_SIGNUP_IP_LOCK_SECONDS`
+  (900), `AUTH_SIGNUP_DEDUPE_TTL_SECONDS` (600).
+- Supabase Auth upstream limits (optional but recommended for scale):
+  `AUTH_GOTRUE_IP_FORWARDING` + `AUTH_GOTRUE_SECRET_KEY` (new `sb_secret_...`
+  key) forward each END USER's IP to GoTrue, so ITS rate limits apply
+  per user instead of to this backend's shared egress IP. Requires enabling
+  "IP address forwarding" in Dashboard -> Authentication -> Rate Limits.
+- L2 cache breaker: `CACHE_L2_FAILURE_THRESHOLD` (5),
+  `CACHE_L2_BREAKER_OPEN_MS` (30000), `CACHE_L2_BREAKER_MAX_OPEN_MS` (300000).
 - Frontend: NOTHING new - the browser talks to the trusted proxy (or the
   backend base URL) and stores the session tokens it receives; no Supabase
   credentials belong in the frontend.

@@ -1,7 +1,8 @@
 /**
  * User-authentication routes (Supabase Auth identity provider).
  *
- *   POST /api/auth/signup           create an account
+ *   POST /api/auth/signup           create an account (immediately usable;
+ *                                   email confirmation is disabled upstream)
  *   POST /api/auth/login            password grant -> user + session
  *   POST /api/auth/logout           revoke the presented session
  *   GET  /api/auth/me               current user (verified session required)
@@ -9,7 +10,7 @@
  *   POST /api/auth/password-reset   request a password-reset email
  *   POST /api/auth/verify           exchange one-time email token -> session
  *   POST /api/auth/password-update  set a new password (session required)
- *   POST /api/auth/resend           resend confirmation/recovery email
+ *   POST /api/auth/resend           RESERVED for a future email feature (501)
  *
  * POLICY (deliberate - see routes/index.js and README "Route protection"):
  *   - These routes sit BEHIND the central API-key middleware: callers must be
@@ -20,6 +21,9 @@
  *     /refresh resolve their own tokens) - login/signup are anonymous.
  *   - State-changing requests that arrived with a session COOKIE are guarded
  *     by the CSRF origin check (see middleware/session.js).
+ *   - Login failed-attempt limits + signup anti-abuse are enforced in the
+ *     controllers via services/auth-throttle.service.js (DB-backed, shared
+ *     across serverless instances).
  */
 
 import { Router } from 'express';
@@ -33,9 +37,9 @@ import {
   passwordResetController,
   verifyController,
   passwordUpdateController,
-  resendController,
 } from '../controllers/auth.controller.js';
 import { requireUser, csrfOriginGuard } from '../middleware/session.js';
+import { notImplemented } from '../middleware/not-implemented.js';
 
 const router = Router();
 
@@ -44,7 +48,13 @@ router.post('/auth/signup', csrfOriginGuard(), signupController);
 router.post('/auth/login', csrfOriginGuard(), loginController);
 router.post('/auth/refresh', csrfOriginGuard(), refreshController);
 router.post('/auth/password-reset', csrfOriginGuard(), passwordResetController);
-router.post('/auth/resend', csrfOriginGuard(), resendController);
+// RESERVED: email confirmation is disabled (no confirmation emails exist) and
+// this endpoint must not be activated until a future email feature needs it.
+// The route keeps its exact path and answers an honest 501.
+router.post('/auth/resend', csrfOriginGuard(), notImplemented('auth.resend', {
+  reason: 'reserved',
+  detail: 'Email confirmation is disabled; this endpoint is reserved for a future email feature.',
+}));
 router.post('/auth/verify', csrfOriginGuard(), verifyController);
 
 // Session-required.
