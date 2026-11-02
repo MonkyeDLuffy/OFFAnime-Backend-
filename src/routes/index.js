@@ -23,6 +23,7 @@ import jikanRoutes from './jikan.routes.js';
 import tmdbRoutes from './tmdb.routes.js';
 import authRoutes from './auth.routes.js';
 import watchlistRoutes from './watchlist.routes.js';
+import continueWatchingRoutes from './continue-watching.routes.js';
 
 /**
  * Attach all routers to the app under {@link API_PREFIX}.
@@ -50,6 +51,7 @@ export function registerRoutes(app) {
 
   api.use(authRoutes); //      /auth/* (Supabase Auth; API key + per-route session policy)
   api.use(watchlistRoutes); // /watchlist (verified session required; RLS-backed)
+  api.use(continueWatchingRoutes); // /user/continue-watching (verified session; RLS-backed; same session policy as /watchlist)
   api.use(homeRoutes); //      /home, /schedule
   api.use(searchRoutes); //    /search, /top-search
   api.use(animeRoutes); //     /details, /smart/details, /episodes, /recommendations, /seasons, /category

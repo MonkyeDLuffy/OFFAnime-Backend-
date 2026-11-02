@@ -110,6 +110,9 @@ All routes are mounted under `/api`. Phase 7 status:
 | `GET /api/watchlist` | **Live** | Account-backed watchlist (verified session required); `{ items: [{ animeId, addedAt }], count }` |
 | `POST /api/watchlist` | **Live** | Add `{ animeId }` (AniList ID); idempotent; 201 first time / 200 repeat |
 | `DELETE /api/watchlist/:animeId` | **Live** | Remove (AniList ID); idempotent; 200 always |
+| `POST /api/user/continue-watching` | **Live** | Save/update playback progress (AniList ID keyed, upsert); verified session required |
+| `GET /api/user/continue-watching` | **Live** | The authenticated user's progress entries, newest watched first |
+| `DELETE /api/user/continue-watching/:anilistId` | **Live** | Remove one progress entry (AniList ID); idempotent; 200 always |
 
 `501` responses (reserved for any future unimplemented route) use the standard
 error shape (below) with `code: "NOT_IMPLEMENTED"` - reserved routes never
@@ -493,6 +496,60 @@ Errors: `400 VALIDATION_ERROR` (invalid animeId), `401 UNAUTHORIZED_ERROR` /
 Only identifiers + save timestamps are stored; the frontend hydrates titles,
 artwork, and episode info through the existing anime endpoints (e.g.
 `GET /api/details/:animeId`) so displayed data is always current.
+
+### Continue Watching (account-backed, frontend contract)
+
+Persistent per-account playback progress stored in Supabase
+(`public.continue_watching`, migration
+`20261102000004_continue_watching.sql`). One row per (user, anime); the row is
+UPSERTED (single-statement `INSERT ... ON CONFLICT (user_id, anilist_id) DO
+UPDATE`), so repeated saves update the same record and never create duplicates.
+Progress is scoped to `auth.uid()` through RLS and the user id ALWAYS comes
+from the verified session - a userId in the request body is ignored.
+
+Both user-data sets synchronize after login the same way the watchlist does:
+the frontend uses the verified session tokens from `POST /api/auth/login` (or
+the session cookies) to call `GET /api/watchlist` AND
+`GET /api/user/continue-watching` in parallel. Nothing is deleted on logout,
+and both data sets persist across devices/sessions for the same user.
+
+All routes require BOTH the trusted-proxy API key (`X-API-Key`) AND a verified
+user session (`Authorization: Bearer <accessToken>` or the session cookie).
+Cookie-authenticated mutations are CSRF-guarded like `/api/auth/*`.
+
+```text
+POST /api/user/continue-watching   body: {
+  "anilistId": 21, "malId": 21,
+  "title": "One Piece", "titleEnglish": "One Piece", "titleRomaji": "One Piece",
+  "posterUrl": "https://img.example/one-piece-poster.jpg",
+  "bannerUrl": "https://img.example/one-piece-banner.jpg",
+  "episode": 10, "position": 540, "duration": 1440, "language": "sub"
+}
+  -> 201 { "saved": true, "entry": {...} }   (first time)
+  -> 200 { "saved": true, "entry": {...} }   (same row updated in place)
+
+GET /api/user/continue-watching
+  -> 200 { "items": [ {...entry..., "lastWatchedAt": "..."} ], "count": 1 }
+     (newest watched first; up to 1000 rows)
+
+DELETE /api/user/continue-watching/21
+  -> 200 { "ok": true, "anilistId": 21 }     (idempotent)
+```
+
+The saved entry carries `anilistId`, optional `malId`, `title`,
+`titleEnglish`, `titleRomaji`, `posterUrl`, `bannerUrl`, `episode`,
+`positionSeconds`, optional `durationSeconds`, `language`, and
+`lastWatchedAt`/`createdAt`/`updatedAt`. `positionSeconds` is clamped to
+`durationSeconds` when a duration is reported (a finished episode stays within
+its duration); finishing one episode never marks an anime "completed" - an
+entry disappears only when the user removes it.
+
+Errors: `400 VALIDATION_ERROR` (invalid/missing fields), `401
+UNAUTHORIZED_ERROR` / `AUTH_SESSION_EXPIRED` (missing/expired session),
+`403` (CSRF/cookie policy), `502 PROVIDER_ERROR` (storage temporarily
+unavailable, with `details.provider/operation/upstreamStatus` for diagnosis).
+
+Query-parameter API keys are NOT accepted on these routes - they are user data.
 
 ## Identity system (critical)
 
