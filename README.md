@@ -96,7 +96,9 @@ All routes are mounted under `/api`. Phase 7 status:
 | `GET /api/details/:id` | **Live** | Full pipeline: AniList + Jikan enrichment + TMDB visuals, composite cache |
 | `GET /api/smart/details/:id` | **Live** | Same canonical payload as `/details/:id`; shares the identical cache key |
 | `GET /api/episodes/:id` | **Live** | Episode METADATA only (no MegaPlay, no stream URLs) |
-| `GET /api/stream/resolve/:id` | **Live** | MegaPlay streaming; `?episode=1&language=sub\|dub`; AniList ID -> MegaPlay -> MAL fallback; playback via the configured proxy (`MEGAPLAY_PROXY_URL`) |
+| `GET /api/stream/resolve/anilist/:id` | **Live** | Streaming Server 1 (AniList-PRIMARY): `?ep=1&language=sub\|dub` (alias `episode=1`); MegaPlay -> MAL fallback; playback via the configured proxy (`MEGAPLAY_PROXY_URL`) |
+| `GET /api/stream/resolve/mal/:id` | **Live** | Streaming Server 2 (MAL-PRIMARY): same query contract; MegaPlay by MAL ID first -> AniList fallback through the IdentityResolver; playback via the configured proxy |
+| `GET /api/stream/resolve/:id` | **Live** | Legacy streaming route (unchanged): AniList-ONLY; MegaPlay -> MAL fallback; playback via the configured proxy |
 | `GET /api/jikan/anime/:malId` | **Live** | Jikan secondary namespace (`malId` only - never converted) |
 | `GET /api/jikan/from-anilist/:id` | **Live** | AniList ID -> IdentityResolver -> MAL ID -> Jikan; unresolved mapping -> 404 |
 | `GET /api/recommendations/:id` | **Live** | AniList recommendations (rating-sorted), cached |

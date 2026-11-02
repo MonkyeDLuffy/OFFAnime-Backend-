@@ -1,14 +1,16 @@
 /**
- * StreamResolver - isolated streaming resolution logic.
+ * StreamResolver - isolated streaming resolution logic (dual-server capable).
  *
  * Streaming is deliberately separated from anime-metadata logic. This resolver
  * only answers "give me a playable stream for this anime/episode", orchestrating
  * the MegaPlay provider and the identity layer. It holds NO general anime-detail
  * logic.
  *
- * Implemented resolution flow (see README):
+ * TWO PUBLIC FLOWS (one per streaming server the frontend can select):
  *
- *     anilistId  (:id on the route is ALWAYS an AniList ID - never a MAL ID)
+ * AniList-primary (legacy /api/stream/resolve/:id and /api/stream/resolve/anilist/:id):
+ *
+ *     anilistId  (:id is ALWAYS an AniList ID - never a MAL ID)
  *        |-> MegaPlay /stream/ani/{anilistId}/{ep}/{lang}   -- PRIMARY source
  *        |      usable stream -> proxy playback URL (idType=anilist)
  *        |      genuine no-stream (404 / explicit no-stream / empty sources /
@@ -22,6 +24,28 @@
  *        v
  *     none -> PRIMARY (AniList) proxy playback URL anyway
  *
+ * MAL-primary (/api/stream/resolve/mal/:id):
+ *
+ *     malId  (:id is ALWAYS a MAL ID - never treated as an AniList ID)
+ *        |-> MegaPlay /stream/mal/{malId}/{ep}/{lang}      -- PRIMARY source
+ *        |      usable stream -> proxy playback URL (idType=mal)
+ *        v
+ *     identity.resolveMalToAniList(malId)           -- MAL -> AniList mapping
+ *        |      anilistId found (mapping comes ONLY from AniList's id field)
+ *        v
+ *     MegaPlay /stream/ani/{anilistId}/{ep}/{lang}  -- FALLBACK source
+ *        |      usable stream -> proxy playback URL (idType=anilist)
+ *        v
+ *     none -> PRIMARY (MAL) proxy playback URL anyway
+ *
+ * Both flows share ONE orchestrator (_resolveWithPrimaryFallback): the primary
+ * namespace is always attempted FIRST with its own id kind; the cross-namespace
+ * fallback happens ONLY on a genuine primary no-stream result, ONLY through
+ * the IdentityResolver, and NEVER by reusing the primary id in the other
+ * namespace (numeric equality means nothing). A MegaPlay internal id would
+ * never be exposed as an AniList/MAL ID either. NO title-based fallback, no
+ * fuzzy matching, no alternate streaming providers.
+ *
  * AVAILABILITY (corrected architecture): the direct MegaPlay /stream endpoints
  * are SOURCE SELECTION only. A direct 410 / "Error - MegaPlay" no-stream
  * response does NOT prove playback is unavailable - the BROWSER-FACING
@@ -30,23 +54,37 @@
  * /watch/21?ep=1&lang=sub&idType=anilist returns HTTP 200 + player iframe even
  * though the direct URL 410s). When neither direct lookup produced a usable
  * stream, the resolver returns the configured proxy playback URL for the
- * PRIMARY (AniList) namespace and lets the proxy handle availability.
+ * PRIMARY namespace of that request and lets the proxy handle availability.
  *
- * Failure classification (see README):
- *   - AniList-ID lookup succeeds            -> stream (Case A)
- *   - no usable stream + MAL mapping exists -> MAL fallback (Case B)
+ * Failure classification:
+ *   - primary lookup succeeds               -> stream (Case A)
+ *   - no usable stream + mapping exists     -> cross-namespace fallback (Case B)
  *   - timeout/429/500/network               -> typed provider failure
  *     (Case C: stale-if-error applies through CacheManager; an infrastructure
  *     outage is NEVER reinterpreted as "anime not found")
- *   - genuine 404/no-stream from MegaPlay   -> may trigger the MAL fallback
+ *   - genuine 404/no-stream from MegaPlay   -> may trigger the fallback
  *     (Case D: distinguishable from an infrastructure failure)
- *   - neither source yields a usable stream -> PRIMARY (AniList) proxy
- *     playback URL (the proxy is the browser-facing playback mechanism and
- *     handles availability; a direct 410/no-stream is never reinterpreted as
+ *   - neither source yields a usable stream -> PRIMARY proxy playback URL
+ *     (the proxy is the browser-facing playback mechanism and handles
+ *     availability; a direct 410/no-stream is never reinterpreted as
  *     "unavailable")
  *
+ * Identity lookup failures (case-specific, deliberate):
+ *   - AniList-primary: a NotFoundError from identity.resolveAniListToMal
+ *     propagates (documented behavior of the legacy route - AniList is the
+ *     canonical identity registry, so a nonexistent AniList ID invalidates
+ *     the whole request).
+ *   - MAL-primary: a NotFoundError from identity.resolveMalToAniList means
+ *     "no AniList Media maps to this MAL ID" - a MISSING MAPPING, not a
+ *     request-level not-found (the MAL ID may still play through the proxy).
+ *     It is handled gracefully: the AniList fallback is skipped and the
+ *     PRIMARY (mal) namespace stands. Identity cracks in the OTHER direction
+ *     pose no such asymmetry - they cannot invalidate the requested primary ID.
+ *   - Infrastructure failures of the identity layer (timeout/429/500/network)
+ *     always propagate as typed errors - NEVER reinterpreted as "unresolved".
+ *
  * Caching (through the Phase 1/6 CacheManager - no direct Supabase access):
- *   - Namespace-safe keys:
+ *   - Namespace-safe keys (both flows, both directions):
  *       stream:megaplay:anilist:{anilistId}:episode:{episode}:language:{language}
  *       stream:megaplay:mal:{malId}:episode:{episode}:language:{language}
  *   - Only VALID normalized stream results are cached as successful streams.
@@ -55,7 +93,8 @@
  *     the frontend-safe proxy playback URL is built per-response afterwards,
  *     so cached data never depends on proxy configuration.
  *   - Valid no-stream results are cached briefly with `usable: false`
- *     semantics - clearly distinguishable from a real stream.
+ *     semantics - clearly distinguishable from a real stream. A no-stream
+ *     marker cached under one namespace NEVER leaks into the other namespace.
  *   - Valid stream results use a conservative SHORT TTL (streaming URLs are
  *     more volatile than metadata); explicit provider expiry metadata is
  *     respected by capping the TTL when practical.
@@ -65,21 +104,24 @@
  * frontend. The frontend-safe playback URL is built by the isolated
  * proxy-playback module (proxy-playback.js) from MEGAPLAY_PROXY_URL:
  *     {proxy}/watch/{resolvedId}?ep={episode}&lang={language}&idType={idType}
- * When the proxy is not configured, a clear typed configuration error is
- * thrown instead of silently exposing a direct MegaPlay URL.
+ * The idType/id pair mirrors the namespace that actually WON the resolution
+ * (never mixed). When the proxy is not configured, a clear typed
+ * configuration error is thrown instead of silently exposing a direct
+ * MegaPlay URL.
  *
- * Identity safety: AniList ID and MAL ID are DIFFERENT namespaces. The
- * response's anilistId always mirrors the requested AniList ID; malId comes
- * ONLY from the IdentityResolver (or null). A MegaPlay internal id would never
- * be exposed as an AniList/MAL ID. NO title-based fallback, no fuzzy matching,
- * no alternate streaming providers.
+ * Identity safety: AniList ID and MAL ID are DIFFERENT namespaces. On the
+ * AniList-primary flow the response's anilistId always mirrors the requested
+ * AniList ID, and on the MAL-primary flow the response's malId always mirrors
+ * the requested MAL ID; the OTHER id comes ONLY from the IdentityResolver
+ * (or null). NO numeric inference, NO ID swapping, NO silent rewrite of the
+ * request's own id into the other namespace.
  */
 
 import { megaplayProvider } from '../providers/index.js';
 import { cacheManager } from '../cache/cache-manager.js';
 import { identityResolver } from '../identity/identity-resolver.js';
 import { isProxyConfigured, buildProxyWatchUrl } from './proxy-playback.js';
-import { ProviderError, NotImplementedError, ValidationError } from '../errors/index.js';
+import { ProviderError, NotImplementedError, ValidationError, NotFoundError } from '../errors/index.js';
 import { normalizeId, ID_TYPES } from '../identity/id-types.js';
 import {
   PROVIDERS,
@@ -114,6 +156,25 @@ function streamCacheKey(idType, id, episode, language) {
  */
 function isUpstreamNotFound(err) {
   return err instanceof ProviderError && /** @type {ProviderError} */ (err).details?.upstreamStatus === 404;
+}
+
+/**
+ * Response identity metadata for THIS request (uniform across all three
+ * resolution outcomes): the requested primary id always retains ITS OWN
+ * namespace field, and the counterpart field is filled ONLY when the
+ * counterpart id was genuinely established for this request (the mapping the
+ * identity fallback resolved). A null counterpart is honest: "identity was
+ * not needed / unresolved", never ring-filled from numeric equality.
+ * @param {'anilist'|'mal'} primaryIdType namespace of the request's primary id
+ * @param {number} primaryId the request's primary id
+ * @param {number|null} counterpartId the other namespace's id (or null)
+ * @returns {{ anilistId: number|null, malId: number|null }}
+ */
+function responseIdentityOf(primaryIdType, primaryId, counterpartId) {
+  return {
+    anilistId: primaryIdType === ID_TYPES.ANILIST ? primaryId : counterpartId,
+    malId: primaryIdType === ID_TYPES.MAL ? primaryId : counterpartId,
+  };
 }
 
 /**
@@ -158,59 +219,152 @@ export class StreamResolver {
   }
 
   /**
-   * Resolve a playable stream for an anime episode.
+   * Resolve a playable stream for an anime episode, AniList-PRIMARY.
+   *
+   * Legacy entry point (unchanged contract): identical behavior with
+   * resolveStreamByAniListId - one code path, no duplicated flow.
    *
    * @param {object} params
    * @param {number|string} params.anilistId  AniList ID (primary identity;
    *   NEVER assumed to be a MAL ID).
    * @param {number|string} [params.episode=1] Positive, bounded episode.
    * @param {'sub'|'dub'} [params.language='sub'] Documented language contract.
- * @returns {Promise<object>} Normalized streaming response:
- *   { resolved: true, provider, idType, anilistId, malId, episode, language,
- *     playbackUrl, sources, expiresAt }. The playbackUrl is ALWAYS the
- *   frontend-safe proxy watch URL - never a direct MegaPlay URL.
- * @throws {ValidationError} invalid AniList ID/episode/language.
- * @throws {NotFoundError} AniList confirms the anime does not exist (from the
- *   identity layer - never a stream-availability conclusion).
- * @throws {TimeoutError|RateLimitError|ProviderError} on provider failure
- *   (stale-if-error already applied through the cache layer).
+   * @returns {Promise<object>} Normalized streaming response
+   * @throws {ValidationError} invalid AniList ID/episode/language.
+   * @throws {NotFoundError} AniList confirms the anime does not exist (from the
+   *   identity layer - never a stream-availability conclusion).
+   * @throws {TimeoutError|RateLimitError|ProviderError} on provider failure
+   *   (stale-if-error already applied through the cache layer).
    */
   async resolveStream({ anilistId, episode, language } = {}) {
+    return this.resolveStreamByAniListId({ anilistId, episode, language });
+  }
+
+  /**
+   * Resolve a playable stream, AniList-PRIMARY (Server 1).
+   *
+   * The route id is ALWAYS an AniList ID. MegaPlay is asked DIRECTLY with the
+   * AniList ID first (/stream/ani/...); only a genuine no-stream result may
+   * trigger the AniList->MAL IdentityResolver fallback. The response's
+   * anilistId always mirrors the requested AniList ID; malId comes ONLY from
+   * the IdentityResolver (or null) - never guessed, never back-filled.
+   *
+   * @param {object} params
+   * @param {number|string} params.anilistId AniList ID (never a MAL ID).
+   * @param {number|string} [params.episode=1] Positive, bounded episode.
+   * @param {'sub'|'dub'} [params.language='sub'] Documented language contract.
+   * @returns {Promise<object>} Normalized streaming response:
+   *   { resolved: true, provider, idType, anilistId, malId, episode, language,
+   *     playbackUrl, streams, sources, expiresAt }. playbackUrl is ALWAYS the
+   *   frontend-safe proxy watch URL - never a direct MegaPlay URL.
+   * @throws {ValidationError} invalid AniList ID/episode/language.
+   * @throws {NotFoundError} AniList confirms the anime does not exist (identity
+   *   layer - never a stream-availability conclusion).
+   * @throws {TimeoutError|RateLimitError|ProviderError} on provider failure
+   *   (stale-if-error already applied through the cache layer).
+   */
+  async resolveStreamByAniListId({ anilistId, episode, language } = {}) {
     const id = normalizeId(anilistId);
     if (id === null) {
-      throw new ValidationError('resolveStream requires a valid AniList ID', { received: anilistId });
+      throw new ValidationError('resolveStreamByAniListId requires a valid AniList ID', {
+        received: anilistId,
+      });
     }
+    return this._resolveWithPrimaryFallback(ID_TYPES.ANILIST, id, episode, language);
+  }
+
+  /**
+   * Resolve a playable stream, MAL-PRIMARY (Server 2).
+   *
+   * The route id is ALWAYS a MAL ID. MegaPlay is asked DIRECTLY with the MAL ID
+   * first (/stream/mal/... via resolveByMalId) - this is NOT the AniList
+   * resolver re-badged. Only a genuine no-stream result may trigger the
+   * MAL->AniList IdentityResolver fallback, with the RESOLVED AniList ID (the
+   * MAL ID is never passed to the AniList provider and vice versa). Identity
+   * NotFoundError (no AniList Media for the MAL ID) is a missing mapping,
+   * handled gracefully: the fallback is skipped, the PRIMARY (mal) namespace
+   * stands (see the class header for the direction asymmetry).
+   *
+   * @param {object} params
+   * @param {number|string} params.malId MAL ID (never an AniList ID).
+   * @param {number|string} [params.episode=1] Positive, bounded episode.
+   * @param {'sub'|'dub'} [params.language='sub'] Documented language contract.
+   * @returns {Promise<object>} Normalized streaming response (same contract as
+   *   resolveStreamByAniListId; malId mirrors the requested MAL ID).
+   * @throws {ValidationError} invalid MAL ID/episode/language.
+   * @throws {TimeoutError|RateLimitError|ProviderError} on provider failure
+   *   (stale-if-error already applied through the cache layer).
+   */
+  async resolveStreamByMalId({ malId, episode, language } = {}) {
+    const id = normalizeId(malId);
+    if (id === null) {
+      throw new ValidationError('resolveStreamByMalId requires a valid MAL ID', {
+        received: malId,
+      });
+    }
+    return this._resolveWithPrimaryFallback(ID_TYPES.MAL, id, episode, language);
+  }
+
+  // --- internals ------------------------------------------------------------
+
+  /**
+   * Shared primary->fallback orchestration for BOTH flows.
+   *
+   * 1) The PRIMARY namespace is ALWAYS attempted first with its OWN id kind
+   *    (anilist -> resolveByAnilistId, mal -> resolveByMalId). A usable stream
+   *    is returned immediately - the counterpart lookup never happens, so no
+   *    duplicate provider request is made.
+   * 2) A genuine no-stream PRIMARY result (never an infrastructure failure) is
+   *    the ONLY thing that may consult the IdentityResolver for the
+   *    counterpart direction; with an actual mapping, the FALLBACK namespace
+   *    is attempted with the RESOLVED counterpart id.
+   * 3) When neither direct MegaPlay lookup produced a usable stream, the
+   *    PRIMARY namespace of THIS request stands: the proxy is the
+   *    browser-facing playback mechanism and handles availability (a direct
+   *    410/no-stream is never reinterpreted as "unavailable"). The counterpart
+   *    id (when genuinely resolved) rides along as metadata only.
+   *
+   * @param {'anilist'|'mal'} primaryIdType
+   * @param {number} primaryId
+   * @param {number|string|undefined} episode
+   * @param {unknown} language
+   * @returns {Promise<object>}
+   * @throws {ValidationError} invalid episode/language (the id was normalized
+   *   by the public caller).
+   * @throws {NotFoundError} AniList-primary identity cannot confirm the anime
+   *   exists (@see resolveStreamByAniListId). @throws
+   *   {TimeoutError|RateLimitError|ProviderError} typed provider/identity
+   *   failures propagate unchanged.
+   */
+  async _resolveWithPrimaryFallback(primaryIdType, primaryId, episode, language) {
     const ep = normalizeEpisode(episode);
     const lang = normalizeLanguage(language);
 
-    // 1) AniList ID MUST always be attempted first. No MAL resolution unless
-    //    the AniList-ID lookup cannot provide a usable stream.
-    const aniResult = await this._lookupStream(ID_TYPES.ANILIST, id, ep, lang);
-    if (isUsableStreamResult(aniResult)) {
-      return this._toStreamResponse(aniResult, {
-        idType: ID_TYPES.ANILIST,
-        anilistId: id,
-        malId: null, // identity was not needed - never guessed
-        resolvedId: id, // the AniList ID was used - idType=anilist
+    // 1) PRIMARY namespace with its OWN id kind - always first.
+    const primaryResult = await this._lookupStream(primaryIdType, primaryId, ep, lang);
+    if (isUsableStreamResult(primaryResult)) {
+      return this._toStreamResponse(primaryResult, {
+        idType: primaryIdType,
+        ...responseIdentityOf(primaryIdType, primaryId, null),
+        resolvedId: primaryId, // the primary id was used - primary idType
         episode: ep,
         language: lang,
       });
     }
 
-    // 2) Genuine no-stream result -> MAL fallback through the IdentityResolver
-    //    ONLY (a real provider-confirmed AniList -> MAL mapping). No title
-    //    search, no fuzzy matching, no guessing, no numeric inference.
-    let resolvedMalId = null;
-    const identity = await this.identity.resolveAniListToMal(id);
-    if (identity.resolved && identity.malId !== null) {
-      resolvedMalId = identity.malId;
-      const malResult = await this._lookupStream(ID_TYPES.MAL, resolvedMalId, ep, lang);
-      if (isUsableStreamResult(malResult)) {
-        return this._toStreamResponse(malResult, {
-          idType: ID_TYPES.MAL,
-          anilistId: id, // AniList ID remains the canonical identity
-          malId: resolvedMalId, // from actual identity resolution only
-          resolvedId: resolvedMalId, // the RESOLVED MAL ID was used - idType=mal
+    // 2) Genuine no-stream result -> cross-namespace fallback through the
+    //    IdentityResolver ONLY (a real provider-confirmed mapping in the
+    //    direction this flow needs). No title search, no fuzzy matching, no
+    //    guessing, no numeric inference in either direction.
+    const counterpartId = await this._counterpartId(primaryIdType, primaryId);
+    if (counterpartId !== null) {
+      const fallbackIdType = primaryIdType === ID_TYPES.ANILIST ? ID_TYPES.MAL : ID_TYPES.ANILIST;
+      const fallbackResult = await this._lookupStream(fallbackIdType, counterpartId, ep, lang);
+      if (isUsableStreamResult(fallbackResult)) {
+        return this._toStreamResponse(fallbackResult, {
+          idType: fallbackIdType,
+          ...responseIdentityOf(primaryIdType, primaryId, counterpartId),
+          resolvedId: counterpartId, // the RESOLVED counterpart was used
           episode: ep,
           language: lang,
         });
@@ -222,20 +376,49 @@ export class StreamResolver {
     //    unavailable: the BROWSER-FACING playback mechanism is the proxy, which
     //    constructs the MegaPlay URL internally and serves the playable iframe
     //    page. The direct lookups above selected the source namespace; the
-    //    PRIMARY (AniList) namespace stands here. The proxy handles
-    //    availability. malId is included only when genuinely resolved by the
+    //    PRIMARY namespace stands here. The proxy handles availability. The
+    //    counterpart id is included only when genuinely resolved by the
     //    IdentityResolver - never guessed, never back-filled.
-    return this._toStreamResponse(aniResult, {
-      idType: ID_TYPES.ANILIST,
-      anilistId: id, // AniList ID remains the canonical identity
-      malId: resolvedMalId, // null when identity is unresolved - never guessed
-      resolvedId: id, // the AniList ID was used - idType=anilist
+    return this._toStreamResponse(primaryResult, {
+      idType: primaryIdType,
+      ...responseIdentityOf(primaryIdType, primaryId, counterpartId),
+      resolvedId: primaryId, // the primary id was used - primary idType
       episode: ep,
       language: lang,
     });
   }
 
-  // --- internals ------------------------------------------------------------
+  /**
+   * Resolve the COUNTERPART id for the primary namespace (the cross-namespace
+   * fallback id), through the IdentityResolver for the correct direction.
+   *
+   * Returns null when the mapping is genuinely unresolved OR when the identity
+   * lookup fails with direction-appropriate semantics:
+   *   - MAL-primary: identity NotFoundError == "no AniList Media maps to this
+   *     MAL ID" - a missing mapping (graceful; the PRIMARY namespace stands).
+   *   - AniList-primary: identity NotFoundError propagates (existing documented
+   *     behavior - AniList is the canonical identity registry; a nonexistent
+   *     AniList ID invalidates the whole request).
+   *   - Infrastructure failures (timeout/429/500/network) ALWAYS propagate in
+   *     both directions - never reinterpreted as "unresolved".
+   *
+   * @param {'anilist'|'mal'} primaryIdType
+   * @param {number} primaryId
+   * @returns {Promise<number|null>} the counterpart id, or null when unresolved.
+   */
+  async _counterpartId(primaryIdType, primaryId) {
+    try {
+      const identity =
+        primaryIdType === ID_TYPES.ANILIST
+          ? await this.identity.resolveAniListToMal(primaryId)
+          : await this.identity.resolveMalToAniList(primaryId);
+      if (!identity.resolved) return null;
+      return primaryIdType === ID_TYPES.ANILIST ? identity.malId : identity.anilistId;
+    } catch (err) {
+      if (primaryIdType === ID_TYPES.MAL && err instanceof NotFoundError) return null;
+      throw err;
+    }
+  }
 
   /**
    * One MegaPlay lookup (by id kind) with cache/stale-if-error semantics.
@@ -338,9 +521,11 @@ export class StreamResolver {
 
   /**
    * Build the normalized streaming response expected by the frontend. Identity
-   * metadata comes ONLY from actual resolution: anilistId mirrors the
-   * requested AniList ID; malId comes only from the IdentityResolver (or is
-   * null). No MegaPlay internal id is ever exposed as an AniList/MAL ID.
+   * metadata comes ONLY from actual resolution and is computed by the
+   * orchestrator (responseIdentityOf): the winning namespace's id mirrors the
+   * request's id in THAT namespace; the other id comes only from the
+   * IdentityResolver (or is null). No MegaPlay internal id is ever exposed as
+   * an AniList/MAL ID.
    *
    * Playback: DIRECT MegaPlay URLs are NEVER exposed to the frontend. When
    * the playback proxy is configured, the frontend-safe playback URL is

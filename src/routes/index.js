@@ -53,7 +53,7 @@ export function registerRoutes(app) {
   api.use(homeRoutes); //      /home, /schedule
   api.use(searchRoutes); //    /search, /top-search
   api.use(animeRoutes); //     /details, /smart/details, /episodes, /recommendations, /seasons, /category
-  api.use(streamingRoutes); // /stream/resolve
+  api.use(streamingRoutes); // /stream/resolve (+ /stream/resolve/anilist, /stream/resolve/mal)
   api.use(jikanRoutes); //     /jikan/*
   api.use(tmdbRoutes); //      /tmdb/:id
 

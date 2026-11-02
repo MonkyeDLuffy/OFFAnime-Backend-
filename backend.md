@@ -258,9 +258,15 @@ All routes are mounted under **`/api`**. Auth requirement: 🔓 public,
 
 ### Streaming
 
+Three routes, one per streaming server the frontend can select. The `:id` namespace is decided by the ROUTE (never the value): `/anilist/:id` and legacy `/:id` are AniList IDs; `/mal/:id` is a MAL ID. Cross-namespace fallback happens ONLY through the IdentityResolver's directional methods (AniList's `idMal` / `id` fields - no numeric inference, no title matching). Ordering matters: `/anilist/:id` and `/mal/:id` are registered BEFORE the legacy `/:id`.
+
 | Method | Path | Auth | Use |
 | --- | --- | --- | --- |
-| GET | `/api/stream/resolve/:id` | 🔐 | Resolve a playable stream. `:id` = AniList ID. Query: `ep=1` (alias `episode=1`; `ep` wins), `language=sub\|dub`. Flow: MegaPlay by AniList ID → IdentityResolver → MegaPlay by MAL ID → none = 404. Playback URL is ALWAYS the frontend-safe proxy watch URL (`{MEGAPLAY_PROXY_URL}/watch/{resolvedId}?ep=..&lang=..&idType=anilist\|mal`) — direct MegaPlay URLs are never exposed. Response: `{ resolved, provider, idType, anilistId, malId, episode, language, sources, expiresAt, playbackUrl }`. Proxy unconfigured → typed `501 NOT_IMPLEMENTED`. Query `?api_key` is NOT accepted here. |
+| GET | `/api/stream/resolve/anilist/:id` | 🔐 | AniList-PRIMARY (Server 1). `:id` = AniList ID. Query: `ep=1` (alias `episode=1`; `ep` wins), `language=sub\|dub`. Flow: MegaPlay `/stream/ani/{id}` → genuine no-stream → IdentityResolver (AniList→MAL) → MegaPlay `/stream/mal/{malId}` → none = PRIMARY (anilist) proxy playback URL. |
+| GET | `/api/stream/resolve/mal/:id` | 🔐 | MAL-PRIMARY (Server 2). `:id` = MAL ID. Same query contract. Flow: MegaPlay `/stream/mal/{id}` → genuine no-stream → IdentityResolver (MAL→AniList) → MegaPlay `/stream/ani/{anilistId}` → none = PRIMARY (mal) proxy playback URL. The MAL ID is NEVER passed to the AniList endpoint; no AniList mapping → PRIMARY stands (graceful. not a 404). |
+| GET | `/api/stream/resolve/:id` | 🔐 | LEGACY (unchanged): AniList-ONLY primary flow. `:id` = AniList ID. Flow: MegaPlay by AniList ID → IdentityResolver → MegaPlay by MAL ID → none = PRIMARY (anilist) proxy playback URL. |
+
+All three: playback URL is ALWAYS the frontend-safe proxy watch URL (`{MEGAPLAY_PROXY_URL}/watch/{resolvedId}?ep=..&lang=..&idType={anilist|mal}`; `idType`/`resolvedId` mirror the namespace that won the resolution) — direct MegaPlay URLs are never exposed. Response: `{ resolved, provider, idType, anilistId, malId, episode, language, streams, sources, expiresAt, playbackUrl }` (the OTHER-id field is null when identity was not needed / unresolved — never guessed; on `idType=mal` success `anilistId` is null, and vice versa). Proxy unconfigured → typed `501 NOT_IMPLEMENTED`. Provider failures remain typed (`TIMEOUT_ERROR`/`RATE_LIMIT_ERROR`/`PROVIDER_ERROR`); infrastructure outages are NEVER reinterpreted as "no stream". Cache is namespace-safe per id kind (`stream:megaplay:anilist:{id}:...` vs `stream:megaplay:mal:{id}:...`). Query `?api_key` is NOT accepted on any streaming route (header-only).
 
 ### Jikan (MAL) namespace
 
