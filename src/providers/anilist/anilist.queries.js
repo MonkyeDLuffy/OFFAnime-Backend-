@@ -83,19 +83,53 @@ ${MEDIA_FIELDS}
 }
 `;
 
-/** Basic relations (related anime) for a given AniList ID. */
+/**
+ * Full card fields for a RELATED media node in the relations response
+ * (/api/seasons). Requested in the SAME GraphQL request as the parent - no
+ * per-node follow-up calls.
+ */
+export const RELATION_NODE_FIELDS = `
+  id
+  idMal
+  type
+  format
+  status
+  episodes
+  season
+  seasonYear
+  averageScore
+  genres
+  title { english romaji native }
+  coverImage { extraLarge large medium }
+  bannerImage
+`;
+
+/**
+ * Relations for the /api/seasons endpoint. IMPORTANT (schema-correct query):
+ * AniList's `relationType` lives on the MediaEdge (`relations { edges {
+ * relationType node { ... } } }`) - it is NOT a field of the Media nodes
+ * inside `relations.nodes` (querying it there makes AniList reject the whole
+ * request with HTTP 400 "Cannot query field relationType on type Media").
+ * Parent anime fields ride along in the same request (no extra lookup).
+ */
 export const GET_RELATIONS_QUERY = `
 query ($id: Int) {
   Media(id: $id, type: ANIME) {
+    id
+    idMal
+    type
+    format
+    status
+    episodes
+    title { english romaji native }
+    coverImage { extraLarge large medium }
+    bannerImage
     relations {
-      nodes {
-        id
-        idMal
-        type
-        format
-        title { romaji english userPreferred }
-        coverImage { large medium }
+      edges {
         relationType
+        node {
+${RELATION_NODE_FIELDS}
+        }
       }
     }
   }

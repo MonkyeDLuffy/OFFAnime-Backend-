@@ -36,6 +36,7 @@ import {
   normalizeAnilistPage,
   normalizeAnilistRecommendations,
   normalizeAnilistRelation,
+  buildAnilistRelationsResponse,
 } from '../normalizers/anime.normalizer.js';
 import { mergeJikanIntoCanonical } from '../normalizers/anime.merge.js';
 import { mergeTmdbIntoCanonical } from '../normalizers/anime.merge.js';
@@ -49,6 +50,30 @@ const isCanonicalAnime = (value) =>
 /** A cached search result is valid only if it has a results array. */
 const isValidSearchPage = (value) =>
   Boolean(value && typeof value === 'object' && Array.isArray(value.results));
+
+/**
+ * A cached /api/seasons response is valid only if the categorized structure is
+ * intact. Whenever an optional relation category array is missing, the entry
+ * is treated like a bad/empty response and is never cached as valid data (so a
+ * malformed normalization result can never permanently hide real relations).
+ */
+const isValidRelationsResponse = (value) =>
+  Boolean(value && typeof value === 'object'
+    && value.anime && typeof value.anime === 'object'
+    && Array.isArray(value.prequels)
+    && Array.isArray(value.sequels)
+    && Array.isArray(value.sideStories)
+    && Array.isArray(value.spinOffs)
+    && Array.isArray(value.alternativeVersions)
+    && Array.isArray(value.parentStory)
+    && Array.isArray(value.other)
+    && value.formatGroups && typeof value.formatGroups === 'object'
+    && Array.isArray(value.formatGroups.ova)
+    && Array.isArray(value.formatGroups.ona)
+    && Array.isArray(value.formatGroups.movies)
+    && Array.isArray(value.formatGroups.specials)
+    && Array.isArray(value.formatGroups.tv)
+    && Array.isArray(value.formatGroups.otherFormats));
 
 /**
  * Bound an OPTIONAL enrichment promise by a deadline. Past the deadline the
@@ -344,22 +369,32 @@ export async function getAnimeRecommendations(anilistId) {
 }
 
 /**
- * Normalized AniList relations (seasons/sequels/prequels) for an anime
- * (cached). Relations come ONLY from AniList's actual relation data - never
- * invented. All IDs stay correctly namespaced.
+ * AniList relations for /api/seasons, categorized by the ACTUAL edge
+ * `relationType` (prequels/sequels/side stories/spin-offs/alternative
+ * versions/parent story/other) plus convenience format groups derived from the
+ * same entries (ova/ona/movies/specials/tv/otherFormats). All relation data is
+ * fetched from AniList in ONE GraphQL request (parent + relations edges); no
+ * per-relation follow-up calls. IDs stay AniList namespaced - never converted.
+ *
+ * Caching: failures are never cached (stale-if-error in the cache layer), so a
+ * temporary AniList outage can never permanently hide valid relations; a
+ * valid "no relations" payload from a real request is an honest empty state.
  * @param {number|string} anilistId
- * @returns {Promise<Array>}
+ * @returns {{ success: true, anime: object, prequels: object[], sequels: object[], sideStories: object[], spinOffs: object[], alternativeVersions: object[], parentStory: object[], other: object[], formatGroups: { ova: object[], ona: object[], movies: object[], specials: object[], tv: object[], otherFormats: object[] }, totalRelated: number }}
+ * @throws {NotFoundError} unknown anime. @throws {ProviderError} provider
+ *   failure with no stale cache available.
  */
 export async function getAnimeSeasons(anilistId) {
   const id = parseRequiredId(anilistId, 'anilistId');
   return cacheManager.getOrLoad(
-    `anilist:relations:${id}`,
-    async () => {
-      const raw = await anilistProvider.getRelations(id);
-      const nodes = Array.isArray(raw?.nodes) ? raw.nodes : [];
-      return nodes.map((node) => normalizeAnilistRelation(node)).filter(Boolean);
-    },
-    { ttlSeconds: CACHE_TTL.DAY, isValid: Array.isArray },
+    // v2 key: categorized relation payload (bumped for the fixed relations
+    // query, so stale pre-fix cached data can never hide the new response).
+    `anilist:relations:v2:${id}`,
+    async () => ({
+      success: true,
+      ...buildAnilistRelationsResponse(await anilistProvider.getRelations(id)),
+    }),
+    { ttlSeconds: CACHE_TTL.DAY, isValid: isValidRelationsResponse },
   );
 }
 

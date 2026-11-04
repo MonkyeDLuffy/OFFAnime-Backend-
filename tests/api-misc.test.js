@@ -114,40 +114,377 @@ test('GET /api/recommendations/:id -> invalid ID -> 400; cached behavior on vali
   }
 });
 
-test('GET /api/seasons/:id -> 200 relations from AniList actual relation data (namespace safety)', async () => {
+// --- /api/seasons (AniList relations) fixtures ---------------------------------
+
+/**
+ * Raw AniList Media node for a RELATED entry (relations edge/node fields).
+ * @param {{ id?: number|null, idMal?: number|null, type?: string, format?: string|null, status?: string, episodes?: number|null, season?: string|null, seasonYear?: number|null, averageScore?: number|null, genres?: string[], romaji?: string, english?: string|null, native?: string|null, poster?: string|null, xlPoster?: string|null, banner?: string|null }} [options]
+ */
+function relationNode({
+  id,
+  idMal = null,
+  type = 'ANIME',
+  format = 'TV',
+  status = 'FINISHED',
+  episodes = 12,
+  season = 'WINTER',
+  seasonYear = 2023,
+  averageScore = 80,
+  genres = ['Action'],
+  romaji = 'Related Anime',
+  english = null,
+  native = null,
+  poster = 'https://img.anilist.co/rel.jpg',
+  xlPoster = null,
+  banner = null,
+} = {}) {
+  return {
+    id,
+    idMal,
+    type,
+    format,
+    status,
+    episodes,
+    season,
+    seasonYear,
+    averageScore,
+    genres,
+    title: { english, romaji, native },
+    coverImage: { extraLarge: xlPoster, large: poster, medium: poster },
+    bannerImage: banner,
+  };
+}
+
+/**
+ * Raw relations-edges Media payload for the /api/seasons query (parent fields
+ * + edges in ONE response, exactly like the real AniList shape).
+ * @param {{ id?: number, idMal?: number|null, romaji?: string, english?: string|null, native?: string|null, poster?: string|null, xlPoster?: string|null, banner?: string|null, format?: string, edges: Array<{ relationType: string|string|null, node: Record<string, unknown>|null }> }} options
+ */
+function relationsMedia({ id = 100, idMal = 200, romaji = 'Parent Anime', english = 'Parent Anime EN', native = '親アニメ', poster = 'https://img.anilist.co/parent.jpg', xlPoster = null, banner = null, format = 'TV', edges }) {
+  return {
+    id,
+    idMal,
+    type: 'ANIME',
+    format,
+    status: 'FINISHED',
+    episodes: 12,
+    title: { english, romaji, native },
+    coverImage: { extraLarge: xlPoster, large: poster, medium: poster },
+    bannerImage: banner,
+    relations: { edges },
+  };
+}
+
+test('GET /api/seasons/:id -> 200 categorized relations (prequels/sequels separated, deduped, anime-only)', async () => {
   await resetL1Cache();
   const mock = installApiMocks({
     anilist: (body) => {
       if (anilistKind(body.query) !== 'relations') throw new Error(`expected relations, got: ${body.query}`);
+      // Query correctness: relationType MUST come from edges, never nodes
+      // (the schema field placement that broke this endpoint before).
+      assert.ok(
+        ! /relations\s*\{\s*nodes/.test(body.query),
+        'relations query must use edges (AniList lacks relationType on Media nodes)',
+      );
       return {
         data: {
-          Media: {
-            relations: {
-              nodes: [
-                { id: 124, idMal: 457, relationType: 'SEQUEL', type: 'ANIME', format: 'TV', title: { romaji: 'Sequel', english: 'Sequel EN', userPreferred: 'Sequel' }, coverImage: { large: 'https://img.anilist.co/seq.jpg', medium: null } },
-                { id: 122, idMal: 455, relationType: 'PREQUEL', type: 'ANIME', format: 'TV', title: { romaji: 'Prequel', english: 'Prequel EN', userPreferred: 'Prequel' }, coverImage: { large: 'https://img.anilist.co/pre.jpg', medium: null } },
-                { id: null, relationType: 'SIDE_STORY' },
-              ],
-            },
-          },
+          Media: relationsMedia({
+            edges: [
+              { relationType: 'SEQUEL', node: relationNode({ id: 124, idMal: 457, romaji: 'Sequel', english: 'Sequel EN', banner: 'https://img.anilist.co/seq-banner.jpg' }) },
+              { relationType: 'PREQUEL', node: relationNode({ id: 122, idMal: 455, romaji: 'Prequel', native: null }) },
+              // Unusable/duplicate/invalid entries are all dropped, never fabricated:
+              { relationType: 'SIDE_STORY', node: null },
+              { relationType: 'SIDE_STORY', node: relationNode({ id: null, romaji: 'No Id' }) },
+              { relationType: 'ADAPTATION', node: relationNode({ id: 900, type: 'MANGA', format: null, romaji: 'Manga Adaptation' }) },
+              { relationType: 'SEQUEL', node: relationNode({ id: 124, romaji: 'Duplicate Sequel' }) },
+              { relationType: 'UNKNOWN_TYPE', node: relationNode({ id: 130, romaji: 'Other Type' }) },
+            ],
+          }),
         },
       };
     },
   });
   const server = await startTestServer();
   try {
-    const res = await fetch(`${server.baseUrl}/api/seasons/123`);
+    const res = await fetch(`${server.baseUrl}/api/seasons/100`);
     assert.equal(res.status, 200);
 
     const body = await res.json();
-    assert.ok(Array.isArray(body) && body.length === 2);
-    assert.equal(body[0].relationType, 'SEQUEL');
-    assert.equal(body[0].id, 124);
-    assert.equal(body[0].anilistId, 124);
-    assert.equal(body[0].malId, 457);
-    // Unusable nodes are dropped (never fabricated).
-    assert.ok(!body.some((r) => r.id === null));
+    assert.equal(body.success, true);
 
+    // Parent anime identified in the SAME AniList request.
+    assert.equal(body.anime.id, 100);
+    assert.equal(body.anime.title, 'Parent Anime EN');
+    assert.equal(body.anime.malId, 200);
+    assert.deepEqual(body.anime.images, { poster: 'https://img.anilist.co/parent.jpg', banner: null });
+
+    // Prequels and sequels are separate arrays.
+    assert.equal(body.sequels.length, 1);
+    const sequel = body.sequels[0];
+    assert.equal(sequel.id, 124);
+    assert.equal(sequel.anilistId, 124);
+    assert.equal(sequel.malId, 457);
+    assert.equal(sequel.relationType, 'SEQUEL');
+    assert.equal(sequel.relationLabel, 'Sequel');
+    assert.equal(sequel.format, 'TV');
+    assert.equal(sequel.status, 'FINISHED');
+    assert.equal(sequel.episodes, 12);
+    assert.equal(sequel.season, 'WINTER');
+    assert.equal(sequel.seasonYear, 2023);
+    assert.equal(sequel.averageScore, 80);
+    assert.deepEqual(sequel.genres, ['Action']);
+    assert.equal(sequel.title, 'Sequel EN');
+    assert.equal(sequel.titleEnglish, 'Sequel EN');
+    assert.equal(sequel.titleRomaji, 'Sequel');
+
+    assert.equal(body.prequels.length, 1);
+    const prequel = body.prequels[0];
+    assert.equal(prequel.relationType, 'PREQUEL');
+    // English-first display title falls back to romaji, then native.
+    assert.equal(prequel.title, 'Prequel');
+    assert.equal(prequel.titleEnglish, null);
+    assert.equal(prequel.titleRomaji, 'Prequel');
+
+    // Other relations preserved (including unknown AniList types) with labels.
+    assert.equal(body.other.length, 1);
+    assert.equal(body.other[0].id, 130);
+    assert.equal(body.other[0].relationType, 'UNKNOWN_TYPE');
+    assert.equal(body.other[0].relationLabel, 'Unknown Type');
+
+    // Manga excluded; pagination/dedup/self handled.
+    assert.ok(!body.other.some((e) => e.type === 'MANGA'));
+    assert.deepEqual(body.sideStories, []);
+    assert.deepEqual(body.spinOffs, []);
+    assert.deepEqual(body.alternativeVersions, []);
+    assert.deepEqual(body.parentStory, []);
+    // Every TV-format entry lands in the tv group (sequel, prequel AND the
+    // unknown-relation entry), keyed by id.
+    assert.deepEqual(
+      Object.fromEntries(Object.entries(body.formatGroups).map(([k, v]) => [k, v.map((e) => e.id).sort((a, b) => a - b)])),
+      { ova: [], ona: [], movies: [], specials: [], tv: [122, 124, 130], otherFormats: [] },
+    );
+    assert.equal(body.totalRelated, 3); // sequel + prequel + unknown-type; dupes/manga/self excluded
+
+    // One exactly-one AniList request carried everything.
+    assert.equal(mock.anilistCalls().length, 1);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/seasons/:id -> format groups derived from the same entries; OVA sequel keeps its category', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'relations') throw new Error(`expected relations, got: ${body.query}`);
+      return {
+        data: {
+          Media: relationsMedia({
+            edges: [
+              { relationType: 'SEQUEL', node: relationNode({ id: 210, romaji: 'TV Short Sequel', format: 'TV_SHORT' }) },
+              { relationType: 'SIDE_STORY', node: relationNode({ id: 211, romaji: 'OVA Side Story', format: 'OVA' }) },
+              { relationType: 'SIDE_STORY', node: relationNode({ id: 212, romaji: 'ONA Side Story', format: 'ONA' }) },
+              { relationType: 'SIDE_STORY', node: relationNode({ id: 213, romaji: 'Special Side Story', format: 'SPECIAL' }) },
+              { relationType: 'SUMMARY', node: relationNode({ id: 214, romaji: 'Movie Summary', format: 'MOVIE' }) },
+              { relationType: 'SPIN_OFF', node: relationNode({ id: 215, romaji: 'Music Spin-off', format: 'MUSIC' }) },
+            ],
+          }),
+        },
+      };
+    },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/seasons/100`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+
+    const findById = (entry) => entry.id;
+    assert.deepEqual(body.formatGroups.ova.map(findById), [211]);
+    assert.deepEqual(body.formatGroups.ona.map(findById), [212]);
+    assert.deepEqual(body.formatGroups.movies.map(findById), [214]);
+    assert.deepEqual(body.formatGroups.specials.map(findById), [213]);
+    // TV_SHORT goes to tv; MUSIC (and unknown formats) goes to otherFormats.
+    assert.deepEqual(body.formatGroups.tv.map(findById), [210]);
+    assert.deepEqual(body.formatGroups.otherFormats.map(findById), [215]);
+
+    // The same OBJECTS (not records, not fabrications): OVA entry keeps its
+    // original relation category AND its format.
+    assert.deepEqual(body.sideStories.map(findById), [211, 212, 213]);
+    const ova = body.formatGroups.ova[0];
+    assert.equal(ova.format, 'OVA');
+    assert.equal(ova.relationType, 'SIDE_STORY');
+    assert.equal(ova.id, body.sideStories[0].id);
+    assert.equal(ova.title, body.sideStories[0].title);
+
+    // The movie summary stays in `other` (relation categories by type) while
+    // also being reachable via the movies format group. JSON round-trips mean
+    // distinct object instances - compare by CONTENT, not reference.
+    const movie = body.formatGroups.movies[0];
+    assert.equal(movie.relationType, 'SUMMARY');
+    assert.equal(movie.relationLabel, 'Summary');
+    assert.ok(body.other.some((e) => JSON.stringify(e) === JSON.stringify(movie)));
+
+    assert.equal(body.totalRelated, 6);
+    assert.equal(mock.anilistCalls().length, 1);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/seasons/:id -> posters/banners per entry; xl poster preferred; missing banner is null (never a poster)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'relations') throw new Error(`expected relations, got: ${body.query}`);
+      return {
+        data: {
+          Media: relationsMedia({
+            id: 300,
+            poster: null,
+            xlPoster: 'https://img.anilist.co/parent-xl.jpg',
+            banner: 'https://img.anilist.co/parent-banner.jpg',
+            romaji: 'Banner Parent',
+            edges: [
+              { relationType: 'SEQUEL', node: relationNode({ id: 301, xlPoster: 'https://img.anilist.co/xl.jpg', banner: 'https://img.anilist.co/real-banner.jpg' }) },
+              { relationType: 'PREQUEL', node: relationNode({ id: 302, xlPoster: null, poster: 'https://img.anilist.co/l.jpg', banner: null }) },
+            ],
+          }),
+        },
+      };
+    },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/seasons/300`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+
+    // Parent: extraLarge preferred, banner is the real AniList bannerImage.
+    assert.equal(body.anime.images.poster, 'https://img.anilist.co/parent-xl.jpg');
+    assert.equal(body.anime.images.banner, 'https://img.anilist.co/parent-banner.jpg');
+
+    const sequel = body.sequels[0];
+    assert.equal(sequel.images.poster, 'https://img.anilist.co/xl.jpg');
+    assert.equal(sequel.images.banner, 'https://img.anilist.co/real-banner.jpg');
+
+    const prequel = body.prequels[0];
+    // large falls back before medium; poster never faked as a banner.
+    assert.equal(prequel.images.poster, 'https://img.anilist.co/l.jpg');
+    assert.equal(prequel.images.banner, null);
+    assert.notEqual(prequel.images.banner, prequel.images.poster);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/seasons/:id -> spin-offs + side stories categorized; multiple sequels kept', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'relations') throw new Error(`expected relations, got: ${body.query}`);
+      return {
+        data: {
+          Media: relationsMedia({
+            edges: [
+              { relationType: 'SEQUEL', node: relationNode({ id: 410, romaji: 'Sequel One' }) },
+              { relationType: 'SEQUEL', node: relationNode({ id: 411, romaji: 'Sequel Two' }) },
+              { relationType: 'SEQUEL', node: relationNode({ id: 412, romaji: 'Sequel Three' }) },
+              { relationType: 'SPIN_OFF', node: relationNode({ id: 430, romaji: 'Spin One' }) },
+              { relationType: 'SIDE_STORY', node: relationNode({ id: 431, romaji: 'Side One' }) },
+              { relationType: 'ALTERNATIVE', node: relationNode({ id: 432, romaji: 'Alternative Version' }) },
+              { relationType: 'PARENT', node: relationNode({ id: 433, romaji: 'Parent Story' }) },
+              { relationType: 'SUMMARY', node: relationNode({ id: 434, romaji: 'Summary Recap' }) },
+              { relationType: 'CHARACTER', node: relationNode({ id: 435, romaji: 'Chara Mix' }) },
+              { relationType: 'ADAPTATION', node: relationNode({ id: 436, romaji: 'Adaptation' }) },
+              { relationType: 'SOURCE', node: relationNode({ id: 437, romaji: 'Source' }) },
+              { relationType: 'COMPILATION', node: relationNode({ id: 438, romaji: 'Compilation' }) },
+              { relationType: 'CONTAINS', node: relationNode({ id: 439, romaji: 'Contains' }) },
+              { relationType: 'SAME_UNIVERSE', node: relationNode({ id: 440, romaji: 'Same Universe' }) },
+            ],
+          }),
+        },
+      };
+    },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/seasons/100`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+
+    assert.deepEqual(body.sequels.map((e) => e.id), [410, 411, 412]);
+    assert.deepEqual(body.spinOffs.map((e) => e.id), [430]);
+    assert.deepEqual(body.sideStories.map((e) => e.id), [431]);
+    assert.deepEqual(body.alternativeVersions.map((e) => e.id), [432]);
+    assert.deepEqual(body.parentStory.map((e) => e.id), [433]);
+    assert.deepEqual(
+      body.other.map((e) => e.id).sort((a, b) => a - b),
+      [434, 435, 436, 437, 438, 439, 440],
+    );
+    assert.equal(body.other[0].relationLabel, 'Summary');
+    assert.equal(body.alternativeVersions[0].relationLabel, 'Alternative Version');
+    assert.equal(body.spinOffs[0].relationLabel, 'Spin-off');
+    assert.equal(body.totalRelated, 14); // 3 sequels + 4 other single categories + 7 "other" types
+    assert.equal(mock.anilistCalls().length, 1);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/seasons/:id -> anime with no relations -> valid empty payload (cached once; cache hit identical)', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: (body) => {
+      if (anilistKind(body.query) !== 'relations') throw new Error(`expected relations, got: ${body.query}`);
+      return { data: { Media: relationsMedia({ id: 505, romaji: 'No Relations Anime', english: 'No Relations Anime EN', edges: [] }) } };
+    },
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/seasons/505`);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.equal(body.anime.id, 505);
+    assert.equal(body.anime.title, 'No Relations Anime EN');
+    for (const category of ['prequels', 'sequels', 'sideStories', 'spinOffs', 'alternativeVersions', 'parentStory', 'other']) {
+      assert.ok(Array.isArray(body[category]) && body[category].length === 0, `${category} must be an empty array`);
+    }
+    for (const group of ['ova', 'ona', 'movies', 'specials', 'tv', 'otherFormats']) {
+      assert.ok(Array.isArray(body.formatGroups[group]) && body.formatGroups[group].length === 0, `formatGroups.${group} must be an empty array`);
+    }
+    assert.equal(body.totalRelated, 0);
+
+    // Cache miss persisted the VALID empty result; a second request stays
+    // identical with zero extra provider calls.
+    const res2 = await fetch(`${server.baseUrl}/api/seasons/505`);
+    assert.deepEqual(await res2.json(), body);
+    assert.equal(mock.anilistCalls().length, 1);
+  } finally {
+    await server.stop();
+    mock.restore();
+  }
+});
+
+test('GET /api/seasons/:id -> unknown anime -> 404 standard not-found response', async () => {
+  await resetL1Cache();
+  const mock = installApiMocks({
+    anilist: () => new Response(JSON.stringify({ errors: [{ status: 404, message: 'Not Found.' }] }), {
+      status: 404,
+      headers: { 'content-type': 'application/json' },
+    }),
+  });
+  const server = await startTestServer();
+  try {
+    const res = await fetch(`${server.baseUrl}/api/seasons/999999999`);
+    assert.equal(res.status, 404);
+    const body = await res.json();
+    assert.equal(body.error.code, 'NOT_FOUND');
     assert.equal(mock.anilistCalls().length, 1);
   } finally {
     await server.stop();

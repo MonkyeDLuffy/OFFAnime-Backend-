@@ -147,14 +147,19 @@ export class AnilistProvider extends BaseProvider {
   }
 
   /**
-   * Fetch basic relations (related anime) for an AniList ID.
+   * Fetch RAW relations data for an AniList ID - the whole `Media` node
+   * including the parent anime fields AND its `relations { edges }` (fetched
+   * in ONE GraphQL request; relationType comes from each edge, never from the
+   * node - see GET_RELATIONS_QUERY). Normalization/categorization happens in
+   * the normalizer/service layers, not here.
    * @param {number|string} anilistId
-   * @returns {Promise<Record<string, unknown> | null>} Raw relations node list.
+   * @returns {Promise<Record<string, unknown>>} Raw AniList `Media` object.
+   * @throws {NotFoundError} unknown anime.
    */
   async getRelations(anilistId) {
     const id = parseRequiredId(anilistId, 'anilistId');
     const data = await this.executeQuery(GET_RELATIONS_QUERY, { id });
-    return this._requireMedia(data.Media, `AniList ID ${id}`)?.relations ?? null;
+    return this._requireMedia(data.Media, `AniList ID ${id}`);
   }
 
   /**

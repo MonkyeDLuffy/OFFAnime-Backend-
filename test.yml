@@ -1,0 +1,32 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 60
+      arrivalRate: 10 # 10 virtual users per second
+  http:
+    headers:
+      "x-api-key": "a9_c9awefr57pnb58xis8gbz5z40hp56zge"
+      
+scenarios:
+  - name: "OffAnime Authenticated Read Flow"
+    flow:
+      - get:
+          url: "/api/home"
+      - get:
+          url: "/api/search?q=frieren&page=1&perPage=10"
+      - get:
+          url: "/api/top-search"
+      - get:
+          url: "/api/schedule"
+      - get:
+          url: "/api/details/21"
+      - get:
+          url: "/api/episodes/21"
+      - get:
+          url: "/api/recommendations/21"
+      - get:
+          url: "/api/seasons/21"
+      - get:
+          url: "/api/category/trending?page=1&perPage=10"
+      - get:
+          url: "/api/stream/resolve/anilist/21?ep=1&language=sub"

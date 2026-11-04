@@ -204,23 +204,200 @@ export function normalizeAnilistImages(raw) {
 // --- relation / list-card handling -------------------------------------------
 
 /**
- * Normalize a related-anime node into a minimal relation entry.
- * Returns null for unusable nodes (missing id) - never fabricates.
- * @param {unknown} node
- * @returns {{ relationType: string|null, id: number, anilistId: number, malId: number|null, title: string|null, type: string|null, format: string|null, images: { poster: string|null } } | null}
+ * Readable labels for AniList edge relation types. Types missing from this
+ * map get a humanized label derived from the actual AniList value (never
+ * invented, purely presentational).
  */
-export function normalizeAnilistRelation(node) {
+const RELATION_LABELS = Object.freeze({
+  PREQUEL: 'Prequel',
+  SEQUEL: 'Sequel',
+  SIDE_STORY: 'Side Story',
+  SPIN_OFF: 'Spin-off',
+  ALTERNATIVE: 'Alternative Version',
+  PARENT: 'Parent Story',
+  SUMMARY: 'Summary',
+  CHARACTER: 'Character',
+  ADAPTATION: 'Adaptation',
+  SOURCE: 'Source',
+  OTHER: 'Other',
+  COMPILATION: 'Compilation',
+  CONTAINS: 'Contains',
+  SAME_UNIVERSE: 'Same Universe',
+});
+
+/** Humanize an unmapped relation type: SIDE_STORY_FOO -> "Side Story Foo". */
+function humanizeRelationLabel(relationType) {
+  return relationType
+    .toLowerCase()
+    .split('_')
+    .map((part) => (part ? `${part[0].toUpperCase()}${part.slice(1)}` : ''))
+    .filter(Boolean)
+    .join(' ')
+    .trim() || relationType;
+}
+
+/**
+ * Normalize a related-media entry from AniList relations data into the full
+ * relation shape used by /api/seasons AND by the canonical model's
+ * `relations` array (/api/details). Accepts BOTH payload shapes:
+ *   - MediaEdge: { relationType, node: Media } (the relations-edges query;
+ *     `relationType` comes from the EDGE - the node never carries it).
+ *   - Bare Media node: { ...Media, relationType? } (tolerated defensively;
+ *     live AniList nodes do not carry relationType).
+ * Returns null for unusable entries (missing id / null node) - never fabricates.
+ * @param {unknown} edge MediaEdge or bare Media node.
+ * @returns {{ relationType: string|null, relationLabel: string|null, id: number, anilistId: number, malId: number|null, title: string|null, titleEnglish: string|null, titleRomaji: string|null, titleNative: string|null, type: string|null, format: string|null, status: string|null, episodes: number|null, season: string|null, seasonYear: number|null, averageScore: number|null, genres: string[], images: { poster: string|null, cover: string|null, banner: string|null } } | null}
+ */
+export function normalizeAnilistRelation(edge) {
+  // Edge shape when a `node` object is present (AniList MediaEdge); otherwise
+  // the payload IS the media node itself.
+  const isEdge = Boolean(edge && typeof edge === 'object'
+    && edge.node && typeof edge.node === 'object');
+  const node = isEdge ? edge.node : edge;
   const anilistId = normalizeId(node?.id);
   if (anilistId === null) return null;
+  const relationType = str(isEdge ? edge.relationType : node?.relationType);
+  const titleVariants = titleVariantsFromRaw(node?.title);
   return {
-    relationType: str(node?.relationType),
+    relationType,
+    relationLabel: relationType ? (RELATION_LABELS[relationType] ?? humanizeRelationLabel(relationType)) : null,
     id: anilistId,
     anilistId,
     malId: normalizeId(node?.idMal),
-    title: displayTitleFromRaw(node?.title),
+    title: displayTitleEnglishFirst(titleVariants),
+    titleEnglish: titleVariants.english,
+    titleRomaji: titleVariants.romaji,
+    titleNative: titleVariants.native,
     type: str(node?.type),
     format: str(node?.format),
-    images: { poster: str(node?.coverImage?.large) ?? str(node?.coverImage?.medium) },
+    status: str(node?.status),
+    episodes: positiveInt(node?.episodes),
+    season: str(node?.season),
+    seasonYear: positiveInt(node?.seasonYear),
+    averageScore: numberOrNull(node?.averageScore),
+    genres: strArray(node?.genres),
+    // Poster prefers coverImage.extraLarge -> large -> medium; banner is
+    // AniList's genuine bannerImage only (never a poster in disguise).
+    images: normalizeAnilistImages(node),
+  };
+}
+
+/**
+ * Category keys for /api/seasons, keyed by the actual AniList edge
+ * `relationType`. Types absent from this map land in the `other` bucket
+ * (never discarded): SUMMARY, CHARACTER, ADAPTATION, SOURCE, OTHER,
+ * COMPILATION, CONTAINS, SAME_UNIVERSE, and anything unmapped.
+ */
+const RELATION_CATEGORY_KEYS = Object.freeze({
+  PREQUEL: 'prequels',
+  SEQUEL: 'sequels',
+  SIDE_STORY: 'sideStories',
+  SPIN_OFF: 'spinOffs',
+  ALTERNATIVE: 'alternativeVersions',
+  PARENT: 'parentStory',
+});
+
+/**
+ * Convenience format groups for /api/seasons, keyed by the actual AniList
+ * `Media.format` (OVA/ONA/MOVIE/SPECIAL/TV/TV_SHORT are FORMATS, not relation
+ * types). Everything else (MUSIC, null, unknown) lands in otherFormats.
+ */
+const RELATION_FORMAT_KEYS = Object.freeze({
+  OVA: 'ova',
+  ONA: 'ona',
+  MOVIE: 'movies',
+  SPECIAL: 'specials',
+  TV: 'tv',
+  TV_SHORT: 'tv',
+});
+
+/**
+ * Build the full /api/seasons response payload from the RAW relations Media
+ * (single AniList request: parent + relations edges).
+ *
+ * Guarantees:
+ *   - Every included entry is a normalized relation entry (see
+ *     normalizeAnilistRelation); categories AND format groups reference the
+ *     SAME entry objects - grouped twice, never duplicated or fabricated.
+ *   - Data-quality guards: ANIME-type nodes only (manga excluded), null
+ *     nodes dropped, the requested anime itself excluded, duplicates
+ *     deduplicated by AniList ID (first edge wins, its relationType kept).
+ *   - Categories are separate; `other` preserves every remaining valid
+ *     relation type. Empty relations yield empty arrays (valid, cacheable).
+ *   - An OVA/sequel hybrid keeps BOTH its relation category and its format
+ *     group, since groups mirror the same object.
+ * @param {unknown} raw Raw AniList `Media` from AnilistProvider.getRelations.
+ * @returns {{ anime: object, prequels: object[], sequels: object[], sideStories: object[], spinOffs: object[], alternativeVersions: object[], parentStory: object[], other: object[], formatGroups: { ova: object[], ona: object[], movies: object[], specials: object[], tv: object[], otherFormats: object[] }, totalRelated: number }}
+ * @throws {ProviderError} when the payload itself is missing/malformed
+ *   (missing id) - a provider anomaly, not an optional-field issue.
+ */
+export function buildAnilistRelationsResponse(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new ProviderError('AniList relations payload is missing or malformed');
+  }
+  const parentAnilistId = normalizeId(raw.id);
+  if (parentAnilistId === null) {
+    throw new ProviderError('AniList relations payload is missing a valid id');
+  }
+
+  const parentTitle = titleVariantsFromRaw(raw.title);
+  const parentImages = normalizeAnilistImages(raw);
+  const anime = {
+    id: parentAnilistId,
+    anilistId: parentAnilistId,
+    malId: normalizeId(raw.idMal),
+    title: displayTitleEnglishFirst(parentTitle),
+    titleEnglish: parentTitle.english,
+    titleRomaji: parentTitle.romaji,
+    titleNative: parentTitle.native,
+    type: str(raw.type),
+    format: str(raw.format),
+    status: str(raw.status),
+    episodes: positiveInt(raw.episodes),
+    images: { poster: parentImages.poster, banner: parentImages.banner },
+  };
+
+  const edges = Array.isArray(raw.relations?.edges) ? raw.relations.edges : [];
+  const categories = {
+    prequels: [],
+    sequels: [],
+    sideStories: [],
+    spinOffs: [],
+    alternativeVersions: [],
+    parentStory: [],
+    other: [],
+  };
+  const formatGroups = {
+    ova: [],
+    ona: [],
+    movies: [],
+    specials: [],
+    tv: [],
+    otherFormats: [],
+  };
+  /** @type {Set<number>} Deduplicator for included entries (by AniList ID). */
+  const seen = new Set();
+
+  for (const edge of edges) {
+    const entry = normalizeAnilistRelation(edge);
+    if (entry === null) continue; // null/malformed node
+    if (entry.type !== 'ANIME') continue; // manga (and anything else) excluded
+    if (entry.anilistId === parentAnilistId) continue; // the requested anime itself
+    if (seen.has(entry.anilistId)) continue; // duplicate AniList ID
+    seen.add(entry.anilistId);
+
+    const categoryKey = RELATION_CATEGORY_KEYS[entry.relationType];
+    (categoryKey ? categories[categoryKey] : categories.other).push(entry);
+
+    const formatKey = RELATION_FORMAT_KEYS[entry.format];
+    (formatKey ? formatGroups[formatKey] : formatGroups.otherFormats).push(entry);
+  }
+
+  return {
+    anime,
+    ...categories,
+    formatGroups,
+    totalRelated: seen.size,
   };
 }
 
